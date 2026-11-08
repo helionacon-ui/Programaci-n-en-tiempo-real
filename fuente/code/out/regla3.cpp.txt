@@ -1,0 +1,10 @@
+ctor(3)
+copia
+7 9
+ctor(1)
+copia
+dtor(1)
+asignacion
+dtor(3)
+dtor(3)
+dtor(3)

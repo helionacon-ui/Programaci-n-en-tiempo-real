@@ -1,0 +1,10 @@
+  - "Quijote" (1605), 14 dias, 1100 pags
+  - "Matrix" (1999), 7 dias, 136 min
+  - "Ulises" (1922), 14 dias, 730 pags
+multa Quijote 4 dias: 2 EUR
+multa Matrix 3 dias: 3 EUR
+mayor multa/dia: "Matrix" (1999), 7 dias, 136 min
+libros: 2, dvd: 1
+eliminar Ulises: true, eliminar X: false
+  - "Quijote" (1605), 14 dias, 1100 pags
+  - "Matrix" (1999), 7 dias, 136 min

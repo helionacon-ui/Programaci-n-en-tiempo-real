@@ -1,0 +1,5 @@
+se anyade a si misma: false
+Rectangulo r1: area=6 perimetro=10
+area total g1 = 9.14159
+tipo de *p: 12C_Rectangulo (nombre interno)
+12.5664

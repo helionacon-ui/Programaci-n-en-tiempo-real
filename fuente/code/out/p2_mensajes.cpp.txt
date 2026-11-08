@@ -1,0 +1,9 @@
+mensajes de Ana: 2, de Luis: 0
+pista: mi PIN
+clave incorrecta
+pista: mi PIN
+hola Ana
+pista: dos cifras
+adios Ana
+sin mensajes para Luis
+quedan 0 mensajes

@@ -1,0 +1,3 @@
+ticks = 5
+duracion >= 100 ms: true, < 150 ms: true
+total = 4000

@@ -1,0 +1,10 @@
+Empresa: UPCT, lista de empleados:
+Nombre: Juan (Calle calle), Sueldo: 2500€
+Nombre: Antonio (Plaza plaza), Sueldo: 2500€
+Nombre: Maria (Avenida avda), Sueldo: 3000€
+2 1
+Mayor sueldo: Nombre: Maria (Avenida avda), Sueldo: 3000€
+true false
+Empresa: UPCT, lista de empleados:
+Nombre: Juan (Calle calle), Sueldo: 2500€
+Nombre: Maria (Avenida avda), Sueldo: 3000€

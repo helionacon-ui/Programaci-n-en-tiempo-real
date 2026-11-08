@@ -1,0 +1,12 @@
+palabras: 1882, distintas: 716
+las dos mas repetidas:
+  de: 123
+  y: 104
+palabras que acumulan el 20% de las apariciones: de(123) y(104) que(88) a(44) el(40)
+la mas repetida de cada longitud (1-6 letras):
+  1 letras: y (104)
+  2 letras: de (123)
+  3 letras: que (88)
+  4 letras: como (13)
+  5 letras: mismo (6)
+  6 letras: había (14)

@@ -1,0 +1,411 @@
+<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Autoevaluación · Programación de Sistemas en Tiempo Real</title><meta name="description" content="Guía de estudio de Programación de Sistemas en Tiempo Real: teoría, ejemplos, prácticas y exámenes resueltos.">
+<meta name="theme-color" content="#2456d6"><link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="icon-192.png"><style>:root{--bg:#fbfbfa;--fg:#1d2330;--mut:#5b6474;--card:#fff;--bd:#dfe3ea;--code:#f3f5f8;--acc:#2456d6;--ok:#17803d;--bad:#b3261e;--warn:#fff4d6;--warnb:#e0a800;--tip:#e6f0ff;--ojo:#fde7e7;--c:#2456d6;--sh:0 1px 3px rgba(0,0,0,.08)}
+:root[data-theme=dark]{--bg:#12151c;--fg:#e6e9ef;--mut:#9aa3b2;--card:#1a1f29;--bd:#2c3340;--code:#0e1117;--acc:#7aa2ff;--ok:#5fd18a;--bad:#ff8b84;--warn:#3a3114;--warnb:#a98400;--tip:#16253f;--ojo:#3d1b1b;--sh:none}
+@media (prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#12151c;--fg:#e6e9ef;--mut:#9aa3b2;--card:#1a1f29;--bd:#2c3340;--code:#0e1117;--acc:#7aa2ff;--ok:#5fd18a;--bad:#ff8b84;--warn:#3a3114;--warnb:#a98400;--tip:#16253f;--ojo:#3d1b1b;--sh:none}}
+*{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:70px}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.6 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+header.top{position:sticky;top:0;z-index:50;display:flex;gap:10px;align-items:center;padding:8px 14px;background:var(--card);border-bottom:1px solid var(--bd);box-shadow:var(--sh)}
+header.top h1{font-size:1rem;margin:0;white-space:nowrap}header.top .date{color:var(--mut);font-size:.8rem;white-space:nowrap}
+#q{flex:1;min-width:0;padding:7px 10px;border:1px solid var(--bd);border-radius:8px;background:var(--bg);color:var(--fg);font:inherit}
+button,.btn{font:inherit;cursor:pointer;border:1px solid var(--bd);background:var(--card);color:var(--fg);border-radius:8px;padding:6px 12px}
+button:hover,.btn:hover{border-color:var(--acc)}.btn.p{background:var(--acc);color:#fff;border-color:var(--acc)}
+#menu{display:none}
+.layout{display:flex;align-items:flex-start}
+nav#side{position:sticky;top:52px;width:260px;flex:none;max-height:calc(100vh - 52px);overflow:auto;padding:12px 8px 40px 14px;border-right:1px solid var(--bd);font-size:.9rem}
+nav#side a{display:block;color:var(--fg);text-decoration:none;padding:3px 8px;border-radius:6px;border-left:4px solid var(--c,transparent)}
+nav#side a:hover,nav#side a.on{background:var(--code)}nav#side .sub a{padding-left:20px;font-size:.82rem;color:var(--mut);border-left-color:transparent}
+nav#side .grp{margin:12px 0 2px 8px;font-size:.72rem;text-transform:uppercase;letter-spacing:.06em;color:var(--mut)}
+main{flex:1;min-width:0;max-width:980px;padding:18px 22px 80px;margin:0 auto}
+section.sec{border-top:6px solid var(--c);margin-top:36px;padding-top:6px}
+section.sec>h2.st{font-size:1.7rem;margin:.4em 0;color:var(--c)}
+h3,h4{scroll-margin-top:70px}h3{margin-top:1.6em;border-bottom:2px solid var(--c);padding-bottom:2px}
+a{color:var(--acc)}code{background:var(--code);padding:1px 5px;border-radius:4px;font:.88em ui-monospace,Consolas,monospace}
+pre{background:var(--code);border:1px solid var(--bd);border-radius:8px;padding:10px 12px;overflow:auto;position:relative;font:.84rem/1.45 ui-monospace,Consolas,monospace;max-width:100%}
+pre code{background:none;padding:0;font:inherit}pre .lbl{position:absolute;top:2px;right:8px;font-size:.65rem;color:var(--mut)}
+pre.out{border-left:4px solid var(--ok)}
+.tw{overflow-x:auto;max-width:100%}table{border-collapse:collapse;margin:.6em 0}th,td{border:1px solid var(--bd);padding:4px 9px;text-align:left}th{background:var(--code)}
+.box{border-left:5px solid var(--c);background:var(--card);border-radius:8px;padding:8px 14px;margin:14px 0;box-shadow:var(--sh)}
+.box .bt,.enun .bt{font-weight:700;margin-bottom:2px}
+.box.tip,.box.intuicion{background:var(--tip)}.box.warn{background:var(--warn);border-color:var(--warnb)}.box.ojo{background:var(--ojo);border-color:var(--bad)}
+.box.formula{border-color:var(--acc)}.box.antes{border-color:var(--ok)}
+details.box>summary{font-weight:700;cursor:pointer}
+.fig{margin:14px 0;text-align:center;overflow-x:auto}.fig svg{max-width:100%;height:auto}
+.sim{overflow-x:auto;border:1px dashed var(--c);border-radius:10px;padding:10px 12px;margin:16px 0;background:var(--card)}
+.sim .row{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:6px 0}.sim label{font-size:.88rem}
+.sim input[type=number]{width:62px}.sim input,.sim select,.sim textarea{font:inherit;background:var(--bg);color:var(--fg);border:1px solid var(--bd);border-radius:6px;padding:3px 6px}
+.sim textarea{width:100%;min-height:90px;font-family:ui-monospace,monospace;font-size:.85rem}.sim .stt{font-weight:700;color:var(--c)}
+.sim .cons{background:#0e1117;color:#d6e2ff;border-radius:8px;padding:8px 10px;font:.82rem/1.4 ui-monospace,monospace;white-space:pre-wrap;max-height:260px;overflow:auto}
+.sim svg{max-width:100%;height:auto;display:block}.bar{fill:var(--c)}
+article.ex{border:1px solid var(--bd);border-radius:12px;padding:6px 16px 14px;margin:24px 0;background:var(--card)}
+.chip{display:inline-block;font-size:.72rem;padding:1px 8px;border-radius:99px;border:1px solid var(--bd);background:var(--code);margin-left:4px;vertical-align:middle;font-weight:400;color:var(--mut)}
+.chip.on{background:var(--acc);color:#fff;border-color:var(--acc)}
+.enun{background:var(--code);border-radius:8px;padding:6px 12px}
+details.paso{border:1px solid var(--bd);border-radius:8px;margin:8px 0;padding:2px 12px}details.paso>summary{cursor:pointer;font-weight:600;padding:5px 0}
+.pn{display:inline-block;min-width:1.5em;text-align:center;border-radius:99px;background:var(--c);color:#fff;font-size:.8rem}
+details.resultado{margin-top:10px;border:2px solid var(--ok);border-radius:8px;padding:2px 12px}details.resultado>summary{cursor:pointer;font-weight:700;color:var(--ok);padding:5px 0}
+.tabs{display:flex;gap:6px;flex-wrap:wrap;margin:10px 0}.tabs button.on{background:var(--acc);color:#fff;border-color:var(--acc)}
+.panel{display:none}.panel.on{display:block}
+.excard{display:block;border:1px solid var(--bd);border-radius:10px;padding:8px 12px;margin:8px 0;text-decoration:none;color:var(--fg);background:var(--card)}
+.excard:hover{border-color:var(--acc)}.chips{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0}.chips .chip{cursor:pointer;margin:0;font-size:.82rem;padding:3px 10px}
+details.exam{border:1px solid var(--bd);border-radius:8px;margin:6px 0;padding:2px 12px;background:var(--card)}details.exam>summary{cursor:pointer;padding:5px 0;font-weight:600}
+details.cur>summary{font-size:1.05rem}
+.q{border:1px solid var(--bd);border-radius:10px;padding:8px 14px;margin:12px 0;background:var(--card)}.q .o{display:block;padding:4px 8px;margin:3px 0;border:1px solid var(--bd);border-radius:6px;cursor:pointer}
+.q .o.ok{background:var(--ok);color:#fff}.q .o.bad{background:var(--bad);color:#fff}.q .ex{margin-top:6px;color:var(--mut)}
+.card3d{border:1px solid var(--bd);border-radius:12px;min-height:130px;padding:14px;display:flex;align-items:center;justify-content:center;text-align:center;background:var(--card);cursor:pointer;font-size:1.05rem}
+.prog{height:8px;background:var(--code);border-radius:99px;overflow:hidden}.prog>i{display:block;height:100%;background:var(--ok);width:0}
+.chk{display:block;margin:4px 0}
+#res{position:fixed;top:52px;left:0;right:0;z-index:60;background:var(--card);border-bottom:1px solid var(--bd);max-height:60vh;overflow:auto;display:none;padding:6px 14px;box-shadow:var(--sh)}
+#res a{display:block;padding:5px 0;border-bottom:1px solid var(--bd);text-decoration:none}#res small{color:var(--mut)}
+footer{border-top:1px solid var(--bd);padding:16px;color:var(--mut);text-align:center;font-size:.85rem}
+.pager{display:flex;justify-content:space-between;gap:10px;margin:30px 0}
+mjx-container{overflow-x:auto;overflow-y:hidden;max-width:100%}
+@media(max-width:860px){#menu{display:inline-block}nav#side{position:fixed;left:-290px;top:52px;z-index:70;background:var(--card);width:270px;height:calc(100vh - 52px);transition:left .2s}nav#side.open{left:0}main{padding:12px 14px 60px}header.top .date{display:none}header.top h1{font-size:.85rem}}
+@media print{header.top,nav#side,.sim,.btn,#res{display:none}main{max-width:none}details>*{display:block!important}}
+main p,main li,main dd,main td,main summary{overflow-wrap:anywhere}p code,li code,td code,dd code,.q code{overflow-wrap:anywhere;white-space:normal}
+</style><script>window.MathJax={tex:{inlineMath:[["\\(","\\)"]],displayMath:[["\\[","\\]"]]},svg:{fontCache:"global"},options:{skipHtmlTags:["script","noscript","style","textarea","pre","code"]}};</script><script async src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-svg.js"></script></head>
+<body data-site="guia"><header class="top"><button id="menu" aria-label="Índice">☰</button><h1>Tiempo real</h1><input id="q" type="search" placeholder="Buscar en la guía ( / )" aria-label="Buscar"><span class="date">Actualizado: 2026-11-08</span><button id="tbtn" aria-label="Modo claro/oscuro">◐</button></header>
+<div id="res"></div><div class="layout"><nav id="side" aria-label="Índice"><div class="grp">Guía</div><a class="top" style="--c:#2456d6" href="inicio.html">Empieza aquí</a><a class="top" style="--c:#c2255c" href="examen.html">El examen y cómo estudiar</a><div class="grp">Teoría</div><a class="top" style="--c:#0b7285" href="t0.html">T0 · Sistemas de tiempo real</a><a class="top" style="--c:#2b8a3e" href="t1.html">T1 · Repaso de C y C++</a><a class="top" style="--c:#e8590c" href="t2.html">T2 · Clases y objetos</a><a class="top" style="--c:#862e9c" href="t3.html">T3 · Herencia y polimorfismo</a><a class="top" style="--c:#1864ab" href="t4.html">T4 · Hilos y exclusión mutua</a><a class="top" style="--c:#087f5b" href="t5.html">T5 · Monitores y variables condición</a><a class="top" style="--c:#a61e4d" href="t6.html">T6 · Planificación</a><a class="top" style="--c:#5f3dc4" href="t7.html">T7 · Coma flotante y casos reales</a><div class="grp">Práctica</div><a class="top" style="--c:#d9480f" href="practicas.html">Prácticas</a><a class="top" style="--c:#c92a2a" href="examenes.html">Exámenes resueltos</a><a class="top" style="--c:#e67700" href="hojas.html">Hojas de problemas</a><a class="top" style="--c:#6741d9" href="demos.html">Demostraciones</a><div class="grp">Repaso</div><a class="top" style="--c:#2f9e44" href="auto.html">Autoevaluación</a><div class="sub"><a href="auto.html#auto-test">Test con corrección</a><a href="auto.html#auto-tarjetas">Tarjetas de repaso</a></div><a class="top" style="--c:#e03131" href="simulacros.html">Simulacros</a><a class="top" style="--c:#1971c2" href="formularios.html">Formularios</a><a class="top" style="--c:#495057" href="glosario.html">Glosario</a><a class="top" style="--c:#0c8599" href="plan.html">Plan de estudio</a></nav><main><section class="sec" id="sec-auto" style="--c:#2f9e44"><h2 class="st">Autoevaluación</h2><h3 id="auto-test" data-s="1">Test con corrección</h3><p>Pulsa una opción: se corrige al momento y se explica por qué. <button id="qreset">Reiniciar</button> <b id="qscore"></b></p><div class="q" data-ok="2" id="q1"><b>1. ¿Qué es un sistema de tiempo real firme?</b><span class="o">El resultado tardío vale poco, pero se acepta</span><span class="o">El resultado tardío no sirve y se descarta, pero el sistema continúa</span><span class="o">Perder un plazo es catastrófico</span><span class="o">Ningún plazo es importante</span><div class="ex" style="display:none"><b>Explicación.</b> En el tiempo real firme un resultado fuera de plazo se descarta pero no hay catástrofe; en el duro sí la hay, y en el blando sirve con menos valor.</div></div><div class="q" data-ok="2" id="q2"><b>2. ¿Qué mide el jitter?</b><span class="o">La utilización de la CPU</span><span class="o">La variación del instante de activación respecto al ideal</span><span class="o">El tiempo de cómputo medio</span><span class="o">El número de hilos</span><div class="ex" style="display:none"><b>Explicación.</b> Es la variabilidad temporal de una tarea periódica.</div></div><div class="q" data-ok="2" id="q3"><b>3. Para verificar los plazos de un sistema de tiempo real duro hay que usar…</b><span class="o">El tiempo de cómputo medio</span><span class="o">El tiempo de cómputo del peor caso</span><span class="o">Un solo intento de prueba</span><span class="o">El tiempo de compilación</span><div class="ex" style="display:none"><b>Explicación.</b> Los plazos duros se garantizan con el peor caso (C), no con la media.</div></div><div class="q" data-ok="3" id="q4"><b>4. ¿Qué hace <code>m["x"]</code> en un <code>map&lt;string,int&gt;</code> si «x» no existe?</b><span class="o">Lanza una excepción</span><span class="o">Devuelve un valor sin crear nada</span><span class="o">Crea la entrada con valor 0</span><span class="o">Devuelve <code>end()</code></span><div class="ex" style="display:none"><b>Explicación.</b> <code>operator[]</code> inserta la clave con el valor por defecto. Para consultar sin modificar, usa <code>find</code> o <code>at</code>.</div></div><div class="q" data-ok="2" id="q5"><b>5. Tras <code>it = v.erase(it)</code>, ¿qué apunta <code>it</code>?</b><span class="o">Al elemento borrado</span><span class="o">Al siguiente elemento</span><span class="o">A <code>begin()</code></span><span class="o">Es inválido</span><div class="ex" style="display:none"><b>Explicación.</b> <code>erase</code> devuelve el iterador al elemento siguiente al borrado.</div></div><div class="q" data-ok="2" id="q6"><b>6. Un <code>vector</code> tiene size 8 y capacity 8. Haces <code>push_back</code>. Con factor 2, ¿qué capacity queda?</b><span class="o">9</span><span class="o">16</span><span class="o">10</span><span class="o">8</span><div class="ex" style="display:none"><b>Explicación.</b> Se reserva el doble (16), se copian los 8 elementos y se libera el bloque antiguo.</div></div><div class="q" data-ok="3" id="q7"><b>7. ¿Cómo se pasa un <code>string</code> grande a una función que solo lo lee?</b><span class="o"><code>string s</code></span><span class="o"><code>string&amp; s</code></span><span class="o"><code>const string&amp; s</code></span><span class="o"><code>string* s</code></span><div class="ex" style="display:none"><b>Explicación.</b> <code>const T&amp;</code> evita la copia y garantiza que no se modifica.</div></div><div class="q" data-ok="2" id="q8"><b>8. ¿Qué devuelve un <code>operator&lt;&lt;</code> bien escrito?</b><span class="o"><code>void</code></span><span class="o"><code>ostream&amp;</code></span><span class="o"><code>string</code></span><span class="o"><code>bool</code></span><div class="ex" style="display:none"><b>Explicación.</b> Devolviendo el mismo flujo se pueden encadenar varias salidas: <code>cout &lt;&lt; a &lt;&lt; b</code>.</div></div><div class="q" data-ok="2" id="q9"><b>9. Una clase tiene un <code>int*</code> obtenido con <code>new[]</code>. Sin escribir copia, <code>Buffer b = a;</code>…</b><span class="o">Copia el contenido</span><span class="o">Comparte el bloque y lo libera dos veces</span><span class="o">No compila</span><span class="o">Mueve el bloque</span><div class="ex" style="display:none"><b>Explicación.</b> La copia por defecto copia el puntero; ambos destructores hacen <code>delete[]</code> del mismo bloque.</div></div><div class="q" data-ok="2" id="q10"><b>10. ¿En qué orden se inicializan los atributos?</b><span class="o">En el de la lista de inicialización</span><span class="o">En el orden de declaración en la clase</span><span class="o">Alfabético</span><span class="o">En el que decida el compilador</span><div class="ex" style="display:none"><b>Explicación.</b> Siempre en el orden de declaración, aunque la lista los escriba en otro.</div></div><div class="q" data-ok="2" id="q11"><b>11. ¿Qué atributos NO necesitan gestión manual de copia (regla de 0)?</b><span class="o"><code>int*</code> con <code>new</code></span><span class="o"><code>string</code> y <code>vector</code></span><span class="o">Descriptores de fichero C</span><span class="o">Memoria con <code>malloc</code></span><div class="ex" style="display:none"><b>Explicación.</b> <code>string</code> y <code>vector</code> ya gestionan su memoria y su copia correctamente.</div></div><div class="q" data-ok="2" id="q12"><b>12. ¿Qué hace falta para que <code>p-&gt;area()</code> ejecute la versión de la clase derivada?</b><span class="o">Solo herencia</span><span class="o">Método <code>virtual</code> y llamada vía puntero o referencia a la base</span><span class="o">Que la clase sea <code>final</code></span><span class="o">Que <code>area</code> sea <code>static</code></span><div class="ex" style="display:none"><b>Explicación.</b> Sin <code>virtual</code>, o con copia por valor, el enlace es estático.</div></div><div class="q" data-ok="2" id="q13"><b>13. ¿Por qué la base de una jerarquía necesita destructor virtual?</b><span class="o">Para compilar</span><span class="o">Para destruir correctamente un objeto derivado a través de un puntero a la base</span><span class="o">Para evitar el slicing</span><span class="o">Para que sea abstracta</span><div class="ex" style="display:none"><b>Explicación.</b> Sin él, <code>delete p</code> solo llama al destructor de la base.</div></div><div class="q" data-ok="2" id="q14"><b>14. <code>vector&lt;C_Figura&gt; v; v.push_back(C_Circulo{"c",1});</code></b><span class="o">Mantiene el círculo completo</span><span class="o">Provoca slicing: solo queda la parte C_Figura (y no compila si es abstracta)</span><span class="o">Es la forma recomendada</span><span class="o">Llama a <code>to_string</code> del círculo</span><div class="ex" style="display:none"><b>Explicación.</b> Un contenedor de objetos base copia por valor y recorta. Usa punteros.</div></div><div class="q" data-ok="1" id="q15"><b>15. ¿Cuál de estas clases es abstracta?</b><span class="o"><code>class A { virtual void f() = 0; };</code></span><span class="o"><code>class A { virtual void f() {} };</code></span><span class="o"><code>class A { void f() {} };</code></span><span class="o"><code>class A {};</code></span><div class="ex" style="display:none"><b>Explicación.</b> <code>= 0</code> en un método virtual lo hace puro y la clase abstracta.</div></div><div class="q" data-ok="2" id="q16"><b>16. ¿Por qué <code>++x</code> desde dos hilos pierde incrementos?</b><span class="o">Porque <code>++</code> es lento</span><span class="o">Porque son tres pasos (leer, sumar, escribir) que se pueden intercalar</span><span class="o">Porque <code>x</code> es <code>int</code></span><span class="o">Porque el compilador lo optimiza mal siempre</span><div class="ex" style="display:none"><b>Explicación.</b> Si los dos leen el mismo valor antes de escribir, uno de los incrementos se pisa.</div></div><div class="q" data-ok="2" id="q17"><b>17. ¿Qué pasa si destruyes un <code>thread</code> sin hacer <code>join</code> ni <code>detach</code>?</b><span class="o">Nada</span><span class="o">Se llama a <code>std::terminate</code></span><span class="o">Se hace join solo</span><span class="o">Se libera la CPU</span><div class="ex" style="display:none"><b>Explicación.</b> El estándar obliga a unir o soltar antes de destruir.</div></div><div class="q" data-ok="2" id="q18"><b>18. ¿Qué evita el interbloqueo con dos mutex?</b><span class="o"><code>lock_guard</code> sobre cada uno por separado</span><span class="o"><code>scoped_lock lk{m1, m2};</code></span><span class="o"><code>sleep_for</code></span><span class="o"><code>detach</code></span><div class="ex" style="display:none"><b>Explicación.</b> Adquiere todos a la vez con un algoritmo seguro; cada <code>lock_guard</code> por separado no lo garantiza.</div></div><div class="q" data-ok="2" id="q19"><b>19. ¿Qué es mejor para una tarea periódica?</b><span class="o"><code>sleep_for(T)</code></span><span class="o"><code>sleep_until(siguiente); siguiente += T;</code></span><span class="o"><code>while</code> activo</span><span class="o"><code>detach</code></span><div class="ex" style="display:none"><b>Explicación.</b> <code>sleep_until</code> con instante absoluto evita la deriva acumulada.</div></div><div class="q" data-ok="2" id="q20"><b>20. ¿Por qué se usa un predicado en <code>cv.wait(lk, pred)</code>?</b><span class="o">Es más rápido</span><span class="o">Para tolerar despertares espurios y avisos adelantados</span><span class="o">Para evitar el mutex</span><span class="o">Es obligatorio por sintaxis</span><div class="ex" style="display:none"><b>Explicación.</b> <code>wait</code> recomprueba la condición al despertar, así que no dependes de que el aviso llegue justo a tiempo ni de que sea cierto.</div></div><div class="q" data-ok="2" id="q21"><b>21. ¿Qué tipo de bloqueo exige <code>condition_variable::wait</code>?</b><span class="o"><code>lock_guard</code></span><span class="o"><code>unique_lock</code></span><span class="o"><code>scoped_lock</code> de dos mutex</span><span class="o">Ninguno</span><div class="ex" style="display:none"><b>Explicación.</b> <code>wait</code> debe poder desbloquear y volver a bloquear el mutex.</div></div><div class="q" data-ok="2" id="q22"><b>22. Un hilo cambia <code>terminar_ = true</code> sin el mutex y llama a <code>notify_all</code>. ¿Qué riesgo hay?</b><span class="o">Ninguno</span><span class="o">Carrera con el predicado y aviso perdido</span><span class="o">Interbloqueo seguro</span><span class="o">El hilo se destruye</span><div class="ex" style="display:none"><b>Explicación.</b> La modificación debe hacerse con el mutex para que el predicado vea el valor y no se pierda el aviso.</div></div><div class="q" data-ok="2" id="q23"><b>23. ¿Qué hace <code>wait</code> mientras el hilo duerme?</b><span class="o">Mantiene el mutex bloqueado</span><span class="o">Libera el mutex</span><span class="o">Hace espera activa</span><span class="o">Cierra la variable</span><div class="ex" style="display:none"><b>Explicación.</b> Libera el mutex al dormir y lo vuelve a tomar al despertar.</div></div><div class="q" data-ok="2" id="q24"><b>24. En RM, ¿qué tarea tiene la mayor prioridad?</b><span class="o">La de mayor cómputo</span><span class="o">La de menor periodo</span><span class="o">La de mayor plazo</span><span class="o">La de mayor utilización</span><div class="ex" style="display:none"><b>Explicación.</b> Rate Monotonic: tasa más alta (periodo más pequeño), prioridad más alta.</div></div><div class="q" data-ok="2" id="q25"><b>25. Si \(U\) supera la cota de Liu y Layland, el sistema…</b><span class="o">No es planificable</span><span class="o">Puede serlo o no: hay que calcular el tiempo de respuesta</span><span class="o">Es planificable con EDF siempre</span><span class="o">Es de tiempo real blando</span><div class="ex" style="display:none"><b>Explicación.</b> La cota es solo condición suficiente.</div></div><div class="q" data-ok="2" id="q26"><b>26. Tareas (C,T): (1,4) y (2,6), D=T. ¿Cuál es \(R\) de la segunda con RM?</b><span class="o">2</span><span class="o">3</span><span class="o">4</span><span class="o">6</span><div class="ex" style="display:none"><b>Explicación.</b> R = 2 + ⌈R/4⌉·1: 2→3→3 (⌈3/4⌉=1).</div></div><div class="q" data-ok="1" id="q27"><b>27. Con ICPP, ¿cuántas veces se bloquea como máximo una tarea por activación?</b><span class="o">Una vez</span><span class="o">Tantas como recursos use</span><span class="o">Indefinidas</span><span class="o">Dos</span><div class="ex" style="display:none"><b>Explicación.</b> Como mucho una vez y una sección crítica; además, no hay interbloqueo.</div></div><div class="q" data-ok="2" id="q28"><b>28. ¿Por qué <code>0.1 + 0.2 == 0.3</code> es falso en <code>double</code>?</b><span class="o">Por un error del compilador</span><span class="o">Porque 0,1 y 0,2 no son exactos en binario y el error se acumula</span><span class="o">Porque <code>==</code> no funciona con <code>double</code></span><span class="o">Porque <code>0.3</code> es <code>float</code></span><div class="ex" style="display:none"><b>Explicación.</b> 0,1 y 0,2 se aproximan; la suma no coincide exactamente con la aproximación de 0,3.</div></div><div class="q" data-ok="2" id="q29"><b>29. El error del Patriot fue grande porque…</b><span class="o">El error por tic era enorme</span><span class="o">Un error pequeño se acumuló durante ~100 h</span><span class="o">El radar fallaba</span><span class="o">Usaba <code>float</code></span><div class="ex" style="display:none"><b>Explicación.</b> 3,6 millones de tics con 9,5·10⁻⁸ s de error dan 0,34 s.</div></div><div class="q" data-ok="1" id="q30"><b>30. En Pathfinder, ¿qué tarea expulsó a la que tenía el mutex y alargó el bloqueo de la tarea más prioritaria?</b><span class="o">Una tarea de prioridad media</span><span class="o">La de menor prioridad</span><span class="o">El watchdog</span><span class="o">El planificador cíclico</span><div class="ex" style="display:none"><b>Explicación.</b> Las tareas medias expulsan a la baja y la alta espera por ellas: inversión de prioridad.</div></div><div class="q" data-ok="2" id="q31"><b>31. ¿Cuál es la forma correcta de comparar dos <code>double</code>?</b><span class="o"><code>a == b</code></span><span class="o"><code>fabs(a-b) &lt; eps</code></span><span class="o"><code>a - b == 0</code></span><span class="o"><code>(int)a == (int)b</code></span><div class="ex" style="display:none"><b>Explicación.</b> Comparar con una tolerancia adecuada al problema.</div></div><div class="q" data-ok="2" id="q32"><b>32. En un ejecutivo cíclico con \(T_s=8\) y una tarea de periodo 12, ¿se cumple \(2T_s-\gcd(T_s,T_i)\le D_i\) con \(D_i=12\)?</b><span class="o">No, da 14</span><span class="o">Sí, da exactamente 12</span><span class="o">No, da 16</span><span class="o">Sí, da 4</span><div class="ex" style="display:none"><b>Explicación.</b> \(2\cdot8-\gcd(8,12)=16-4=12\le12\): se cumple con igualdad.</div></div><div class="q" data-ok="2" id="q33"><b>33. Un conjunto de 3 tareas con \(U=0{,}814\) y RM…</b><span class="o">No es planificable (supera la cota)</span><span class="o">Puede serlo: hay que calcular los tiempos de respuesta</span><span class="o">Es planificable seguro</span><span class="o">Solo lo es con EDF</span><div class="ex" style="display:none"><b>Explicación.</b> La cota 0,780 es suficiente, no necesaria: sobre ella el test no decide.</div></div><div class="q" data-ok="2" id="q34"><b>34. Con ICPP, el bloqueo \(B_i\) de una tarea es…</b><span class="o">La suma de todas las secciones críticas posibles</span><span class="o">El máximo de <b>una</b> sección crítica de menor prioridad con techo \(\ge P_i\)</span><span class="o">Siempre 0</span><span class="o">La duración de la sección crítica más larga de cualquier tarea</span><div class="ex" style="display:none"><b>Explicación.</b> ICPP garantiza bloqueo único y acotado por una sección.</div></div><div class="q" data-ok="2" id="q35"><b>35. ¿Por qué se usa <code>sleep_until</code> en una tarea periódica en vez de <code>sleep_for</code>?</b><span class="o">Porque consume menos CPU</span><span class="o">Para no acumular la deriva del tiempo de trabajo</span><span class="o">Porque <code>sleep_for</code> no existe en C++17</span><span class="o">Para que el hilo pueda ser interrumpido</span><div class="ex" style="display:none"><b>Explicación.</b> <code>sleep_for</code> suma el trabajo al periodo; <code>sleep_until</code> fija instantes absolutos.</div></div><div class="q" data-ok="2" id="q36"><b>36. En <code>vector&lt;unique_ptr&lt;Item&gt;&gt; v</code>, para añadir un elemento hay que…</b><span class="o"><code>v.push_back(p)</code> con una copia</span><span class="o"><code>v.push_back(move(p))</code></span><span class="o"><code>v.push_back(&amp;p)</code></span><span class="o"><code>v = p</code></span><div class="ex" style="display:none"><b>Explicación.</b> Un <code>unique_ptr</code> no se copia; se mueve.</div></div><div class="q" data-ok="2" id="q37"><b>37. Para borrar de un <code>vector</code> todos los elementos que cumplen una condición se usa…</b><span class="o"><code>v.remove_if(...)</code></span><span class="o"><code>v.erase(remove_if(v.begin(), v.end(), f), v.end())</code></span><span class="o"><code>delete v</code></span><span class="o"><code>v.clear()</code></span><div class="ex" style="display:none"><b>Explicación.</b> <code>remove_if</code> reordena; <code>erase</code> elimina la cola sobrante.</div></div><div class="q" data-ok="2" id="q38"><b>38. Un monitor tiene un <code>wait</code> con predicado que incluye `</b><span class="o"></span><span class="o">cerrado_`. ¿Qué hay que hacer al cerrar?</span><span class="o"><code>notify_one</code></span><span class="o"><code>notify_all</code> bajo/tras tomar el <code>mutex</code></span><span class="o">Nada, el hilo se despierta solo</span><span class="o"><code>terminate</code></span><div class="ex" style="display:none"><b>Explicación.</b> Todos los hilos que esperan deben comprobar la nueva condición.</div></div><div class="q" data-ok="2" id="q39"><b>39. ¿Qué hace <code>in.clear(); in.ignore(numeric_limits&lt;streamsize&gt;::max(), '\n');</code> tras una lectura fallida?</b><span class="o">Borra el fichero</span><span class="o">Limpia el estado de error y descarta el resto de la línea</span><span class="o">Cierra el flujo</span><span class="o">Reinicia el programa</span><div class="ex" style="display:none"><b>Explicación.</b> Sin <code>clear()</code> las lecturas siguientes seguirían fallando.</div></div><div class="q" data-ok="2" id="q40"><b>40. Con una criba de Eratóstenes, ¿por qué el bucle interior empieza en <code>i*i</code>?</b><span class="o">Por rendimiento solo</span><span class="o">Los múltiplos menores ya los marcó un primo más pequeño</span><span class="o">Para evitar el desbordamiento</span><span class="o">Porque 1 no es primo</span><div class="ex" style="display:none"><b>Explicación.</b> \(k\cdot i\) con \(k&lt;i\) tiene un factor primo menor que \(i\).</div></div><div class="q" data-ok="2" id="q41"><b>41. En un <code>vector</code> que duplica su capacidad, <code>push_back</code> es…</b><span class="o">\(O(n)\) siempre</span><span class="o">\(O(1)\) amortizado</span><span class="o">\(O(\log n)\)</span><span class="o">\(O(n^2)\)</span><div class="ex" style="display:none"><b>Explicación.</b> Las copias suman menos de \(2n\) en \(n\) inserciones.</div></div><h3 id="auto-tarjetas" data-s="1">Tarjetas de repaso</h3><div class="card3d" id="card"></div><div style="margin-top:8px;display:flex;gap:8px;align-items:center"><button id="cprev">←</button><button id="cnext">→</button><button id="cshuf">Barajar</button><span id="cn"></span></div><script>window.CARDS=[["¿Cuánto vale el ejercicio de concurrencia en los exámenes recientes?", "El 30 % de la nota del examen (POO el 70 %)."], ["¿Qué pasa si el programa no compila (examen 2026)?", "La puntuación se divide por 2."], ["¿Cuánto dura el examen reciente?", "2 h 30 min."], ["Tiempo real duro vs firme vs blando", "Duro: fallo catastrófico. Firme: resultado tardío inútil. Blando: resultado tardío con menos valor."], ["¿Qué es C, T y D?", "C = cómputo en peor caso, T = periodo, D = plazo relativo."], ["¿Qué devuelve `v.end()`?", "Un iterador a una posición después del último elemento (no se puede desreferenciar)."], ["Diferencia entre `find` y `[]` en un map", "`find` no modifica el mapa; `[]` crea la entrada si no existe."], ["¿Cuándo se invalidan iteradores de un vector?", "Tras `push_back` con realocación y tras `erase` (el iterador borrado y los posteriores)."], ["¿Para qué sirve `const` al final de un método?", "Garantiza que no modifica el objeto y permite llamarlo sobre objetos `const`."], ["¿Qué es copy-and-swap?", "Asignar copiando a un temporal e intercambiando sus datos con los del objeto; seguro ante excepciones y autoasignación."], ["¿Qué es la vtable?", "Tabla de punteros a métodos virtuales por clase; cada objeto polimórfico apunta a la de su clase real."], ["¿Qué es slicing?", "Copiar un objeto derivado a una variable base por valor: se pierde la parte derivada y el polimorfismo."], ["¿Para qué sirve `override`?", "Para que el compilador verifique que realmente redefines un virtual de la base."], ["¿Cómo pasas una variable por referencia a `thread`?", "Con `std::ref(var)`; si no, se copia."], ["Cuatro condiciones del interbloqueo", "Exclusión mutua, retener y esperar, no expulsión, espera circular."], ["¿`lock_guard` o `scoped_lock`?", "`lock_guard` para un mutex; `scoped_lock` para varios a la vez."], ["Patrón de espera", "`unique_lock lk{m}; cv.wait(lk, [&]{ return cond; });`"], ["Patrón de aviso", "Cambiar el estado con el mutex, soltar y `cv.notify_one()` / `notify_all()`."], ["¿Cuándo `notify_all` en lugar de `notify_one`?", "Cuando varios hilos con predicados distintos comparten la variable o puede quedar más de uno listo."], ["Recurrencia del tiempo de respuesta", "R = C + B + Σ ⌈R/Tj⌉·Cj sobre las tareas más prioritarias; iterar hasta punto fijo."], ["Bloqueo con ICPP", "B_i = máx. sección crítica de tareas de menor prioridad sobre recursos con techo ≥ P_i."], ["Condición del ciclo secundario", "Ts divide a Tm, Ts ≥ máx C, 2Ts − mcd(Ts,Ti) ≤ Di."], ["¿Por qué 0,1 no es exacto en binario?", "Es una fracción periódica infinita en base 2; solo cabe una aproximación."], ["¿Qué falló en Mars Pathfinder?", "Inversión de prioridad con un mutex sin herencia de prioridad; el watchdog reinició el sistema. Se arregló activando la herencia."], ["Fórmula del tiempo de respuesta con bloqueo", "$R_i=C_i+B_i+\\sum_{j\\in hp(i)}\\lceil R_i/T_j\\rceil C_j$, iterando desde $R^{(0)}=C_i+B_i$ hasta que no cambie o supere $D_i$."], ["Restricciones de marco en el ejecutivo cíclico", "$T_s\\ge\\max C_i$; $T_s\\mid H$; $2T_s-\\gcd(T_s,T_i)\\le D_i$ para toda tarea."], ["Cota de Liu–Layland", "$U\\le n(2^{1/n}-1)$ (suficiente, no necesaria); tiende a $\\ln2\\approx0{,}693$. Con periodos armónicos, $U\\le1$."], ["¿Cuándo es planificable con EDF?", "Con $D_i=T_i$, apropiativo y un procesador: si y solo si $U\\le1$."], ["¿Qué garantiza ICPP?", "Bloqueo único y acotado por una sección crítica, y ausencia de interbloqueos."], ["`sleep_for` frente a `sleep_until`", "`sleep_for` acumula deriva; `sleep_until` con instante teórico + periodo, no."], ["copy-and-swap", "`operator=(T o) { swap(*this, o); return *this; }`: copia por valor, intercambio, y el destructor limpia lo viejo."]];</script></section><div class="pager"><a class="btn" href="demos.html">← Demostraciones</a><a class="btn" href="simulacros.html">Simulacros →</a></div><footer>Guía de Programación de Sistemas en Tiempo Real · Última actualización: 2026-11-08</footer></main></div>
+<script>/* Lógica pura de los simuladores (se prueba con Node contra los scripts de Python). */
+(function (root) {
+  const P = {};
+  P.gcd = (a, b) => (b ? P.gcd(b, a % b) : a);
+  P.lcm = (a, b) => (a / P.gcd(a, b)) * b;
+  P.hyper = (ts) => ts.reduce((a, t) => P.lcm(a, t.T), 1);
+  P.llBound = (n) => n * (Math.pow(2, 1 / n) - 1);
+  P.util = (ts) => ts.reduce((a, t) => a + t.C / t.T, 0);
+
+  // Orden de prioridades: devuelve índices de mayor a menor prioridad
+  P.order = (ts, policy) => {
+    const idx = ts.map((_, i) => i);
+    const key = policy === 'RM' ? (t) => [t.T, 0] : (t) => [t.D, t.T];
+    return idx.sort((a, b) => { const ka = key(ts[a]), kb = key(ts[b]); return ka[0] - kb[0] || ka[1] - kb[1] || a - b; });
+  };
+
+  // Tiempo de respuesta con bloqueo B (prioridades fijas expulsivas)
+  P.rta = (ts, policy) => {
+    const ord = P.order(ts, policy), res = new Array(ts.length);
+    ord.forEach((i, pos) => {
+      const hp = ord.slice(0, pos), t = ts[i], B = t.B || 0;
+      let r = t.C + B; const hist = [r];
+      for (let k = 0; k < 200; k++) {
+        const nr = t.C + B + hp.reduce((s, j) => s + Math.ceil(r / ts[j].T) * ts[j].C, 0);
+        hist.push(nr);
+        if (nr === r || nr > t.D) { r = nr; break; }
+        r = nr;
+      }
+      res[i] = { R: r, ok: r <= t.D, hist };
+    });
+    return { order: ord, res };
+  };
+
+  // Simulación expulsiva a paso 1. policy RM | DM | EDF
+  P.simulate = (ts, policy, horizon) => {
+    const H = horizon || P.hyper(ts);
+    const rem = ts.map(() => 0), rel = ts.map(() => 0), dl = ts.map(() => 0);
+    const tl = [], misses = [], resp = ts.map(() => 0);
+    const ord = policy === 'EDF' ? null : P.order(ts, policy);
+    const rank = ord ? ord.reduce((o, i, p) => { o[i] = p; return o; }, {}) : null;
+    for (let t = 0; t < H; t++) {
+      ts.forEach((tk, i) => {
+        if (t % tk.T === 0) {
+          if (rem[i] > 0) misses.push([i, dl[i]]);
+          rem[i] = tk.C; rel[i] = t; dl[i] = t + tk.D;
+        }
+      });
+      let run = -1;
+      ts.forEach((tk, i) => {
+        if (rem[i] <= 0) return;
+        if (run < 0) { run = i; return; }
+        const better = ord ? rank[i] < rank[run] : (dl[i] < dl[run] || (dl[i] === dl[run] && i < run));
+        if (better) run = i;
+      });
+      tl.push(run);
+      if (run >= 0) { rem[run]--; if (rem[run] === 0) resp[run] = Math.max(resp[run], t + 1 - rel[run]); }
+    }
+    ts.forEach((tk, i) => { if (rem[i] > 0) misses.push([i, dl[i]]); });
+    return { tl, misses, resp };
+  };
+
+  // Ejecutivo cíclico: tamaños de ciclo secundario válidos
+  P.frames = (ts) => {
+    const Tm = P.hyper(ts), maxC = Math.max(...ts.map((t) => t.C)), out = [];
+    const divs = [];
+    for (let d = 1; d * d <= Tm; d++) if (Tm % d === 0) { divs.push(d); if (d * d !== Tm) divs.push(Tm / d); }
+    divs.sort((a, b) => a - b);
+    for (const Ts of divs) {
+      if (Ts < maxC) continue;
+      const checks = ts.map((t) => ({ T: t.T, v: 2 * Ts - P.gcd(Ts, t.T), D: t.D, ok: 2 * Ts - P.gcd(Ts, t.T) <= t.D }));
+      out.push({ Ts, ok: checks.every((c) => c.ok), checks });
+    }
+    return { Tm, maxC, frames: out };
+  };
+
+  // std::vector: crecimiento por push_back
+  P.vecGrow = (n, factor, reserve) => {
+    let cap = reserve || 0, size = 0, copies = 0, reallocs = 0; const steps = [];
+    for (let i = 1; i <= n; i++) {
+      let moved = false;
+      if (size === cap) {
+        const ncap = cap === 0 ? 1 : Math.max(cap + 1, Math.floor(cap * factor));
+        copies += size; reallocs++; cap = ncap; moved = true;
+      }
+      size++; steps.push({ size, cap, moved });
+    }
+    return { steps, copies, reallocs };
+  };
+
+  // Aritmética: error de truncar 0,1 a 23 bits y deriva del reloj (error de misil Patriot)
+  P.patriot = (hours) => {
+    const trunc = Math.floor(0.1 * Math.pow(2, 23)) / Math.pow(2, 23);
+    const e = 0.1 - trunc, ticks = hours * 3600 * 10, drift = ticks * e;
+    return { trunc, e, ticks, drift, dist: drift * 1676 };
+  };
+  P.bits = (x, n) => { let s = '', f = x; for (let i = 0; i < n; i++) { f *= 2; if (f >= 1) { s += '1'; f -= 1; } else s += '0'; } return s; };
+
+  // Intercalado x += 2 con 2 hilos; mutex opcional. Devuelve resultado final de una ejecución aleatoria
+  P.raceRandom = (useMutex, rnd) => {
+    const th = [0, 1].map(() => ({ pc: 0, R: 0 })); let x = 0, owner = -1;
+    const prog = useMutex ? ['LOCK', 'LOAD', 'ADD', 'STORE', 'UNLOCK'] : ['LOAD', 'ADD', 'STORE'];
+    while (th.some((t) => t.pc < prog.length)) {
+      const cand = [0, 1].filter((i) => th[i].pc < prog.length && !(prog[th[i].pc] === 'LOCK' && owner >= 0));
+      const i = cand[Math.floor(rnd() * cand.length)], ins = prog[th[i].pc];
+      if (ins === 'LOCK') owner = i; else if (ins === 'UNLOCK') owner = -1;
+      else if (ins === 'LOAD') th[i].R = x; else if (ins === 'ADD') th[i].R += 2; else if (ins === 'STORE') x = th[i].R;
+      th[i].pc++;
+    }
+    return x;
+  };
+
+  // Laboratorio: histograma de palabras (práctica 1)
+  P.words = (txt) => {
+    const w = txt.toLowerCase().split(/[^a-záéíóúüñ]+/i).filter(Boolean), m = {};
+    w.forEach((x) => { m[x] = (m[x] || 0) + 1; });
+    return Object.entries(m).sort((a, b) => b[1] - a[1] || (a[0] < b[0] ? -1 : 1));
+  };
+  // Filósofos: cada filósofo i necesita los k cubiertos i, i+1,...,i+k-1 (mod n+1)
+  P.philosophers = (n, mode, rounds, rnd) => {
+    const forks = n + 1, k = 3, held = new Array(forks).fill(-1), log = [];
+    const need = (i) => [...Array(k).keys()].map((j) => (i + j) % forks);
+    const st = [...Array(n)].map(() => ({ got: 0, eaten: 0 }));
+    let stuck = 0;
+    for (let step = 0; step < 4000 && st.some((s) => s.eaten < rounds); step++) {
+      const i = Math.floor(rnd() * n), s = st[i]; if (s.eaten >= rounds) continue;
+      const f = need(i);
+      if (mode === 'lock') {               // std::lock: todo o nada
+        if (f.every((c) => held[c] < 0)) { f.forEach((c) => (held[c] = i)); log.push(i + ' come'); f.forEach((c) => (held[c] = -1)); s.eaten++; stuck = 0; }
+      } else {                              // lock() individuales en orden, con interrupciones entre medias
+        if (s.got < k) { const c = f[s.got]; if (held[c] < 0) { held[c] = i; s.got++; stuck = 0; } }
+        else { log.push(i + ' come'); f.forEach((c) => (held[c] = -1)); s.got = 0; s.eaten++; stuck = 0; }
+      }
+      stuck++;
+      if (stuck > 400) return { deadlock: true, eaten: st.map((s) => s.eaten), held: held.slice(), log };
+    }
+    return { deadlock: false, eaten: st.map((s) => s.eaten), held: held.slice(), log };
+  };
+  // Reparto de filas por hilo (suma de matrices): fila inicial = id, incremento = n hilos
+  P.rows = (tam, nh) => [...Array(nh).keys()].map((id) => { const r = []; for (let f = id; f < tam; f += nh) r.push(f); return r; });
+
+
+  // Inversión de prioridad: tres tareas (L baja, M media, H alta) y un mutex. proto: none | pip | icpp
+  P.INV = [
+    { n: 'L', prio: 1, rel: 0, steps: [['run', 1], ['lock'], ['run', 3], ['unlock'], ['run', 1]] },
+    { n: 'M', prio: 2, rel: 2, steps: [['run', 4]] },
+    { n: 'H', prio: 3, rel: 3, steps: [['run', 1], ['lock'], ['run', 2], ['unlock'], ['run', 1]] }];
+  P.inversion = (proto, jobsIn) => {
+    const J = (jobsIn || P.INV).map((j) => ({ n: j.n, prio: j.prio, rel: j.rel, st: j.steps.map((x) => x.slice()), k: 0, fin: -1 }));
+    const ceil = Math.max(...J.map((j) => j.prio)); let owner = -1; const tl = [], act = [];
+    const active = (i) => {
+      const j = J[i]; let a = j.prio;
+      if (owner === i) {
+        if (proto === 'icpp') a = Math.max(a, ceil);
+        if (proto === 'pip') J.forEach((b, bi) => { if (bi !== i && b.fin < 0 && b.rel <= tl.length && b.st[b.k] && b.st[b.k][0] === 'lock') a = Math.max(a, b.prio); });
+      }
+      return a;
+    };
+    const zero = (i) => {
+      const j = J[i];
+      while (j.k < j.st.length && j.st[j.k][0] !== 'run') {
+        if (j.st[j.k][0] === 'lock') { if (owner < 0) owner = i; else if (owner !== i) return; }
+        else if (owner === i) owner = -1;
+        j.k++;
+      }
+    };
+    for (let t = 0; t < 60 && J.some((j) => j.fin < 0); t++) {
+      const rel = J.map((j, i) => i).filter((i) => J[i].rel <= t && J[i].fin < 0);
+      rel.sort((a, b) => active(b) - active(a)); rel.forEach(zero);
+      J.forEach((j, i) => { if (j.fin < 0 && j.rel <= t && j.k >= j.st.length) j.fin = t; });
+      const ready = rel.filter((i) => J[i].fin < 0 && J[i].st[J[i].k][0] === 'run').sort((a, b) => active(b) - active(a));
+      const run = ready.length ? ready[0] : -1;
+      tl.push(run); act.push(run >= 0 ? active(run) : 0);
+      if (run >= 0) { const j = J[run]; j.st[j.k][1]--; if (j.st[j.k][1] === 0) { j.k++; zero(run); if (j.k >= j.st.length) j.fin = t + 1; } }
+    }
+    return { tl, act, fin: J.map((j) => j.fin), names: J.map((j) => j.n), owner };
+  };
+
+  // Práctica 3.4: un generador y n lectores; nadie se adelanta (cada lector lee cada valor una vez)
+  P.almacen = (nLect, nVal, seed) => {
+    const r = P.mulberry(seed), trace = [], reads = Array.from({ length: nLect }, () => []);
+    let valor = -1, escritos = 0; const leido = new Array(nLect).fill(true);
+    for (;;) {
+      const op = [];
+      if (escritos < nVal && leido.every(Boolean)) op.push(-1);
+      for (let i = 0; i < nLect; i++) if (valor >= 0 && !leido[i]) op.push(i);
+      if (!op.length) break;
+      const a = op[Math.floor(r() * op.length)];
+      if (a < 0) { valor = escritos++; leido.fill(false); trace.push({ who: 'G', v: valor, text: 'Generador escribe ' + valor }); }
+      else { leido[a] = true; reads[a].push(valor); trace.push({ who: a, v: valor, text: 'Lector ' + a + ' lee ' + valor }); }
+    }
+    return { trace, reads, ok: reads.every((l) => l.length === nVal && l.every((v, k) => v === k)) };
+  };
+  P.mulberry = (a) => () => { a |= 0; a = (a + 0x6d2b79f5) | 0; let t = Math.imul(a ^ (a >>> 15), 1 | a); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
+  root.PSTR = P;
+})(typeof window !== 'undefined' ? window : module.exports);
+</script><script>(function(){
+const P=window.PSTR,S=window.PSTR_SIMS=window.PSTR_SIMS||{};
+const NS='http://www.w3.org/2000/svg';
+function h(tag,props,...kids){const e=document.createElement(tag);for(const k in(props||{})){if(k==='on')for(const ev in props.on)e.addEventListener(ev,props.on[ev]);else if(k==='html')e.innerHTML=props[k];else if(k in e&&k!=='list')try{e[k]=props[k]}catch(_){e.setAttribute(k,props[k])}else e.setAttribute(k,props[k])}
+ kids.flat().forEach(c=>{if(c!=null)e.append(c.nodeType?c:document.createTextNode(c))});return e}
+const COL=['#2456d6','#d9480f','#2b8a3e','#a61e4d','#862e9c','#0b7285'];
+function gantt(tl,labels,o){o=o||{};const n=tl.length,cw=Math.max(10,Math.min(26,Math.floor(720/Math.max(n,1)))),rh=24,L=50,W=L+n*cw+10,Hh=labels.length*rh+30;
+ let s=`<svg xmlns="${NS}" viewBox="0 0 ${W} ${Hh}" width="${W}" role="img" aria-label="Diagrama de Gantt">`;
+ labels.forEach((l,i)=>{s+=`<text x="4" y="${i*rh+17}" font-size="13" fill="currentColor">${l}</text><line x1="${L}" x2="${W-10}" y1="${i*rh+22}" y2="${i*rh+22}" stroke="currentColor" opacity=".2"/>`});
+ tl.forEach((r,t)=>{if(r>=0)s+=`<rect x="${L+t*cw}" y="${r*rh+3}" width="${cw-1}" height="${rh-8}" fill="${COL[r%COL.length]}" rx="2"><title>t=${t}</title></rect>`});
+ (o.marks||[]).forEach(m=>{s+=`<text x="${L+m[1]*cw}" y="${m[0]*rh+14}" font-size="14" fill="#c92a2a" font-weight="700">✗</text>`});
+ const step=n>60?10:(n>30?5:1);for(let t=0;t<=n;t+=step)s+=`<text x="${L+t*cw}" y="${labels.length*rh+16}" font-size="10" text-anchor="middle" fill="currentColor">${t}</text>`;
+ return s+'</svg>'}
+function box(root,title){root.innerHTML='';root.append(h('div',{className:'stt'},title));return root}
+function num(v,min,max,w,cb){return h('input',{type:'number',value:v,min,max,on:{input:cb}})}
+function fmt(x,d){return Number(x).toFixed(d==null?2:d).replace('.',',')}
+function reg(root,load){const id=root.id.replace(/^sim-/,'');S[id]={load}}
+
+// ---------- planificación ----------
+const PRE={feb17:[[4,60,20,2],[4,10,10,1],[8,50,50,0]],jun16:[[4,100,15,2],[4,10,10,2],[8,50,50,0],[6,40,25,2]],sep16:[[12,120,120,0],[8,500,25,3],[10,20,20,3]],burns:[[3,7,7,0],[3,12,12,0],[5,20,20,0]],ej1:[[1,4,4,0],[2,6,6,0],[3,12,12,0]],fallo:[[2,4,4,0],[3,6,6,0],[3,12,12,0]]};
+function rta(root,arg){box(root,'Simulador de planificación: RM / DM / EDF y tiempo de respuesta');
+ let rows=(PRE[arg]||PRE.burns).map(r=>r.slice());
+ const tb=h('table'),out=h('div'),pol=h('select',{on:{change:run}},h('option',{value:'RM'},'RM (periodo)'),h('option',{value:'DM'},'DM (plazo)'),h('option',{value:'EDF'},'EDF'));
+ function draw(){tb.innerHTML='<tr><th>Tarea</th><th>C</th><th>T</th><th>D</th><th>B</th><th></th></tr>';rows.forEach((r,i)=>{const tr=h('tr',null,h('td',null,'τ'+(i+1)));[0,1,2,3].forEach(j=>tr.append(h('td',null,num(r[j],0,999,0,e=>{r[j]=+e.target.value;run()}))));tr.append(h('td',null,h('button',{on:{click:()=>{rows.splice(i,1);draw();run()}}},'×')));tb.append(tr)})}
+ function run(){const ts=rows.map(r=>({C:r[0],T:r[1],D:r[2]||r[1],B:r[3]}));if(!ts.length){out.textContent='';return}
+  const u=P.util(ts),n=ts.length,lb=P.llBound(n),H=P.hyper(ts),p=pol.value;let html=`<p>Utilización U = <b>${fmt(u,3)}</b> · cota de Liu–Layland (n=${n}) = <b>${fmt(lb,3)}</b> · hiperperiodo = <b>${H}</b>. `;
+  html+=p==='EDF'?(u<=1?'EDF: U ≤ 1, planificable (si D = T).':'U &gt; 1: no planificable.'):(u<=lb?'U ≤ cota: planificable por la condición suficiente.':'U &gt; cota: la condición suficiente no concluye; usa el tiempo de respuesta.')+'</p>';
+  if(p!=='EDF'){const r=P.rta(ts,p);html+='<div class="tw"><table><tr><th>Tarea</th><th>Prioridad</th><th>Iteraciones de R</th><th>R</th><th>D</th><th>¿Cumple?</th></tr>';ts.forEach((t,i)=>{const x=r.res[i];html+=`<tr><td>τ${i+1}</td><td>${r.order.length-r.order.indexOf(i)}</td><td>${x.hist.join(' → ')}</td><td>${x.R}</td><td>${t.D}</td><td>${x.ok?'✔':'✘'}</td></tr>`});html+='</table></div>'}
+  const hh=Math.min(H,120),sim=P.simulate(ts,p,hh);html+=`<p>Cronograma (primeros ${hh} instantes, sin bloqueos). ${sim.misses.length?'<b style="color:#c92a2a">Hay plazos incumplidos (✗).</b>':'Ningún plazo incumplido.'}</p>`+gantt(sim.tl,ts.map((_,i)=>'τ'+(i+1)),{marks:sim.misses.map(m=>[m[0],m[1]-1])});
+  out.innerHTML=html}
+ root.append(h('div',{className:'row'},h('label',null,'Política: ',pol),h('button',{on:{click:()=>{rows.push([1,10,10,0]);draw();run()}}},'+ tarea'),h('small',null,'C = cómputo, T = periodo, D = plazo, B = bloqueo máximo')),h('div',{className:'tw'},tb),out);
+ draw();run();root.__load=a=>{rows=(PRE[a]||PRE.burns).map(r=>r.slice());draw();run()};reg(root,root.__load)}
+// ---------- ejecutivo cíclico ----------
+function frames(root,arg){box(root,'Ejecutivo cíclico: tamaño del ciclo secundario');let rows=[[40,10,40],[80,8,80],[120,12,120]];
+ const tb=h('table'),out=h('div');
+ function draw(){tb.innerHTML='<tr><th>Tarea</th><th>T</th><th>C</th><th>D</th><th></th></tr>';rows.forEach((r,i)=>{const tr=h('tr',null,h('td',null,'τ'+(i+1)));[0,1,2].forEach(j=>tr.append(h('td',null,num(r[j],1,999,0,e=>{r[j]=+e.target.value;run()}))));tr.append(h('td',null,h('button',{on:{click:()=>{rows.splice(i,1);draw();run()}}},'×')));tb.append(tr)})}
+ function run(){if(!rows.length)return;const f=P.frames(rows.map(r=>({T:r[0],C:r[1],D:r[2]})));let html=`<p>Ciclo principal Tm = mcm(T) = <b>${f.Tm}</b>. Cómputo máximo = <b>${f.maxC}</b>. El ciclo secundario Ts debe cumplir: Ts ≥ ${f.maxC}, Ts divide a Tm y 2·Ts − mcd(Ts, Tᵢ) ≤ Dᵢ para toda tarea.</p><div class="tw"><table><tr><th>Ts</th>`+rows.map((_,i)=>`<th>2Ts−mcd (τ${i+1})</th>`).join('')+'<th>¿Válido?</th></tr>';f.frames.forEach(x=>{html+=`<tr><td>${x.Ts}</td>`+x.checks.map(c=>`<td>${c.v} ${c.ok?'≤':'&gt;'} ${c.D}</td>`).join('')+`<td>${x.ok?'✔':'✘'}</td></tr>`});out.innerHTML=html+'</table></div>'}
+ root.append(h('div',{className:'tw'},tb),h('button',{on:{click:()=>{rows.push([100,5,100]);draw();run()}}},'+ tarea'),out);draw();run();reg(root,()=>{})}
+// ---------- carrera ----------
+function race(root){box(root,'Condición de carrera: dos hilos hacen x += 2 (x empieza en 0)');
+ const n=h('input',{type:'range',min:10,max:2000,value:500}),m=h('input',{type:'checkbox'}),out=h('div'),lab=h('span',null,'500 ejecuciones');
+ function run(){lab.textContent=n.value+' ejecuciones';const r=P.mulberry(Date.now()%100000),c={};for(let i=0;i<+n.value;i++){const x=P.raceRandom(m.checked,r);c[x]=(c[x]||0)+1}
+  const ks=Object.keys(c).sort(),mx=Math.max(...Object.values(c));let s=`<svg xmlns="${NS}" viewBox="0 0 300 120" width="300">`;ks.forEach((k,i)=>{const hh=100*c[k]/mx;s+=`<rect class="bar" x="${30+i*90}" y="${105-hh}" width="60" height="${hh}"/><text x="${60+i*90}" y="118" text-anchor="middle" font-size="12" fill="currentColor">x=${k}</text><text x="${60+i*90}" y="${100-hh}" text-anchor="middle" font-size="12" fill="currentColor">${c[k]}</text>`});
+  out.innerHTML=s+'</svg><p>'+(ks.length>1||ks[0]!=='4'?'Aparece <b>x = 2</b>: se pierde una actualización (los dos hilos leyeron 0).':'Con mutex solo sale <b>x = 4</b> en todas las ejecuciones.')+'</p>'}
+ root.append(h('div',{className:'row'},h('label',null,'Ejecuciones: ',n),lab,h('label',null,h('input',{type:'checkbox',id:'m'+Math.random(),on:{change:run}}),' con mutex')),out);
+ root.querySelector('input[type=checkbox]').onchange=e=>{m.checked=e.target.checked;run()};n.oninput=run;root.append(h('button',{on:{click:run}},'Repetir'));run();reg(root,()=>{})}
+// ---------- vector ----------
+function vec(root){box(root,'std::vector: capacidad y copias con push_back');const n=h('input',{type:'range',min:1,max:64,value:20}),f=h('select',null,h('option',{value:'2'},'factor 2 (GCC)'),h('option',{value:'1.5'},'factor 1,5 (MSVC)')),r=h('input',{type:'number',value:0,min:0,max:64}),out=h('div');
+ function run(){const x=P.vecGrow(+n.value,+f.value,+r.value),mx=Math.max(...x.steps.map(s=>s.cap)),w=Math.max(6,Math.floor(560/x.steps.length));let s=`<svg xmlns="${NS}" viewBox="0 0 ${w*x.steps.length+20} 130" width="${w*x.steps.length+20}">`;x.steps.forEach((t,i)=>{const hc=110*t.cap/mx,hs=110*t.size/mx;s+=`<rect x="${10+i*w}" y="${120-hc}" width="${w-1}" height="${hc}" fill="none" stroke="currentColor" opacity=".5"/><rect x="${10+i*w}" y="${120-hs}" width="${w-1}" height="${hs}" class="bar" ${t.moved?'style="fill:#d9480f"':''}/>`});
+  out.innerHTML=s+`</svg><p>size final = <b>${n.value}</b>, capacity final = <b>${x.steps[x.steps.length-1].cap}</b>, realocaciones = <b>${x.reallocs}</b> (barras naranjas), elementos copiados = <b>${x.copies}</b>. Con <code>reserve(${n.value})</code> serían 1 realocación y 0 copias.</p>`}
+ root.append(h('div',{className:'row'},h('label',null,'push_back ×',n),h('label',null,'crecimiento ',f),h('label',null,'reserve inicial ',r)),out);[n,f,r].forEach(e=>e.addEventListener('input',run));run();reg(root,()=>{})}
+// ---------- Patriot ----------
+function patriot(root){box(root,'Error de coma flotante: el reloj del Patriot');const hr=h('input',{type:'range',min:0,max:120,value:100}),out=h('div');
+ function run(){const p=P.patriot(+hr.value);out.innerHTML=`<p>0,1 s en binario: <code>${P.bits(0.1,40)}…</code> (infinito periódico). Truncado a 23 bits tras la coma: error por tic = <b>${p.e.toExponential(3).replace('.',',')}</b> s.</p><p>Tras <b>${hr.value} h</b> hay ${p.ticks.toLocaleString('es-ES')} tics → deriva = <b>${fmt(p.drift,4)} s</b> → un Scud a 1676 m/s se «desplaza» <b>${fmt(p.dist,0)} m</b> respecto a donde el sistema lo busca.</p>`}
+ root.append(h('div',{className:'row'},h('label',null,'Horas encendido: ',hr),h('span',null,'')),out);hr.oninput=run;run();reg(root,()=>{})}
+// ---------- inversión ----------
+function inv(root){box(root,'Inversión de prioridad: L (baja), M (media), H (alta) y un mutex');const sel=h('select',null,h('option',{value:'none'},'sin protocolo'),h('option',{value:'pip'},'herencia de prioridad'),h('option',{value:'icpp'},'techo de prioridad inmediato')),out=h('div');
+ function run(){const r=P.inversion(sel.value);out.innerHTML=gantt(r.tl,['L','M','H'])+`<p>H termina en <b>t = ${r.fin[2]}</b> (llega en t = 3). Tiempo de respuesta de H = <b>${r.fin[2]-3}</b>; su cómputo propio es 4, luego pierde <b>${r.fin[2]-3-4}</b> unidades esperando.</p><p>L: 1 + sección crítica de 3 + 1. M llega en 2 y dura 4. H llega en 3: 1 + sección crítica de 2 + 1.</p>`}
+ root.append(h('div',{className:'row'},h('label',null,'Protocolo: ',sel)),out);sel.onchange=run;run();reg(root,a=>{if(a){sel.value=a;run()}})}
+// ---------- filósofos ----------
+function philo(root){box(root,'Cena de los filósofos (3 cubiertos por filósofo, n+1 cubiertos)');const n=h('input',{type:'number',min:3,max:8,value:3}),md=h('select',null,h('option',{value:'seq'},'lock() de cada mutex uno a uno'),h('option',{value:'lock'},'std::lock / scoped_lock (todos a la vez)')),seed=h('input',{type:'number',value:1}),ro=h('input',{type:'number',value:20,min:1,max:200}),out=h('div');
+ function run(){const r=P.philosophers(+n.value,md.value,+ro.value,P.mulberry(+seed.value));out.innerHTML=r.deadlock?`<p><b style="color:#c92a2a">INTERBLOQUEO.</b> Comidas por filósofo: ${r.eaten.join(', ')}. Cubiertos tomados por: ${r.held.map((x,i)=>`C${i+1}:${x<0?'libre':'F'+(x+1)}`).join(' · ')}</p>`:`<p><b style="color:#2b8a3e">Terminan todos.</b> Comidas por filósofo: ${r.eaten.join(', ')}.</p>`;
+  let t=0;if(md.value==='seq'){let d=0;for(let s=1;s<=50;s++)if(P.philosophers(+n.value,'seq',+ro.value,P.mulberry(s)).deadlock)d++;out.innerHTML+=`<p>En 50 semillas distintas hay interbloqueo en <b>${d}</b>.</p>`}}
+ root.append(h('div',{className:'row'},h('label',null,'Filósofos ',n),h('label',null,'Ciclos ',ro),h('label',null,'Semilla ',seed),md,h('button',{on:{click:run}},'Simular')),out);[n,md,seed,ro].forEach(e=>e.addEventListener('input',run));run();reg(root,()=>{})}
+// ---------- laboratorio: histograma ----------
+const Q='En un lugar de la Mancha, de cuyo nombre no quiero acordarme, no ha mucho tiempo que vivía un hidalgo de los de lanza en astillero, adarga antigua, rocín flaco y galgo corredor. Una olla de algo más vaca que carnero, salpicón las más noches, duelos y quebrantos los sábados, lentejas los viernes, algún palomino de añadidura los domingos, consumían las tres partes de su hacienda.';
+function labWords(root,arg){box(root,'Práctica 1: histograma de palabras (map<string,int>)');const ta=h('textarea',null,Q),cs=h('input',{type:'checkbox',checked:true,on:{change:run}}),out=h('div');
+ function run(){const txt=cs.checked?ta.value.toLowerCase():ta.value,w=txt.split(/[^A-Za-zÁÉÍÓÚÜÑáéíóúüñ]+/).filter(Boolean),m={};w.forEach(x=>m[x]=(m[x]||0)+1);const e=Object.entries(m).sort((a,b)=>b[1]-a[1]||(a[0]<b[0]?-1:1)),top=e.slice(0,8),mx=top.length?top[0][1]:1;
+  let s=`<svg xmlns="${NS}" viewBox="0 0 420 ${top.length*22+6}" width="420">`;top.forEach((t,i)=>{s+=`<text x="2" y="${i*22+16}" font-size="13" fill="currentColor">${t[0]}</text><rect class="bar" x="90" y="${i*22+4}" width="${300*t[1]/mx}" height="16"/><text x="${95+300*t[1]/mx}" y="${i*22+16}" font-size="12" fill="currentColor">${t[1]}</text>`});
+  const cons=top.slice(0,2).map(t=>t[0]+': '+t[1]).join('\n');out.innerHTML=s+`</svg><div class="cons">Palabras totales: ${w.length}\nPalabras distintas: ${e.length}\nLas dos más repetidas:\n${cons}</div><pre><code>map&lt;string,int&gt; hist;\nwhile (in &gt;&gt; palabra) {\n    for (char&amp; c : palabra) c = tolower((unsigned char)c);   // ${cs.checked?'activo':'desactivado'}\n    palabra.erase(remove_if(palabra.begin(), palabra.end(), [](unsigned char c){ return ispunct(c); }), palabra.end());\n    if (!palabra.empty()) ++hist[palabra];\n}</code></pre>`}
+ root.append(ta,h('div',{className:'row'},h('label',null,cs,' ignorar mayúsculas')),out);ta.oninput=run;run();reg(root,a=>{if(a==='mayus'){ta.value='Programación de Tiempo Real o programación de tiempo real';cs.checked=false}else if(a==='quijote')ta.value=Q;run()})}
+// ---------- laboratorio: filas por hilo ----------
+function labRows(root){box(root,'Práctica 3.1: suma de matrices por filas con n hilos');const t=h('input',{type:'number',min:1,max:16,value:6}),nh=h('input',{type:'number',min:1,max:8,value:3}),out=h('div');
+ function run(){const tam=+t.value,k=+nh.value,rows=P.rows(tam,k);let html='<div class="tw"><table><tr><th>Hilo</th><th>Filas que suma (inicial = id, incremento = n)</th><th>nº filas</th></tr>';rows.forEach((r,i)=>html+=`<tr><td>${i}</td><td>${r.join(', ')||'—'}</td><td>${r.length}</td></tr>`);const mxr=Math.max(...rows.map(r=>r.length));
+  html+=`</table></div><div class="cons">tiempo modelo = filas del hilo más cargado × tam = ${mxr} × ${tam} = ${mxr*tam} sumas\ntiempo con 1 hilo = ${tam*tam} sumas\nmejora teórica = ${fmt(tam*tam/(mxr*tam),2)}×</div><pre><code>vector&lt;thread&gt; v;\nfor (int id = 0; id &lt; ${k}; ++id)\n    v.emplace_back(suma_fila, ref(a), ref(b), ref(c), id, ${k});   // fila inicial id, salto ${k}\nfor (auto&amp; h : v) h.join();</code></pre>`;out.innerHTML=html}
+ root.append(h('div',{className:'row'},h('label',null,'Tamaño (tam×tam) ',t),h('label',null,'Hilos ',nh)),out);[t,nh].forEach(e=>e.addEventListener('input',run));run();reg(root,()=>{})}
+// ---------- enlace dinámico ----------
+function bind(root){box(root,'¿Qué método se ejecuta? Enlace estático frente a dinámico');const sv=h('select',null,h('option',{value:'v'},'método virtual'),h('option',{value:'n'},'método no virtual')),how=h('select',null,h('option',{value:'ptr'},'a través de Base* (apunta a Derivada)'),h('option',{value:'ref'},'a través de Base& (referida a Derivada)'),h('option',{value:'val'},'copia por valor: Base b = derivada;'),h('option',{value:'obj'},'directamente sobre un objeto Derivada')),out=h('div');
+ function run(){const virt=sv.value==='v',h2=how.value;const dyn=(h2==='ptr'||h2==='ref')&&virt,d=h2==='obj'||dyn;out.innerHTML=`<p>Se ejecuta <b>${d?'Derivada::f()':'Base::f()'}</b>.</p><p>${h2==='val'?'La copia por valor «recorta» el objeto (slicing): ya solo es un Base.':virt?(d&&h2!=='obj'?'La tabla de métodos virtuales del objeto real decide en tiempo de ejecución.':'El tipo del objeto es Derivada.'):'Sin <code>virtual</code> el compilador decide por el tipo estático (Base): enlace estático.'}</p>`}
+ root.append(h('div',{className:'row'},sv,how),out);[sv,how].forEach(e=>e.onchange=run);run();reg(root,()=>{})}
+
+function complejo(root){box(root,'Práctica 2.1: número complejo (C_Complejo)');
+ const mk=(v)=>h('input',{type:'number',step:'0.5',value:v}),ar=mk(3),ai=mk(4),br=mk(1),bi=mk(-2),out=h('div');
+ const fmt=(re,im)=>`${+re.toFixed(6)}${im<0?'-':'+'}${+Math.abs(im).toFixed(6)}i`;
+ function run(){const a=[+ar.value,+ai.value],b=[+br.value,+bi.value];const m=Math.hypot(a[0],a[1]),g=Math.atan2(a[1],a[0]);
+  const code=`C_Complejo a{${a[0]}, ${a[1]}}, b{${b[0]}, ${b[1]}};\ncout << "a+b=" << a + b << "  a-b=" << a - b << '\\n';\nauto [m, arg] = modulo_argumento(a);\ncout << "|a|=" << m << " arg(a)=" << arg << " rad\\n";`;
+  out.innerHTML='<pre><code></code></pre><div class="cons"></div>';out.querySelector('code').textContent=code;
+  out.querySelector('.cons').textContent=`a=${fmt(...a)} b=${fmt(...b)}\na+b=${fmt(a[0]+b[0],a[1]+b[1])}  a-b=${fmt(a[0]-b[0],a[1]-b[1])}\n|a|=${+m.toFixed(6)} arg(a)=${+g.toFixed(6)} rad`}
+ root.append(h('div',{className:'row'},h('label',null,'a = ',ar,' + ',ai,'i'),h('label',null,' b = ',br,' + ',bi,'i')),out);[ar,ai,br,bi].forEach(e=>e.oninput=run);run();reg(root,()=>{})}
+function almacen(root){box(root,'Práctica 3.4: almacén con un generador y varios lectores (monitor)');
+ const nl=h('input',{type:'range',min:1,max:5,value:3}),lab=h('span',null,'3 lectores'),sd=h('input',{type:'number',value:1,min:1,max:9999,style:'width:6em'}),out=h('div');
+ function run(){lab.textContent=nl.value+' lectores';const r=P.almacen(+nl.value,7,+sd.value);
+  const rows=r.trace.map((t,k)=>`<tr><td>${k+1}</td><td>${t.who==='G'?'<b>Generador</b>':'Lector '+t.who}</td><td>${t.who==='G'?'escribe':'lee'} ${t.v}</td></tr>`).join('');
+  out.innerHTML=`<p>${r.ok?'✔ Cada lector leyó los 7 valores <b>una vez y en orden</b>; el generador nunca escribió antes de que todos leyeran.':'✘ Algo falló'}</p><p>Suma que ve cada lector: <b>${r.reads.map(l=>l.reduce((a,b)=>a+b,0)).join(', ')}</b> (esperado 21).</p><div class="tw" style="max-height:260px;overflow:auto"><table><tr><th>Paso</th><th>Hilo</th><th>Acción</th></tr>${rows}</table></div><p><small>El orden de los lectores cambia con la semilla; el resultado, no.</small></p>`}
+ root.append(h('div',{className:'row'},h('label',null,'Lectores: ',nl),lab,h('label',null,' semilla: ',sd)),out);nl.oninput=run;sd.oninput=run;run();reg(root,()=>{})}
+const R={rta,frames,race,vec,patriot,inv,philo,'lab-words':labWords,'lab-rows':labRows,bind,complejo,almacen};
+function init(){document.querySelectorAll('.sim[data-sim]').forEach(el=>{const[name,arg]=el.dataset.sim.split(':');try{R[name](el,arg)}catch(e){el.textContent='Error en el simulador: '+e.message;console.error(e)}})}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
+})();
+</script><script>(function(){
+const $=(s,r=document)=>r.querySelector(s),$$=(s,r=document)=>[...r.querySelectorAll(s)];
+const ls={get(k,d){try{const v=localStorage.getItem(k);return v==null?d:JSON.parse(v)}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+// tema claro/oscuro
+function applyTheme(t){if(t)document.documentElement.setAttribute('data-theme',t);}
+applyTheme(ls.get('theme',null));
+$('#tbtn').onclick=()=>{const cur=document.documentElement.getAttribute('data-theme')||(matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');const n=cur==='dark'?'light':'dark';applyTheme(n);ls.set('theme',n)};
+$('#menu').onclick=()=>$('#side').classList.toggle('open');
+$$('#side a').forEach(a=>a.addEventListener('click',()=>$('#side').classList.remove('open')));
+// abrir <details> si el hash apunta dentro
+function openHash(){const id=decodeURIComponent(location.hash.slice(1));if(!id)return;const e=document.getElementById(id);if(!e)return;let p=e;while(p){if(p.tagName==='DETAILS')p.open=true;p=p.parentElement}e.scrollIntoView()}
+addEventListener('hashchange',openHash);setTimeout(openHash,300);
+// resaltar sección activa
+const secs=$$('section.sec');if(secs.length>1&&'IntersectionObserver'in window){const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){$$('#side a.top').forEach(a=>a.classList.toggle('on',a.getAttribute('href')==='#'+e.target.id))}}),{rootMargin:'-20% 0px -70% 0px'});secs.forEach(s=>io.observe(s))}
+// buscador
+let IDX=null;const res=$('#res');
+async function loadIdx(){if(IDX)return IDX;const el=$('#sidx');if(el){IDX=JSON.parse(el.textContent)}else{try{IDX=await (await fetch('search.json')).json()}catch(e){IDX=[]}}return IDX}
+const norm=s=>s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'');
+$('#q').addEventListener('input',async e=>{const q=norm(e.target.value.trim());if(q.length<2){res.style.display='none';return}const ix=await loadIdx();const ws=q.split(/\s+/);
+ const out=[];for(const it of ix){const t=norm(it.title),b=it.n;let sc=0;let ok=true;for(const w of ws){if(t.includes(w))sc+=5;else if(b.includes(w))sc+=1;else{ok=false;break}}if(ok)out.push([sc,it])}
+ out.sort((a,b)=>b[0]-a[0]);res.innerHTML=out.slice(0,25).map(([s,it])=>`<a href="${it.href}"><b>${it.title}</b> <small>${it.sec}</small><br><small>${it.snip}</small></a>`).join('')||'<small>Sin resultados</small>';res.style.display='block'});
+document.addEventListener('click',e=>{if(!res.contains(e.target)&&e.target.id!=='q')res.style.display='none'});
+document.addEventListener('keydown',e=>{if(e.key==='/'&&document.activeElement.tagName!=='INPUT'&&document.activeElement.tagName!=='TEXTAREA'){e.preventDefault();$('#q').focus()}});
+// checklist
+const checks=$$('.chk input');const kk='chk:'+(document.body.dataset.site||'x');let st=ls.get(kk,{});
+function updProg(){const n=checks.filter(c=>c.checked).length;$$('.prog>i').forEach(i=>i.style.width=(100*n/Math.max(1,checks.length))+'%');$$('.progn').forEach(s=>s.textContent=n+' / '+checks.length)}
+checks.forEach(c=>{c.checked=!!st[c.dataset.id];c.onchange=()=>{st[c.dataset.id]=c.checked;ls.set(kk,st);updProg()}});updProg();
+// pestañas
+$$('.tabs').forEach(tb=>{const bs=$$('button',tb);bs.forEach(b=>b.onclick=()=>{bs.forEach(x=>x.classList.toggle('on',x===b));const g=tb.dataset.g;$$('.panel[data-g="'+g+'"]').forEach(p=>p.classList.toggle('on',p.dataset.t===b.dataset.t))})});
+// filtros exámenes
+const fchips=$$('.chips[data-f] .chip'),fq=$('#exq');
+function filt(){const act=fchips.filter(c=>c.classList.contains('on')).map(c=>c.dataset.v);const q=fq?norm(fq.value):'';let shown=0;
+ $$('details.exam').forEach(d=>{const ok=(!act.length||act.some(a=>d.dataset.f.split(' ').includes(a)))&&(!q||norm(d.dataset.txt).includes(q));d.style.display=ok?'':'none';if(ok)shown++;if(q&&ok)d.open=true});
+ $$('details.cur').forEach(c=>{const any=$$('details.exam',c).some(d=>d.style.display!=='none');c.style.display=any?'':'none'});const s=$('#exn');if(s)s.textContent=shown+' exámenes'}
+fchips.forEach(c=>c.onclick=()=>{c.classList.toggle('on');filt()});if(fq)fq.addEventListener('input',filt);
+// test
+$$('.q').forEach(q=>{const ok=+q.dataset.ok;$$('.o',q).forEach((o,i)=>o.onclick=()=>{if(q.dataset.done)return;q.dataset.done=1;o.classList.add(i+1===ok?'ok':'bad');$$('.o',q)[ok-1].classList.add('ok');$('.ex',q).style.display='block';upd()})});
+function upd(){const all=$$('.q'),d=all.filter(q=>q.dataset.done),g=d.filter(q=>$('.o.bad',q)==null).length;const s=$('#qscore');if(s)s.textContent=g+' aciertos de '+d.length+' respondidas ('+all.length+' preguntas)'}
+const rq=$('#qreset');if(rq)rq.onclick=()=>{$$('.q').forEach(q=>{delete q.dataset.done;$$('.o',q).forEach(o=>o.className='o');$('.ex',q).style.display='none'});upd()};
+// tarjetas
+const cards=window.CARDS||[];let ci=0,flip=false;const cd=$('#card');
+function showCard(){if(!cd||!cards.length)return;const c=cards[ci];cd.textContent=flip?c[1]:c[0];cd.style.fontWeight=flip?'400':'700';$('#cn').textContent=(ci+1)+' / '+cards.length}
+if(cd&&cards.length){cd.onclick=()=>{flip=!flip;showCard()};$('#cnext').onclick=()=>{ci=(ci+1)%cards.length;flip=false;showCard()};$('#cprev').onclick=()=>{ci=(ci+cards.length-1)%cards.length;flip=false;showCard()};$('#cshuf').onclick=()=>{for(let i=cards.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[cards[i],cards[j]]=[cards[j],cards[i]]}ci=0;flip=false;showCard()};showCard()}
+// botones "abrir en el simulador"
+$$('.open-sim').forEach(b=>b.onclick=()=>{const s=document.getElementById('sim-'+b.dataset.sim);if(!s)return;let p=s;while(p){if(p.tagName==='DETAILS')p.open=true;p=p.parentElement}s.scrollIntoView({behavior:'smooth',block:'center'});const S=(window.PSTR_SIMS||{})[b.dataset.sim];if(S&&S.load)S.load(b.dataset.arg)});
+// PWA
+if('serviceWorker'in navigator&&location.protocol.startsWith('http')){navigator.serviceWorker.register('sw.js').catch(()=>{})}
+})();
+</script></body></html>

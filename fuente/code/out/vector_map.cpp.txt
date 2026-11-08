@@ -1,0 +1,16 @@
+size 1 -> capacity 1
+size 2 -> capacity 2
+size 3 -> capacity 4
+size 5 -> capacity 8
+size 9 -> capacity 16
+size 17 -> capacity 32
+el: 3
+lee: 1
+que: 2
+sabe: 1
+tamaño antes: 4
+zzz no está
+tamaño después de hist["zzz"]: 5 (x=0)
+1 3 5 
+uva pera kiwi Manzana 
+set: 1 3 5 

@@ -1,0 +1,41 @@
+[P1] rueda 1
+[P2] rueda 1
+[P2] rueda 2
+[P1] rueda 2
+[P1] cuerpo 1
+[P2] cuerpo 1
+[P2] rueda 3
+[P1] rueda 3
+[E2] ensambla patinete 1 usando [P1] cuerpo 1, [P2] rueda 2, [P1] rueda 2
+[E1] ensambla patinete 1 usando [P2] cuerpo 1, [P2] rueda 1, [P1] rueda 1
+[P1] rueda 4
+[P2] rueda 4
+[P1] cuerpo 2
+[P2] cuerpo 2
+[P1] rueda 5
+[P2] rueda 5
+[P2] rueda 6
+[P1] rueda 6
+[E2] ensambla patinete 2 usando [P1] cuerpo 2, [P1] rueda 4, [P2] rueda 4
+[E1] ensambla patinete 2 usando [P2] cuerpo 2, [P1] rueda 3, [P2] rueda 3
+[P2] rueda 7
+[P1] rueda 7
+[P1] cuerpo 3
+[P2] cuerpo 3
+[P2] rueda 8
+[P1] rueda 8
+[E1] ensambla patinete 3 usando [P2] cuerpo 3, [P1] rueda 7, [P2] rueda 7
+[E2] ensambla patinete 3 usando [P1] cuerpo 3, [P1] rueda 6, [P2] rueda 6
+[P1] rueda 9
+[P2] rueda 9
+[E1] termina
+[E2] termina
+[P1] cuerpo 4
+[P1] cuerpos termina
+[P2] cuerpo 4
+[P2] cuerpos termina
+[P2] rueda 10
+[P2] ruedas termina
+[P1] rueda 10
+[P1] ruedas termina
+Simulación terminada.

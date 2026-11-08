@@ -1,0 +1,4 @@
+const V='guia-2026-11-08';const F=["./", "index.html", "search.json", "manifest.webmanifest", "icon-192.png", "inicio.html", "examen.html", "t0.html", "t1.html", "t2.html", "t3.html", "t4.html", "t5.html", "t6.html", "t7.html", "practicas.html", "examenes.html", "hojas.html", "demos.html", "auto.html", "simulacros.html", "formularios.html", "glosario.html", "plan.html"];
+self.addEventListener('install',e=>{e.waitUntil(caches.open(V).then(c=>c.addAll(F)).then(()=>self.skipWaiting()))});
+self.addEventListener('activate',e=>{e.waitUntil(caches.keys().then(ks=>Promise.all(ks.filter(k=>k!==V).map(k=>caches.delete(k)))).then(()=>self.clients.claim()))});
+self.addEventListener('fetch',e=>{if(e.request.method!=='GET')return;e.respondWith(fetch(e.request).then(r=>{const c=r.clone();caches.open(V).then(x=>x.put(e.request,c));return r}).catch(()=>caches.match(e.request)))});

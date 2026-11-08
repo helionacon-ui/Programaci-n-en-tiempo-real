@@ -1,0 +1,874 @@
+<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Prácticas · Programación de Sistemas en Tiempo Real</title><meta name="description" content="Guía de estudio de Programación de Sistemas en Tiempo Real: teoría, ejemplos, prácticas y exámenes resueltos.">
+<meta name="theme-color" content="#2456d6"><link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="icon-192.png"><style>:root{--bg:#fbfbfa;--fg:#1d2330;--mut:#5b6474;--card:#fff;--bd:#dfe3ea;--code:#f3f5f8;--acc:#2456d6;--ok:#17803d;--bad:#b3261e;--warn:#fff4d6;--warnb:#e0a800;--tip:#e6f0ff;--ojo:#fde7e7;--c:#2456d6;--sh:0 1px 3px rgba(0,0,0,.08)}
+:root[data-theme=dark]{--bg:#12151c;--fg:#e6e9ef;--mut:#9aa3b2;--card:#1a1f29;--bd:#2c3340;--code:#0e1117;--acc:#7aa2ff;--ok:#5fd18a;--bad:#ff8b84;--warn:#3a3114;--warnb:#a98400;--tip:#16253f;--ojo:#3d1b1b;--sh:none}
+@media (prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#12151c;--fg:#e6e9ef;--mut:#9aa3b2;--card:#1a1f29;--bd:#2c3340;--code:#0e1117;--acc:#7aa2ff;--ok:#5fd18a;--bad:#ff8b84;--warn:#3a3114;--warnb:#a98400;--tip:#16253f;--ojo:#3d1b1b;--sh:none}}
+*{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:70px}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.6 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+header.top{position:sticky;top:0;z-index:50;display:flex;gap:10px;align-items:center;padding:8px 14px;background:var(--card);border-bottom:1px solid var(--bd);box-shadow:var(--sh)}
+header.top h1{font-size:1rem;margin:0;white-space:nowrap}header.top .date{color:var(--mut);font-size:.8rem;white-space:nowrap}
+#q{flex:1;min-width:0;padding:7px 10px;border:1px solid var(--bd);border-radius:8px;background:var(--bg);color:var(--fg);font:inherit}
+button,.btn{font:inherit;cursor:pointer;border:1px solid var(--bd);background:var(--card);color:var(--fg);border-radius:8px;padding:6px 12px}
+button:hover,.btn:hover{border-color:var(--acc)}.btn.p{background:var(--acc);color:#fff;border-color:var(--acc)}
+#menu{display:none}
+.layout{display:flex;align-items:flex-start}
+nav#side{position:sticky;top:52px;width:260px;flex:none;max-height:calc(100vh - 52px);overflow:auto;padding:12px 8px 40px 14px;border-right:1px solid var(--bd);font-size:.9rem}
+nav#side a{display:block;color:var(--fg);text-decoration:none;padding:3px 8px;border-radius:6px;border-left:4px solid var(--c,transparent)}
+nav#side a:hover,nav#side a.on{background:var(--code)}nav#side .sub a{padding-left:20px;font-size:.82rem;color:var(--mut);border-left-color:transparent}
+nav#side .grp{margin:12px 0 2px 8px;font-size:.72rem;text-transform:uppercase;letter-spacing:.06em;color:var(--mut)}
+main{flex:1;min-width:0;max-width:980px;padding:18px 22px 80px;margin:0 auto}
+section.sec{border-top:6px solid var(--c);margin-top:36px;padding-top:6px}
+section.sec>h2.st{font-size:1.7rem;margin:.4em 0;color:var(--c)}
+h3,h4{scroll-margin-top:70px}h3{margin-top:1.6em;border-bottom:2px solid var(--c);padding-bottom:2px}
+a{color:var(--acc)}code{background:var(--code);padding:1px 5px;border-radius:4px;font:.88em ui-monospace,Consolas,monospace}
+pre{background:var(--code);border:1px solid var(--bd);border-radius:8px;padding:10px 12px;overflow:auto;position:relative;font:.84rem/1.45 ui-monospace,Consolas,monospace;max-width:100%}
+pre code{background:none;padding:0;font:inherit}pre .lbl{position:absolute;top:2px;right:8px;font-size:.65rem;color:var(--mut)}
+pre.out{border-left:4px solid var(--ok)}
+.tw{overflow-x:auto;max-width:100%}table{border-collapse:collapse;margin:.6em 0}th,td{border:1px solid var(--bd);padding:4px 9px;text-align:left}th{background:var(--code)}
+.box{border-left:5px solid var(--c);background:var(--card);border-radius:8px;padding:8px 14px;margin:14px 0;box-shadow:var(--sh)}
+.box .bt,.enun .bt{font-weight:700;margin-bottom:2px}
+.box.tip,.box.intuicion{background:var(--tip)}.box.warn{background:var(--warn);border-color:var(--warnb)}.box.ojo{background:var(--ojo);border-color:var(--bad)}
+.box.formula{border-color:var(--acc)}.box.antes{border-color:var(--ok)}
+details.box>summary{font-weight:700;cursor:pointer}
+.fig{margin:14px 0;text-align:center;overflow-x:auto}.fig svg{max-width:100%;height:auto}
+.sim{overflow-x:auto;border:1px dashed var(--c);border-radius:10px;padding:10px 12px;margin:16px 0;background:var(--card)}
+.sim .row{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:6px 0}.sim label{font-size:.88rem}
+.sim input[type=number]{width:62px}.sim input,.sim select,.sim textarea{font:inherit;background:var(--bg);color:var(--fg);border:1px solid var(--bd);border-radius:6px;padding:3px 6px}
+.sim textarea{width:100%;min-height:90px;font-family:ui-monospace,monospace;font-size:.85rem}.sim .stt{font-weight:700;color:var(--c)}
+.sim .cons{background:#0e1117;color:#d6e2ff;border-radius:8px;padding:8px 10px;font:.82rem/1.4 ui-monospace,monospace;white-space:pre-wrap;max-height:260px;overflow:auto}
+.sim svg{max-width:100%;height:auto;display:block}.bar{fill:var(--c)}
+article.ex{border:1px solid var(--bd);border-radius:12px;padding:6px 16px 14px;margin:24px 0;background:var(--card)}
+.chip{display:inline-block;font-size:.72rem;padding:1px 8px;border-radius:99px;border:1px solid var(--bd);background:var(--code);margin-left:4px;vertical-align:middle;font-weight:400;color:var(--mut)}
+.chip.on{background:var(--acc);color:#fff;border-color:var(--acc)}
+.enun{background:var(--code);border-radius:8px;padding:6px 12px}
+details.paso{border:1px solid var(--bd);border-radius:8px;margin:8px 0;padding:2px 12px}details.paso>summary{cursor:pointer;font-weight:600;padding:5px 0}
+.pn{display:inline-block;min-width:1.5em;text-align:center;border-radius:99px;background:var(--c);color:#fff;font-size:.8rem}
+details.resultado{margin-top:10px;border:2px solid var(--ok);border-radius:8px;padding:2px 12px}details.resultado>summary{cursor:pointer;font-weight:700;color:var(--ok);padding:5px 0}
+.tabs{display:flex;gap:6px;flex-wrap:wrap;margin:10px 0}.tabs button.on{background:var(--acc);color:#fff;border-color:var(--acc)}
+.panel{display:none}.panel.on{display:block}
+.excard{display:block;border:1px solid var(--bd);border-radius:10px;padding:8px 12px;margin:8px 0;text-decoration:none;color:var(--fg);background:var(--card)}
+.excard:hover{border-color:var(--acc)}.chips{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0}.chips .chip{cursor:pointer;margin:0;font-size:.82rem;padding:3px 10px}
+details.exam{border:1px solid var(--bd);border-radius:8px;margin:6px 0;padding:2px 12px;background:var(--card)}details.exam>summary{cursor:pointer;padding:5px 0;font-weight:600}
+details.cur>summary{font-size:1.05rem}
+.q{border:1px solid var(--bd);border-radius:10px;padding:8px 14px;margin:12px 0;background:var(--card)}.q .o{display:block;padding:4px 8px;margin:3px 0;border:1px solid var(--bd);border-radius:6px;cursor:pointer}
+.q .o.ok{background:var(--ok);color:#fff}.q .o.bad{background:var(--bad);color:#fff}.q .ex{margin-top:6px;color:var(--mut)}
+.card3d{border:1px solid var(--bd);border-radius:12px;min-height:130px;padding:14px;display:flex;align-items:center;justify-content:center;text-align:center;background:var(--card);cursor:pointer;font-size:1.05rem}
+.prog{height:8px;background:var(--code);border-radius:99px;overflow:hidden}.prog>i{display:block;height:100%;background:var(--ok);width:0}
+.chk{display:block;margin:4px 0}
+#res{position:fixed;top:52px;left:0;right:0;z-index:60;background:var(--card);border-bottom:1px solid var(--bd);max-height:60vh;overflow:auto;display:none;padding:6px 14px;box-shadow:var(--sh)}
+#res a{display:block;padding:5px 0;border-bottom:1px solid var(--bd);text-decoration:none}#res small{color:var(--mut)}
+footer{border-top:1px solid var(--bd);padding:16px;color:var(--mut);text-align:center;font-size:.85rem}
+.pager{display:flex;justify-content:space-between;gap:10px;margin:30px 0}
+mjx-container{overflow-x:auto;overflow-y:hidden;max-width:100%}
+@media(max-width:860px){#menu{display:inline-block}nav#side{position:fixed;left:-290px;top:52px;z-index:70;background:var(--card);width:270px;height:calc(100vh - 52px);transition:left .2s}nav#side.open{left:0}main{padding:12px 14px 60px}header.top .date{display:none}header.top h1{font-size:.85rem}}
+@media print{header.top,nav#side,.sim,.btn,#res{display:none}main{max-width:none}details>*{display:block!important}}
+main p,main li,main dd,main td,main summary{overflow-wrap:anywhere}p code,li code,td code,dd code,.q code{overflow-wrap:anywhere;white-space:normal}
+</style><script>window.MathJax={tex:{inlineMath:[["\\(","\\)"]],displayMath:[["\\[","\\]"]]},svg:{fontCache:"global"},options:{skipHtmlTags:["script","noscript","style","textarea","pre","code"]}};</script><script async src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-svg.js"></script></head>
+<body data-site="guia"><header class="top"><button id="menu" aria-label="Índice">☰</button><h1>Tiempo real</h1><input id="q" type="search" placeholder="Buscar en la guía ( / )" aria-label="Buscar"><span class="date">Actualizado: 2026-11-08</span><button id="tbtn" aria-label="Modo claro/oscuro">◐</button></header>
+<div id="res"></div><div class="layout"><nav id="side" aria-label="Índice"><div class="grp">Guía</div><a class="top" style="--c:#2456d6" href="inicio.html">Empieza aquí</a><a class="top" style="--c:#c2255c" href="examen.html">El examen y cómo estudiar</a><div class="grp">Teoría</div><a class="top" style="--c:#0b7285" href="t0.html">T0 · Sistemas de tiempo real</a><a class="top" style="--c:#2b8a3e" href="t1.html">T1 · Repaso de C y C++</a><a class="top" style="--c:#e8590c" href="t2.html">T2 · Clases y objetos</a><a class="top" style="--c:#862e9c" href="t3.html">T3 · Herencia y polimorfismo</a><a class="top" style="--c:#1864ab" href="t4.html">T4 · Hilos y exclusión mutua</a><a class="top" style="--c:#087f5b" href="t5.html">T5 · Monitores y variables condición</a><a class="top" style="--c:#a61e4d" href="t6.html">T6 · Planificación</a><a class="top" style="--c:#5f3dc4" href="t7.html">T7 · Coma flotante y casos reales</a><div class="grp">Práctica</div><a class="top" style="--c:#d9480f" href="practicas.html">Prácticas</a><div class="sub"><a href="practicas.html#p1">Práctica 1 · Programación basada en objetos: strings y colecciones</a><a href="practicas.html#p2">Práctica 2 · Programación orientada a objetos</a><a href="practicas.html#p3">Práctica 3 · Programación concurrente</a></div><a class="top" style="--c:#c92a2a" href="examenes.html">Exámenes resueltos</a><a class="top" style="--c:#e67700" href="hojas.html">Hojas de problemas</a><a class="top" style="--c:#6741d9" href="demos.html">Demostraciones</a><div class="grp">Repaso</div><a class="top" style="--c:#2f9e44" href="auto.html">Autoevaluación</a><a class="top" style="--c:#e03131" href="simulacros.html">Simulacros</a><a class="top" style="--c:#1971c2" href="formularios.html">Formularios</a><a class="top" style="--c:#495057" href="glosario.html">Glosario</a><a class="top" style="--c:#0c8599" href="plan.html">Plan de estudio</a></nav><main><section class="sec" id="sec-practicas" style="--c:#d9480f"><h2 class="st">Prácticas</h2><p>Las tres prácticas del curso, desarrolladas paso a paso. Cada una tiene el código completo (también disponible como archivos independientes), la salida esperada y la interpretación que se espera que escribas. Compila siempre con:</p><pre class="lang-txt"><code>g++ -std=c++17 -Wall -Wextra -pthread fichero.cpp -o programa</code></pre><h3 id="p1" data-s="1">Práctica 1 · Programación basada en objetos: strings y colecciones</h3><p>Usar objetos de la biblioteca estándar sin definir clases propias: <code>string</code>, <code>vector</code>, <code>map</code>, flujos.</p><h4 id="p1-basico" data-s="1">1.1 a 1.3 · Palabras, ordenación y ficheros</h4><p><b>Qué se pide.</b> Leer una línea, imprimir cada palabra en su propia línea sin signos de puntuación, guardarlas en un <code>vector&lt;string&gt;</code>, ordenarlas (de menor a mayor y de mayor a menor) y pasar a leer/escribir ficheros comprobando que entrada y salida son distintos.</p><p><b>Cómo se piensa.</b></p><ol><li>Para separar palabras, un <code>istringstream</code> y <code>in &gt;&gt; p</code> (corta por espacios). Para quitar puntuación, <code>remove_if</code> + <code>erase</code> con <code>ispunct</code>.</li><li><code>sort(v.begin(), v.end())</code> ordena por <b>código de carácter</b>: las mayúsculas (65-90) van <b>antes</b> que las minúsculas (97-122). Para ignorar mayúsculas, pasa un comparador (lambda) que compare las versiones en minúsculas.</li><li>Con ficheros, <code>ifstream</code> y <code>ofstream</code> se usan igual que <code>cin</code> y <code>cout</code>. Comprueba siempre <code>if (!in)</code>.</li></ol><pre class="lang-cpp"><span class="lbl">CPP</span><code>// Práctica 1.1-1.3: palabras de una línea, ordenar y usar ficheros
+#include &lt;algorithm&gt;
+#include &lt;cctype&gt;
+#include &lt;fstream&gt;
+#include &lt;iostream&gt;
+#include &lt;sstream&gt;
+#include &lt;string&gt;
+#include &lt;vector&gt;
+using namespace std;
+
+string sin_puntuacion(string p) {
+    p.erase(remove_if(p.begin(), p.end(), [](unsigned char c) { return ispunct(c); }), p.end());
+    return p;
+}
+vector&lt;string&gt; palabras(const string&amp; linea) {            // 1.1: separa por espacios con un stringstream
+    istringstream in{linea};
+    vector&lt;string&gt; v; string p;
+    while (in &gt;&gt; p) { p = sin_puntuacion(p); if (!p.empty()) v.push_back(p); }
+    return v;
+}
+string minusculas(string s) { transform(s.begin(), s.end(), s.begin(), [](unsigned char c) { return tolower(c); }); return s; }
+
+int main() {
+    string linea = "Programación de Tiempo Real o programación de tiempo real, ¿vale?";
+    auto v = palabras(linea);
+    cout &lt;&lt; "1.1) una por línea:\n"; for (auto&amp; p : v) cout &lt;&lt; p &lt;&lt; '\n';
+
+    sort(v.begin(), v.end());                              // 1.2: orden por código de carácter
+    cout &lt;&lt; "1.2) orden por defecto (las mayúsculas van antes que las minúsculas):\n"; for (auto&amp; p : v) cout &lt;&lt; p &lt;&lt; ' '; cout &lt;&lt; '\n';
+    sort(v.begin(), v.end(), [](const string&amp; a, const string&amp; b) { return minusculas(a) &lt; minusculas(b); });
+    cout &lt;&lt; "   ignorando mayúsculas:\n"; for (auto&amp; p : v) cout &lt;&lt; p &lt;&lt; ' '; cout &lt;&lt; '\n';
+    sort(v.begin(), v.end(), [](const string&amp; a, const string&amp; b) { return minusculas(a) &gt; minusculas(b); });
+    cout &lt;&lt; "   de mayor a menor:\n"; for (auto&amp; p : v) cout &lt;&lt; p &lt;&lt; ' '; cout &lt;&lt; '\n';
+
+    // 1.3: ficheros (comprobando que entrada y salida son distintos)
+    string entrada = "entrada.txt", salida = "salida.txt";
+    if (entrada == salida) { cerr &lt;&lt; "los ficheros deben ser distintos\n"; return 1; }
+    { ofstream f{entrada}; f &lt;&lt; linea &lt;&lt; '\n'; }           // preparo un fichero de prueba
+    ifstream in{entrada}; ofstream out{salida};
+    if (!in || !out) { cerr &lt;&lt; "no se pudo abrir\n"; return 1; }
+    string l;
+    while (getline(in, l)) for (auto&amp; p : palabras(l)) out &lt;&lt; p &lt;&lt; '\n';
+    cout &lt;&lt; "1.3) escrito " &lt;&lt; salida &lt;&lt; '\n';
+}</code></pre><pre class="out"><span class="lbl">Salida</span><code>1.1) una por línea:
+Programación
+de
+Tiempo
+Real
+o
+programación
+de
+tiempo
+real
+¿vale
+1.2) orden por defecto (las mayúsculas van antes que las minúsculas):
+Programación Real Tiempo de de o programación real tiempo ¿vale 
+   ignorando mayúsculas:
+de de o Programación programación Real real Tiempo tiempo ¿vale 
+   de mayor a menor:
+¿vale Tiempo tiempo Real real Programación programación o de de 
+1.3) escrito salida.txt</code></pre><button class="btn open-sim" data-sim="lab-words" data-arg="mayus">Abrir en el simulador</button><p><b>Interpretación que debes escribir.</b> «Sin comparador, <code>Programación</code> aparece antes que <code>de</code> porque la <code>P</code> (80) es menor que la <code>d</code> (100). Se soluciona comparando en minúsculas. <code>ispunct</code> solo reconoce signos ASCII: <code>¿</code> (UTF-8, dos bytes) no se elimina.»</p><h4 id="p1-histograma" data-s="1">1.4 y 1.5 · Histograma de palabras</h4><p><b>Qué se pide.</b> Un <code>map&lt;string,int&gt;</code> con el número de apariciones de cada palabra; mostrar las dos más repetidas y qué palabras acumulan el 20 % de las apariciones; después, un histograma por longitud con <code>vector&lt;map&lt;string,int&gt;&gt;</code>.</p><p><b>Cómo se piensa.</b></p><ul><li><code>++hist[palabra]</code> hace todo: si no existe la crea con 0 y suma 1.</li><li>Un <code>map</code> está ordenado por <b>clave</b>, no por valor. Para ordenar por frecuencia, copia a un <code>vector&lt;pair&lt;string,int&gt;&gt;</code> y ordénalo con un comparador por <code>second</code>.</li><li>El 20 %: recorre ordenado de más a menos frecuente acumulando hasta llegar a <code>total/5</code>.</li><li>Por longitud: <code>por_longitud[palabra.size()][palabra]</code>.</li></ul><pre class="lang-cpp"><span class="lbl">CPP</span><code>// Práctica 1: histograma de palabras de un fichero (map&lt;string,int&gt;) y por longitud (vector&lt;map&gt;)
+#include &lt;algorithm&gt;
+#include &lt;cctype&gt;
+#include &lt;fstream&gt;
+#include &lt;iostream&gt;
+#include &lt;map&gt;
+#include &lt;sstream&gt;
+#include &lt;string&gt;
+#include &lt;vector&gt;
+using namespace std;
+
+string normalizar(string p) {
+    p.erase(remove_if(p.begin(), p.end(), [](unsigned char c) { return ispunct(c); }), p.end());   // sin puntuación
+    transform(p.begin(), p.end(), p.begin(), [](unsigned char c) { return tolower(c); });         // sin mayúsculas (solo ASCII)
+    return p;
+}
+
+int main(int argc, char* argv[]) {
+    if (argc != 2) { cerr &lt;&lt; "uso: " &lt;&lt; argv[0] &lt;&lt; " fichero.txt\n"; return 1; }
+    ifstream in{argv[1]};
+    if (!in) { cerr &lt;&lt; "no se puede abrir " &lt;&lt; argv[1] &lt;&lt; '\n'; return 1; }
+
+    map&lt;string, int&gt; hist;
+    vector&lt;map&lt;string, int&gt;&gt; por_longitud(16);         // índice = nº de letras (suponemos &lt;= 15)
+    long total = 0;
+    string palabra;
+    while (in &gt;&gt; palabra) {                            // &gt;&gt; separa por espacios
+        palabra = normalizar(palabra);
+        if (palabra.empty()) continue;
+        ++hist[palabra]; ++total;
+        if (palabra.size() &lt; por_longitud.size()) ++por_longitud[palabra.size()][palabra];
+    }
+    // ordenar por frecuencia: un map está ordenado por clave, así que pasamos a un vector de pares
+    vector&lt;pair&lt;string, int&gt;&gt; v(hist.begin(), hist.end());
+    sort(v.begin(), v.end(), [](const auto&amp; a, const auto&amp; b) { return a.second &gt; b.second || (a.second == b.second &amp;&amp; a.first &lt; b.first); });
+
+    cout &lt;&lt; "palabras: " &lt;&lt; total &lt;&lt; ", distintas: " &lt;&lt; hist.size() &lt;&lt; '\n';
+    cout &lt;&lt; "las dos mas repetidas:\n";
+    for (size_t i = 0; i &lt; 2 &amp;&amp; i &lt; v.size(); ++i) cout &lt;&lt; "  " &lt;&lt; v[i].first &lt;&lt; ": " &lt;&lt; v[i].second &lt;&lt; '\n';
+    long acum = 0; cout &lt;&lt; "palabras que acumulan el 20% de las apariciones:";
+    for (auto&amp; [p, n] : v) { cout &lt;&lt; ' ' &lt;&lt; p &lt;&lt; '(' &lt;&lt; n &lt;&lt; ')'; acum += n; if (acum * 5 &gt;= total) break; }
+    cout &lt;&lt; "\nla mas repetida de cada longitud (1-6 letras):\n";
+    for (size_t l = 1; l &lt;= 6; ++l) {
+        if (por_longitud[l].empty()) continue;
+        auto it = max_element(por_longitud[l].begin(), por_longitud[l].end(), [](auto&amp; a, auto&amp; b) { return a.second &lt; b.second; });
+        cout &lt;&lt; "  " &lt;&lt; l &lt;&lt; " letras: " &lt;&lt; it-&gt;first &lt;&lt; " (" &lt;&lt; it-&gt;second &lt;&lt; ")\n";
+    }
+}</code></pre><pre class="out"><span class="lbl">Salida</span><code>palabras: 1882, distintas: 716
+las dos mas repetidas:
+  de: 123
+  y: 104
+palabras que acumulan el 20% de las apariciones: de(123) y(104) que(88) a(44) el(40)
+la mas repetida de cada longitud (1-6 letras):
+  1 letras: y (104)
+  2 letras: de (123)
+  3 letras: que (88)
+  4 letras: como (13)
+  5 letras: mismo (6)
+  6 letras: había (14)</code></pre><div class="sim" data-sim="lab-words" id="sim-lab-words"></div><button class="btn open-sim" data-sim="lab-words" data-arg="quijote">Abrir en el simulador</button><p><b>Interpretación.</b> Con el fragmento de 1882 palabras, <code>de</code> (123) e <code>y</code> (104) suman casi el 12 % del texto: las palabras funcionales dominan. Cinco palabras (<code>de</code>, <code>y</code>, <code>que</code>, <code>a</code>, <code>el</code>) acumulan el 20 %. Es la <b>ley de Zipf</b>: la frecuencia cae muy deprisa con el puesto en el ranking.</p><aside class="box warn"><div class="bt">Qué suele fallar</div><ul><li><code>hist[palabra]</code> para <b>consultar</b> si existe: la crea. Usa <code>find</code>.</li><li>Olvidar convertir a minúsculas: <code>El</code> y <code>el</code> cuentan como palabras distintas.</li><li>No comprobar el fichero abierto, o dejar <code>argv[1]</code> sin comprobar <code>argc</code>.</li><li>Los acentos: <code>tolower</code> del C solo funciona con ASCII. <code>É</code> no se convierte.</li></ul></aside><h3 id="p2" data-s="1">Práctica 2 · Programación orientada a objetos</h3><h4 id="p2-complejo" data-s="1">2.1 · Clase número complejo</h4><p><b>Qué se pide.</b> Atributos real e imaginario; constructor con dos valores y un constructor <b>delegado</b> sin parámetros (0+0i); <code>get</code>; módulo y argumento como <code>pair</code> con <code>hypot</code> y <code>atan2</code>; <code>operator&lt;&lt;</code>, <code>operator&gt;&gt;</code>, <code>+</code>, <code>-</code>.</p><p><b>Decisiones de diseño.</b> Los operadores y <code>modulo_argumento</code> pueden ser funciones <b>libres</b> (fuera de la clase) porque solo necesitan los <code>get</code>: la clase queda más pequeña y estable. <code>operator&gt;&gt;</code> construye un temporal y hace <code>swap</code>: si la lectura falla, el objeto original no queda a medias.</p><pre class="lang-cpp"><span class="lbl">CPP</span><code>// Práctica 2.1: número complejo
+#include &lt;cmath&gt;
+#include &lt;iostream&gt;
+#include &lt;utility&gt;
+using namespace std;
+
+class C_Complejo {
+public:
+    C_Complejo(double re, double im) : re_{re}, im_{im} {}
+    C_Complejo() : C_Complejo(0, 0) {}                     // constructor delegado: 0 + 0i
+    double real() const { return re_; }
+    double imag() const { return im_; }
+private:
+    double re_, im_;
+};
+
+// Fuera de la clase: solo necesita los get. Reduce lo que la clase tiene que mantener.
+pair&lt;double, double&gt; modulo_argumento(const C_Complejo&amp; c) { return {hypot(c.real(), c.imag()), atan2(c.imag(), c.real())}; }
+
+C_Complejo operator+(const C_Complejo&amp; l, const C_Complejo&amp; r) { return {l.real() + r.real(), l.imag() + r.imag()}; }
+C_Complejo operator-(const C_Complejo&amp; l, const C_Complejo&amp; r) { return {l.real() - r.real(), l.imag() - r.imag()}; }
+ostream&amp; operator&lt;&lt;(ostream&amp; os, const C_Complejo&amp; c) { return os &lt;&lt; c.real() &lt;&lt; (c.imag() &lt; 0 ? "-" : "+") &lt;&lt; fabs(c.imag()) &lt;&lt; "i"; }
+istream&amp; operator&gt;&gt;(istream&amp; is, C_Complejo&amp; c) {            // formato: re im
+    double re, im;
+    if (is &gt;&gt; re &gt;&gt; im) { C_Complejo tmp{re, im}; swap(c, tmp); }   // construir temporal y swap
+    return is;
+}
+
+int main() {
+    C_Complejo a{3, 4}, b{1, -2}, z;
+    cout &lt;&lt; "a=" &lt;&lt; a &lt;&lt; " b=" &lt;&lt; b &lt;&lt; " z=" &lt;&lt; z &lt;&lt; '\n';
+    cout &lt;&lt; "a+b=" &lt;&lt; a + b &lt;&lt; "  a-b=" &lt;&lt; a - b &lt;&lt; '\n';
+    auto [m, arg] = modulo_argumento(a);
+    cout &lt;&lt; "|a|=" &lt;&lt; m &lt;&lt; " arg(a)=" &lt;&lt; arg &lt;&lt; " rad\n";
+}</code></pre><pre class="out"><span class="lbl">Salida</span><code>a=3+4i b=1-2i z=0+0i
+a+b=4+2i  a-b=2+6i
+|a|=5 arg(a)=0.927295 rad</code></pre><div class="sim" data-sim="complejo" id="sim-complejo"></div><button class="btn open-sim" data-sim="complejo" data-arg="">Abrir en el simulador</button><h4 id="p2-mensajes" data-s="1">2.2 y 2.3 · Mensajes secretos y su registro</h4><p><b>Qué se pide.</b> <code>Mensaje_Secreto</code> con texto, clave y pista; <code>bloquear</code> (sin y con clave nueva, esta última solo si está desbloqueado), <code>desbloquear(clave)</code>, <code>esta_bloqueado</code>, <code>borrar</code>; <code>operator&lt;&lt;</code> que muestra la pista si está bloqueado. <code>Registro_Mensajes</code> con un <code>map&lt;string, vector&lt;Mensaje_Secreto&gt;&gt;</code> y métodos para añadir, consultar, leer el primero/último (borrándolo), listar y borrar con claves.</p><p><b>Cómo se piensa.</b></p><ul><li><code>total_mensajes_persona</code> usa <code>find</code> (no <code>[]</code>) para no crear personas fantasma y convierte <code>size()</code> (sin signo) a <code>int</code>.</li><li><code>primer_mensaje</code> y <code>ultimo_mensaje</code> se parecen mucho: un método <b>privado</b> <code>leer(persona, clave, primero)</code> evita repetir código.</li><li>Borrar del vector mientras se recorre exige iteradores: <code>m = erase(m)</code> o <code>++m</code>.</li></ul><pre class="lang-cpp"><span class="lbl">CPP</span><code>// Prácticas 2.2 y 2.3: Mensaje_Secreto y Registro_Mensajes
+#include &lt;iostream&gt;
+#include &lt;map&gt;
+#include &lt;string&gt;
+#include &lt;vector&gt;
+using namespace std;
+
+class Mensaje_Secreto {
+public:
+    Mensaje_Secreto(string texto, int clave, string pista = "") : texto_{std::move(texto)}, clave_{clave}, pista_{std::move(pista)} {}
+    void bloquear() { bloqueado_ = true; }
+    bool bloquear(int clave_nueva) { if (bloqueado_) return false; clave_ = clave_nueva; bloqueado_ = true; return true; }
+    bool desbloquear(int clave) { if (clave == clave_) bloqueado_ = false; return !bloqueado_; }
+    bool esta_bloqueado() const { return bloqueado_; }
+    void borrar() { texto_.clear(); }
+    const string&amp; pista() const { return pista_; }
+    friend ostream&amp; operator&lt;&lt;(ostream&amp; os, const Mensaje_Secreto&amp; m) {
+        return os &lt;&lt; (m.bloqueado_ ? "[bloqueado] pista: " + m.pista_ : m.texto_);
+    }
+private:
+    string texto_; int clave_; string pista_; bool bloqueado_ = true;
+};
+
+class Registro_Mensajes {
+public:
+    void nuevo_mensaje(const Mensaje_Secreto&amp; m, const string&amp; persona) { reg_[persona].push_back(m); }
+    bool existe_persona(const string&amp; p) const { return reg_.find(p) != reg_.end(); }
+    int total_mensajes_persona(const string&amp; p) const { auto it = reg_.find(p); return it == reg_.end() ? 0 : static_cast&lt;int&gt;(it-&gt;second.size()); }
+    vector&lt;string&gt; lista_personas() const { vector&lt;string&gt; v; for (const auto&amp; [p, _] : reg_) v.push_back(p); return v; }
+    bool primer_mensaje(const string&amp; p, int clave) { return leer(p, clave, true); }
+    bool ultimo_mensaje(const string&amp; p, int clave) { return leer(p, clave, false); }
+    int borrar_todos(const string&amp; p, const vector&lt;int&gt;&amp; claves) {      // claves probadas una por mensaje
+        auto it = reg_.find(p); if (it == reg_.end()) return 0;
+        int borrados = 0; size_t k = 0;
+        for (auto m = it-&gt;second.begin(); m != it-&gt;second.end(); ++k) {
+            if (k &lt; claves.size() &amp;&amp; m-&gt;desbloquear(claves[k])) { m-&gt;borrar(); m = it-&gt;second.erase(m); ++borrados; }
+            else ++m;                                                    // clave incorrecta: se queda
+        }
+        return borrados;
+    }
+private:
+    bool leer(const string&amp; p, int clave, bool primero) {                // método privado común
+        auto it = reg_.find(p);
+        if (it == reg_.end() || it-&gt;second.empty()) { cout &lt;&lt; "sin mensajes para " &lt;&lt; p &lt;&lt; '\n'; return false; }
+        auto m = primero ? it-&gt;second.begin() : prev(it-&gt;second.end());
+        cout &lt;&lt; "pista: " &lt;&lt; m-&gt;pista() &lt;&lt; '\n';
+        if (!m-&gt;desbloquear(clave)) { cout &lt;&lt; "clave incorrecta\n"; return false; }
+        cout &lt;&lt; *m &lt;&lt; '\n'; m-&gt;borrar(); it-&gt;second.erase(m);
+        return true;
+    }
+    map&lt;string, vector&lt;Mensaje_Secreto&gt;&gt; reg_;
+};
+
+int main() {
+    Registro_Mensajes r;
+    r.nuevo_mensaje({"hola Ana", 1234, "mi PIN"}, "Ana");
+    r.nuevo_mensaje({"adios Ana", 99, "dos cifras"}, "Ana");
+    cout &lt;&lt; "mensajes de Ana: " &lt;&lt; r.total_mensajes_persona("Ana") &lt;&lt; ", de Luis: " &lt;&lt; r.total_mensajes_persona("Luis") &lt;&lt; '\n';
+    r.primer_mensaje("Ana", 1);        // clave incorrecta
+    r.primer_mensaje("Ana", 1234);     // lo muestra y lo borra
+    r.ultimo_mensaje("Ana", 99);
+    r.primer_mensaje("Luis", 0);
+    cout &lt;&lt; "quedan " &lt;&lt; r.total_mensajes_persona("Ana") &lt;&lt; " mensajes\n";
+}</code></pre><pre class="out"><span class="lbl">Salida</span><code>mensajes de Ana: 2, de Luis: 0
+pista: mi PIN
+clave incorrecta
+pista: mi PIN
+hola Ana
+pista: dos cifras
+adios Ana
+sin mensajes para Luis
+quedan 0 mensajes</code></pre><h4 id="p2-figuras" data-s="1">2.4 · Figuras y herencia</h4><p>Clase abstracta <code>Figura</code> con <code>area()</code> y <code>perimetro()</code> virtuales puros, <code>operator&lt;&lt;</code> polimórfico apoyado en un <code>to_string()</code> protegido y virtual, destructor virtual, <code>Circulo</code>, <code>Rectangulo</code> y <code>Agrupacion_Figuras</code> (contenedor recursivo con <code>set&lt;Figura*&gt;</code>). La solución completa, compilada y ejecutada, está en el tema T3 («Ejemplo completo»).</p><div class="sim" data-sim="bind" id="sim-bind"></div><button class="btn open-sim" data-sim="bind" data-arg="">Abrir en el simulador</button><h4 id="p2-actividades" data-s="1">2.5 · Actividades de un proyecto</h4><p>Misma idea con un contenedor recursivo, ahora con <b>dos</b> niveles de abstracción: <code>Tarea_Compuesta</code> es abstracta (no implementa <code>duracion</code>) y sus dos hijas deciden cómo combinarla. Paralelas: el <b>máximo</b> de las duraciones. Secuenciales: la <b>suma</b>.</p><pre class="lang-cpp"><span class="lbl">CPP</span><code>// Práctica 2.5: actividades de un proyecto (contenedor recursivo con herencia)
+#include &lt;algorithm&gt;
+#include &lt;iostream&gt;
+#include &lt;sstream&gt;
+#include &lt;string&gt;
+#include &lt;vector&gt;
+using namespace std;
+
+class Actividad {
+public:
+    Actividad(string id, string desc) : id_{std::move(id)}, desc_{std::move(desc)} {}
+    virtual ~Actividad() = default;
+    virtual int duracion() const = 0;
+    friend ostream&amp; operator&lt;&lt;(ostream&amp; os, const Actividad&amp; a) { return os &lt;&lt; a.to_string(); }
+protected:
+    virtual string to_string() const { ostringstream o; o &lt;&lt; id_ &lt;&lt; " (" &lt;&lt; desc_ &lt;&lt; ") dura " &lt;&lt; duracion(); return o.str(); }
+    string id_, desc_;
+};
+
+class Tarea : public Actividad {
+public:
+    Tarea(string id, string desc, int d) : Actividad{std::move(id), std::move(desc)}, d_{d} {}
+    int duracion() const override { return d_; }
+private:
+    int d_;
+};
+
+class Tarea_Compuesta : public Actividad {        // abstracta: no implementa duracion()
+public:
+    Tarea_Compuesta(string id, string desc) : Actividad{std::move(id), std::move(desc)} {}
+    bool anyadir(Actividad* a) { if (a == this) return false; v_.push_back(a); return true; }
+protected:
+    string to_string() const override {
+        ostringstream o; o &lt;&lt; Actividad::to_string() &lt;&lt; " {";
+        for (auto* a : v_) o &lt;&lt; " [" &lt;&lt; *a &lt;&lt; "]";
+        o &lt;&lt; " }"; return o.str();
+    }
+    vector&lt;Actividad*&gt; v_;
+};
+
+class Tareas_Paralelas : public Tarea_Compuesta {
+public:
+    using Tarea_Compuesta::Tarea_Compuesta;       // hereda constructores
+    int duracion() const override { int m = 0; for (auto* a : v_) m = max(m, a-&gt;duracion()); return m; }   // el máximo
+};
+class Tareas_Secuenciales : public Tarea_Compuesta {
+public:
+    using Tarea_Compuesta::Tarea_Compuesta;
+    int duracion() const override { int s = 0; for (auto* a : v_) s += a-&gt;duracion(); return s; }          // la suma
+};
+
+int main() {
+    Tarea t1{"T1", "cavar", 3}, t2{"T2", "cimentar", 5}, t3{"T3", "pintar", 2}, t4{"T4", "limpiar", 1};
+    Tareas_Paralelas par{"P", "a la vez"};
+    par.anyadir(&amp;t1); par.anyadir(&amp;t2);
+    Tareas_Secuenciales seq{"S", "en orden"};
+    seq.anyadir(&amp;par); seq.anyadir(&amp;t3); seq.anyadir(&amp;t4);
+    cout &lt;&lt; seq &lt;&lt; '\n';
+    cout &lt;&lt; "duracion total = " &lt;&lt; seq.duracion() &lt;&lt; " (max(3,5) + 2 + 1)\n";
+}</code></pre><pre class="out"><span class="lbl">Salida</span><code>S (en orden) dura 8 { [P (a la vez) dura 5 { [T1 (cavar) dura 3] [T2 (cimentar) dura 5] }] [T3 (pintar) dura 2] [T4 (limpiar) dura 1] }
+duracion total = 8 (max(3,5) + 2 + 1)</code></pre><p><b>Interpretación.</b> La duración de <code>S</code> es 8 = max(3, 5) + 2 + 1: la tarea paralela interna aporta 5 (la más larga), no 3 + 5. El polimorfismo hace que <code>S.duracion()</code> llame a <code>P.duracion()</code> sin saber qué tipo de tarea es.</p><h3 id="p3" data-s="1">Práctica 3 · Programación concurrente</h3><h4 id="p3-matrices" data-s="1">3.1 y 3.3 · Suma de matrices con hilos y con thread pool</h4><p><b>Qué se pide.</b> Sumar dos matrices <code>vector&lt;vector&lt;int&gt;&gt;</code> con \(n\) hilos de forma que no haya carreras <b>sin mutex</b>: cada hilo suma filas <b>disjuntas</b>. Después, un <i>thread pool</i>: los hilos piden al «director» la siguiente fila.</p><p><b>Cómo se piensa.</b></p><ul><li>3.1: el hilo \(id\) suma las filas \(id, id+n, id+2n, \ldots\). Como cada hilo <b>escribe</b> en filas distintas de <code>c</code>, no hay carrera y no hace falta <code>mutex</code>. Las matrices de entrada solo se leen: se pasan con <code>cref</code>.</li><li>3.3: ahora el reparto es dinámico. El contador de «siguiente fila» <b>sí</b> es un dato compartido: lo protege un <code>mutex</code> dentro de la clase <code>Director</code>.</li></ul><pre class="lang-cpp"><span class="lbl">CPP</span><code>// Prácticas 3.1 y 3.3: suma de matrices por filas con n hilos y con thread pool
+#include &lt;chrono&gt;
+#include &lt;iostream&gt;
+#include &lt;mutex&gt;
+#include &lt;thread&gt;
+#include &lt;vector&gt;
+using namespace std;
+using Matriz = vector&lt;vector&lt;int&gt;&gt;;
+
+Matriz crear(int tam) {                                   // valores 0..tam-1 en cada fila
+    Matriz m(tam, vector&lt;int&gt;(tam));
+    for (auto&amp; fila : m) for (int j = 0; j &lt; tam; ++j) fila[j] = j;
+    return m;
+}
+ostream&amp; operator&lt;&lt;(ostream&amp; os, const Matriz&amp; m) {
+    for (const auto&amp; f : m) { for (int x : f) os &lt;&lt; x &lt;&lt; ' '; os &lt;&lt; '\n'; }
+    return os;
+}
+// 3.1: cada hilo suma las filas inicio, inicio+salto, inicio+2*salto... No comparten escritura: no hace falta mutex.
+void suma_filas(const Matriz&amp; a, const Matriz&amp; b, Matriz&amp; c, size_t inicio, size_t salto) {
+    for (size_t i = inicio; i &lt; a.size(); i += salto)
+        for (size_t j = 0; j &lt; a[i].size(); ++j) c[i][j] = a[i][j] + b[i][j];
+}
+Matriz suma_paralelo(const Matriz&amp; a, const Matriz&amp; b, int n_hilos) {
+    Matriz c(a.size(), vector&lt;int&gt;(a.size()));
+    vector&lt;thread&gt; hilos;
+    for (int id = 0; id &lt; n_hilos; ++id) hilos.emplace_back(suma_filas, cref(a), cref(b), ref(c), id, n_hilos);
+    for (auto&amp; h : hilos) h.join();
+    return c;
+}
+// 3.3: el «director» reparte la siguiente fila a quien la pida. Su contador sí es compartido: mutex.
+class Director {
+public:
+    explicit Director(size_t n_filas) : n_{n_filas} {}
+    bool siguiente(size_t&amp; fila) { lock_guard&lt;mutex&gt; lk{m_}; if (sig_ &gt;= n_) return false; fila = sig_++; return true; }
+private:
+    mutex m_; size_t sig_ = 0, n_;
+};
+Matriz suma_pool(const Matriz&amp; a, const Matriz&amp; b, int n_hilos) {
+    Matriz c(a.size(), vector&lt;int&gt;(a.size()));
+    Director dir{a.size()};
+    auto trabajador = [&amp;] {
+        size_t f;
+        while (dir.siguiente(f))
+            for (size_t j = 0; j &lt; a[f].size(); ++j) c[f][j] = a[f][j] + b[f][j];
+    };
+    vector&lt;thread&gt; hilos;
+    for (int i = 0; i &lt; n_hilos; ++i) hilos.emplace_back(trabajador);
+    for (auto&amp; h : hilos) h.join();
+    return c;
+}
+
+int main() {
+    Matriz a = crear(4), b = crear(4);
+    cout &lt;&lt; "a + b con 3 hilos:\n" &lt;&lt; suma_paralelo(a, b, 3);
+    cout &lt;&lt; "mismo resultado con thread pool: " &lt;&lt; boolalpha &lt;&lt; (suma_pool(a, b, 3) == suma_paralelo(a, b, 3)) &lt;&lt; '\n';
+
+    const int N = 1500;
+    Matriz A = crear(N), B = crear(N);
+    for (int nh : {1, 2, 4}) {
+        auto t0 = chrono::steady_clock::now();
+        Matriz C = suma_paralelo(A, B, nh);
+        auto t1 = chrono::steady_clock::now();
+        cout &lt;&lt; nh &lt;&lt; " hilos: " &lt;&lt; chrono::duration_cast&lt;chrono::microseconds&gt;(t1 - t0).count() &lt;&lt; " us (C[7][7]=" &lt;&lt; C[7][7] &lt;&lt; ")\n";
+    }
+}</code></pre><p>Salida de una ejecución (los tiempos cambian en cada máquina y ejecución):</p><pre class="lang-out"><span class="lbl">OUT</span><code>a + b con 3 hilos:
+0 2 4 6 
+0 2 4 6 
+0 2 4 6 
+0 2 4 6 
+mismo resultado con thread pool: true
+1 hilos: 7713 us (C[7][7]=14)
+2 hilos: 7088 us (C[7][7]=14)
+4 hilos: 6739 us (C[7][7]=14)</code></pre><div class="sim" data-sim="lab-rows" id="sim-lab-rows"></div><button class="btn open-sim" data-sim="lab-rows" data-arg="">Abrir en el simulador</button><p><b>Interpretación.</b> La mejora real es <b>modesta</b>: sumar es muy barato y el tiempo lo domina el acceso a memoria y la reserva de la matriz resultado. Más hilos que núcleos no ayuda. Para un cálculo más costoso por elemento, la mejora sí se acerca al número de núcleos.</p><h4 id="p3-filosofos" data-s="1">3.2 · La cena de los filósofos</h4><p><b>Qué se pide.</b> \(n\) filósofos, \(n+1\) cubiertos (un <code>mutex</code> cada uno). Para comer, el filósofo \(i\) necesita <b>tres</b> cubiertos: \(i\), \(i+1\), \(i+2\) (módulo \(n+1\)). Ciclo: coge cubiertos, come 10 ms, los suelta, piensa 10 ms. Usar <code>std::lock</code> o <code>scoped_lock</code>; probar después con <code>lock()</code> individuales y observar el interbloqueo.</p><p><b>Cómo se piensa.</b> Con <code>lock()</code> uno a uno, cada filósofo se queda con su primer cubierto y espera el segundo, que tiene otro: <b>espera circular</b> ⇒ interbloqueo. <code>scoped_lock lk{c1, c2, c3}</code> los coge <b>todos a la vez</b> con un algoritmo seguro.</p><pre class="lang-cpp"><span class="lbl">CPP</span><code>// Práctica 3.2: cena de los filósofos con 3 cubiertos por filósofo (n filósofos, n+1 cubiertos)
+#include &lt;chrono&gt;
+#include &lt;iostream&gt;
+#include &lt;mutex&gt;
+#include &lt;thread&gt;
+#include &lt;vector&gt;
+using namespace std;
+using namespace std::chrono_literals;
+
+mutex consola;
+void imprimir(const string&amp; s) { lock_guard&lt;mutex&gt; lk{consola}; cout &lt;&lt; s &lt;&lt; '\n'; }
+
+void filosofo(int id, mutex&amp; c1, mutex&amp; c2, mutex&amp; c3, int ciclos) {
+    for (int i = 0; i &lt; ciclos; ++i) {
+#ifdef INTERBLOQUEO
+        c1.lock(); this_thread::sleep_for(1ms); c2.lock(); c3.lock();     // uno a uno: cada hilo retiene y espera
+#else
+        scoped_lock lk{c1, c2, c3};                                       // los tres a la vez, sin interbloqueo
+#endif
+        imprimir("F" + to_string(id) + " come");
+        this_thread::sleep_for(10ms);
+#ifdef INTERBLOQUEO
+        c3.unlock(); c2.unlock(); c1.unlock();
+#endif
+        imprimir("F" + to_string(id) + " piensa");
+        this_thread::sleep_for(10ms);
+    }
+}
+
+int main(int argc, char* argv[]) {
+    int n = argc &gt; 1 ? stoi(argv[1]) : 3, ciclos = argc &gt; 2 ? stoi(argv[2]) : 2;
+    vector&lt;mutex&gt; cubiertos(n + 1);                      // un mutex por cubierto
+    vector&lt;thread&gt; hilos;
+    for (int i = 0; i &lt; n; ++i)                           // F_i usa los cubiertos i, i+1, i+2 (módulo n+1)
+        hilos.emplace_back(filosofo, i + 1, ref(cubiertos[i]), ref(cubiertos[(i + 1) % (n + 1)]), ref(cubiertos[(i + 2) % (n + 1)]), ciclos);
+    for (auto&amp; h : hilos) h.join();
+    imprimir("todos han terminado");
+}</code></pre><p>Con <code>-DINTERBLOQUEO</code> (cada <code>lock()</code> por separado y una pausa de 1 ms entre ellos) el programa se bloquea: en cinco ejecuciones de prueba con 3 filósofos y 50 ciclos se cortó por tiempo en las cinco. Sin esa definición, termina siempre:</p><pre class="lang-out"><span class="lbl">OUT</span><code>F1 come
+F2 piensa
+...
+todos han terminado</code></pre><div class="sim" data-sim="philo" id="sim-philo"></div><button class="btn open-sim" data-sim="philo" data-arg="">Abrir en el simulador</button><h4 id="p3-almacen" data-s="1">3.4 · Almacén (monitor)</h4><p><b>Qué se pide.</b> Un generador que escribe los valores 0 a 6 y varios lectores. Cada lector debe leer cada valor <b>una vez</b> y el generador <b>no puede escribir</b> el siguiente hasta que <b>todos</b> hayan leído el actual. Clase <code>Almacen</code> como monitor, con cierre ordenado.</p><p><b>Cómo se piensa.</b> Estado: el valor y un <code>map&lt;thread::id,bool&gt;</code> que dice quién ya lo leyó. Dos condiciones de espera, ambas sobre el mismo <code>mutex</code>:</p><ul><li>El <b>generador</b> espera hasta que <code>todos_han_leido()</code>.</li><li>Un <b>lector</b> espera hasta que él <b>no</b> ha leído el valor actual.</li></ul><p>Cada cambio de estado (<code>anyadir</code>, <code>leer</code>) hace <code>notify_all</code>: así se despierta quien corresponda y los demás recomprueban su predicado. <code>cerrar()</code> pone una bandera y despierta a todos para que ninguno se quede dormido para siempre.</p><pre class="lang-cpp"><span class="lbl">CPP</span><code>// Práctica 3.4: Almacen (monitor). Un generador y varios lectores: cada lector lee cada valor UNA vez,
+// y el generador no escribe el siguiente hasta que todos los lectores han leído el actual.
+#include &lt;atomic&gt;
+#include &lt;chrono&gt;
+#include &lt;condition_variable&gt;
+#include &lt;iostream&gt;
+#include &lt;map&gt;
+#include &lt;mutex&gt;
+#include &lt;thread&gt;
+#include &lt;vector&gt;
+using namespace std;
+using namespace std::chrono_literals;
+
+class Almacen {
+public:
+    void anyadir_lector(thread::id id) { lock_guard&lt;mutex&gt; lk{m_}; leido_[id] = true; }     // empieza «sin pendiente»
+    void anyadir(int v) {
+        unique_lock&lt;mutex&gt; lk{m_};
+        cv_.wait(lk, [&amp;] { return todos_han_leido() || cerrado_; });                         // espera si alguien no ha leído
+        if (cerrado_) return;
+        valor_ = v;
+        for (auto&amp; [id, ok] : leido_) ok = false;                                            // ahora todos tienen pendiente
+        cv_.notify_all();
+    }
+    bool leer(int&amp; v) {                                                                      // false = almacén cerrado
+        unique_lock&lt;mutex&gt; lk{m_};
+        auto yo = this_thread::get_id();
+        cv_.wait(lk, [&amp;] { return !leido_[yo] || cerrado_; });                               // espera un valor nuevo
+        if (leido_[yo]) return false;                                                        // cerrado y sin pendiente
+        v = valor_; leido_[yo] = true;
+        cv_.notify_all();                                                                    // quizá era el último lector
+        return true;
+    }
+    void cerrar() { { lock_guard&lt;mutex&gt; lk{m_}; cerrado_ = true; } cv_.notify_all(); }
+private:
+    bool todos_han_leido() const { for (const auto&amp; [id, ok] : leido_) if (!ok) return false; return true; }
+    mutex m_;
+    condition_variable cv_;
+    map&lt;thread::id, bool&gt; leido_;
+    int valor_ = 0;
+    bool cerrado_ = false;
+};
+
+int main() {
+    Almacen a;
+    atomic&lt;bool&gt; seguir{true};
+    vector&lt;long&gt; suma(3, 0), cuenta(3, 0);
+    vector&lt;thread&gt; lectores;
+    for (int i = 0; i &lt; 3; ++i)
+        lectores.emplace_back([&amp;, i] {
+            a.anyadir_lector(this_thread::get_id());
+            int v;
+            while (seguir &amp;&amp; a.leer(v)) { suma[i] += v; ++cuenta[i]; this_thread::sleep_for(chrono::milliseconds(2 + 3 * i)); }
+        });
+    this_thread::sleep_for(50ms);                                  // deja que se registren los lectores
+    thread generador{[&amp;] { for (int v = 0; v &lt;= 6; ++v) a.anyadir(v); }};
+    generador.join();
+    this_thread::sleep_for(60ms);                                  // los lectores terminan de leer el último valor
+    seguir = false; a.cerrar();
+    for (auto&amp; h : lectores) h.join();
+    for (int i = 0; i &lt; 3; ++i) cout &lt;&lt; "lector " &lt;&lt; i &lt;&lt; ": " &lt;&lt; cuenta[i] &lt;&lt; " valores, suma " &lt;&lt; suma[i] &lt;&lt; '\n';
+    cout &lt;&lt; "(cada lector debe leer 7 valores y sumar 21)\n";
+}</code></pre><pre class="out"><span class="lbl">Salida</span><code>lector 0: 7 valores, suma 21
+lector 1: 7 valores, suma 21
+lector 2: 7 valores, suma 21
+(cada lector debe leer 7 valores y sumar 21)</code></pre><div class="sim" data-sim="almacen" id="sim-almacen"></div><button class="btn open-sim" data-sim="almacen" data-arg="">Abrir en el simulador</button><p><b>Interpretación.</b> Cada lector lee exactamente 7 valores y suma 21 (0+1+…+6), sea cual sea la velocidad de cada uno: la sincronización fuerza el ritmo del más lento. Es el esquema de «productor con varios consumidores que necesitan todos el mismo dato».</p><aside class="box formula"><div class="bt">Resumen de prácticas</div><ul><li>P1: <code>++hist[p]</code>, <code>find</code> para consultar, <code>sort</code> con lambda para ordenar por valor.</li><li>P2: constructor delegado, <code>operator&lt;&lt;</code> con <code>to_string()</code> virtual, destructor virtual, contenedor recursivo con punteros.</li><li>P3: filas disjuntas ⇒ sin mutex; contador compartido ⇒ mutex; varios recursos ⇒ <code>scoped_lock</code>; esperar condición ⇒ <code>condition_variable</code> con predicado.</li></ul></aside></section><div class="pager"><a class="btn" href="t7.html">← T7 · Coma flotante y casos reales</a><a class="btn" href="examenes.html">Exámenes resueltos →</a></div><footer>Guía de Programación de Sistemas en Tiempo Real · Última actualización: 2026-11-08</footer></main></div>
+<script>/* Lógica pura de los simuladores (se prueba con Node contra los scripts de Python). */
+(function (root) {
+  const P = {};
+  P.gcd = (a, b) => (b ? P.gcd(b, a % b) : a);
+  P.lcm = (a, b) => (a / P.gcd(a, b)) * b;
+  P.hyper = (ts) => ts.reduce((a, t) => P.lcm(a, t.T), 1);
+  P.llBound = (n) => n * (Math.pow(2, 1 / n) - 1);
+  P.util = (ts) => ts.reduce((a, t) => a + t.C / t.T, 0);
+
+  // Orden de prioridades: devuelve índices de mayor a menor prioridad
+  P.order = (ts, policy) => {
+    const idx = ts.map((_, i) => i);
+    const key = policy === 'RM' ? (t) => [t.T, 0] : (t) => [t.D, t.T];
+    return idx.sort((a, b) => { const ka = key(ts[a]), kb = key(ts[b]); return ka[0] - kb[0] || ka[1] - kb[1] || a - b; });
+  };
+
+  // Tiempo de respuesta con bloqueo B (prioridades fijas expulsivas)
+  P.rta = (ts, policy) => {
+    const ord = P.order(ts, policy), res = new Array(ts.length);
+    ord.forEach((i, pos) => {
+      const hp = ord.slice(0, pos), t = ts[i], B = t.B || 0;
+      let r = t.C + B; const hist = [r];
+      for (let k = 0; k < 200; k++) {
+        const nr = t.C + B + hp.reduce((s, j) => s + Math.ceil(r / ts[j].T) * ts[j].C, 0);
+        hist.push(nr);
+        if (nr === r || nr > t.D) { r = nr; break; }
+        r = nr;
+      }
+      res[i] = { R: r, ok: r <= t.D, hist };
+    });
+    return { order: ord, res };
+  };
+
+  // Simulación expulsiva a paso 1. policy RM | DM | EDF
+  P.simulate = (ts, policy, horizon) => {
+    const H = horizon || P.hyper(ts);
+    const rem = ts.map(() => 0), rel = ts.map(() => 0), dl = ts.map(() => 0);
+    const tl = [], misses = [], resp = ts.map(() => 0);
+    const ord = policy === 'EDF' ? null : P.order(ts, policy);
+    const rank = ord ? ord.reduce((o, i, p) => { o[i] = p; return o; }, {}) : null;
+    for (let t = 0; t < H; t++) {
+      ts.forEach((tk, i) => {
+        if (t % tk.T === 0) {
+          if (rem[i] > 0) misses.push([i, dl[i]]);
+          rem[i] = tk.C; rel[i] = t; dl[i] = t + tk.D;
+        }
+      });
+      let run = -1;
+      ts.forEach((tk, i) => {
+        if (rem[i] <= 0) return;
+        if (run < 0) { run = i; return; }
+        const better = ord ? rank[i] < rank[run] : (dl[i] < dl[run] || (dl[i] === dl[run] && i < run));
+        if (better) run = i;
+      });
+      tl.push(run);
+      if (run >= 0) { rem[run]--; if (rem[run] === 0) resp[run] = Math.max(resp[run], t + 1 - rel[run]); }
+    }
+    ts.forEach((tk, i) => { if (rem[i] > 0) misses.push([i, dl[i]]); });
+    return { tl, misses, resp };
+  };
+
+  // Ejecutivo cíclico: tamaños de ciclo secundario válidos
+  P.frames = (ts) => {
+    const Tm = P.hyper(ts), maxC = Math.max(...ts.map((t) => t.C)), out = [];
+    const divs = [];
+    for (let d = 1; d * d <= Tm; d++) if (Tm % d === 0) { divs.push(d); if (d * d !== Tm) divs.push(Tm / d); }
+    divs.sort((a, b) => a - b);
+    for (const Ts of divs) {
+      if (Ts < maxC) continue;
+      const checks = ts.map((t) => ({ T: t.T, v: 2 * Ts - P.gcd(Ts, t.T), D: t.D, ok: 2 * Ts - P.gcd(Ts, t.T) <= t.D }));
+      out.push({ Ts, ok: checks.every((c) => c.ok), checks });
+    }
+    return { Tm, maxC, frames: out };
+  };
+
+  // std::vector: crecimiento por push_back
+  P.vecGrow = (n, factor, reserve) => {
+    let cap = reserve || 0, size = 0, copies = 0, reallocs = 0; const steps = [];
+    for (let i = 1; i <= n; i++) {
+      let moved = false;
+      if (size === cap) {
+        const ncap = cap === 0 ? 1 : Math.max(cap + 1, Math.floor(cap * factor));
+        copies += size; reallocs++; cap = ncap; moved = true;
+      }
+      size++; steps.push({ size, cap, moved });
+    }
+    return { steps, copies, reallocs };
+  };
+
+  // Aritmética: error de truncar 0,1 a 23 bits y deriva del reloj (error de misil Patriot)
+  P.patriot = (hours) => {
+    const trunc = Math.floor(0.1 * Math.pow(2, 23)) / Math.pow(2, 23);
+    const e = 0.1 - trunc, ticks = hours * 3600 * 10, drift = ticks * e;
+    return { trunc, e, ticks, drift, dist: drift * 1676 };
+  };
+  P.bits = (x, n) => { let s = '', f = x; for (let i = 0; i < n; i++) { f *= 2; if (f >= 1) { s += '1'; f -= 1; } else s += '0'; } return s; };
+
+  // Intercalado x += 2 con 2 hilos; mutex opcional. Devuelve resultado final de una ejecución aleatoria
+  P.raceRandom = (useMutex, rnd) => {
+    const th = [0, 1].map(() => ({ pc: 0, R: 0 })); let x = 0, owner = -1;
+    const prog = useMutex ? ['LOCK', 'LOAD', 'ADD', 'STORE', 'UNLOCK'] : ['LOAD', 'ADD', 'STORE'];
+    while (th.some((t) => t.pc < prog.length)) {
+      const cand = [0, 1].filter((i) => th[i].pc < prog.length && !(prog[th[i].pc] === 'LOCK' && owner >= 0));
+      const i = cand[Math.floor(rnd() * cand.length)], ins = prog[th[i].pc];
+      if (ins === 'LOCK') owner = i; else if (ins === 'UNLOCK') owner = -1;
+      else if (ins === 'LOAD') th[i].R = x; else if (ins === 'ADD') th[i].R += 2; else if (ins === 'STORE') x = th[i].R;
+      th[i].pc++;
+    }
+    return x;
+  };
+
+  // Laboratorio: histograma de palabras (práctica 1)
+  P.words = (txt) => {
+    const w = txt.toLowerCase().split(/[^a-záéíóúüñ]+/i).filter(Boolean), m = {};
+    w.forEach((x) => { m[x] = (m[x] || 0) + 1; });
+    return Object.entries(m).sort((a, b) => b[1] - a[1] || (a[0] < b[0] ? -1 : 1));
+  };
+  // Filósofos: cada filósofo i necesita los k cubiertos i, i+1,...,i+k-1 (mod n+1)
+  P.philosophers = (n, mode, rounds, rnd) => {
+    const forks = n + 1, k = 3, held = new Array(forks).fill(-1), log = [];
+    const need = (i) => [...Array(k).keys()].map((j) => (i + j) % forks);
+    const st = [...Array(n)].map(() => ({ got: 0, eaten: 0 }));
+    let stuck = 0;
+    for (let step = 0; step < 4000 && st.some((s) => s.eaten < rounds); step++) {
+      const i = Math.floor(rnd() * n), s = st[i]; if (s.eaten >= rounds) continue;
+      const f = need(i);
+      if (mode === 'lock') {               // std::lock: todo o nada
+        if (f.every((c) => held[c] < 0)) { f.forEach((c) => (held[c] = i)); log.push(i + ' come'); f.forEach((c) => (held[c] = -1)); s.eaten++; stuck = 0; }
+      } else {                              // lock() individuales en orden, con interrupciones entre medias
+        if (s.got < k) { const c = f[s.got]; if (held[c] < 0) { held[c] = i; s.got++; stuck = 0; } }
+        else { log.push(i + ' come'); f.forEach((c) => (held[c] = -1)); s.got = 0; s.eaten++; stuck = 0; }
+      }
+      stuck++;
+      if (stuck > 400) return { deadlock: true, eaten: st.map((s) => s.eaten), held: held.slice(), log };
+    }
+    return { deadlock: false, eaten: st.map((s) => s.eaten), held: held.slice(), log };
+  };
+  // Reparto de filas por hilo (suma de matrices): fila inicial = id, incremento = n hilos
+  P.rows = (tam, nh) => [...Array(nh).keys()].map((id) => { const r = []; for (let f = id; f < tam; f += nh) r.push(f); return r; });
+
+
+  // Inversión de prioridad: tres tareas (L baja, M media, H alta) y un mutex. proto: none | pip | icpp
+  P.INV = [
+    { n: 'L', prio: 1, rel: 0, steps: [['run', 1], ['lock'], ['run', 3], ['unlock'], ['run', 1]] },
+    { n: 'M', prio: 2, rel: 2, steps: [['run', 4]] },
+    { n: 'H', prio: 3, rel: 3, steps: [['run', 1], ['lock'], ['run', 2], ['unlock'], ['run', 1]] }];
+  P.inversion = (proto, jobsIn) => {
+    const J = (jobsIn || P.INV).map((j) => ({ n: j.n, prio: j.prio, rel: j.rel, st: j.steps.map((x) => x.slice()), k: 0, fin: -1 }));
+    const ceil = Math.max(...J.map((j) => j.prio)); let owner = -1; const tl = [], act = [];
+    const active = (i) => {
+      const j = J[i]; let a = j.prio;
+      if (owner === i) {
+        if (proto === 'icpp') a = Math.max(a, ceil);
+        if (proto === 'pip') J.forEach((b, bi) => { if (bi !== i && b.fin < 0 && b.rel <= tl.length && b.st[b.k] && b.st[b.k][0] === 'lock') a = Math.max(a, b.prio); });
+      }
+      return a;
+    };
+    const zero = (i) => {
+      const j = J[i];
+      while (j.k < j.st.length && j.st[j.k][0] !== 'run') {
+        if (j.st[j.k][0] === 'lock') { if (owner < 0) owner = i; else if (owner !== i) return; }
+        else if (owner === i) owner = -1;
+        j.k++;
+      }
+    };
+    for (let t = 0; t < 60 && J.some((j) => j.fin < 0); t++) {
+      const rel = J.map((j, i) => i).filter((i) => J[i].rel <= t && J[i].fin < 0);
+      rel.sort((a, b) => active(b) - active(a)); rel.forEach(zero);
+      J.forEach((j, i) => { if (j.fin < 0 && j.rel <= t && j.k >= j.st.length) j.fin = t; });
+      const ready = rel.filter((i) => J[i].fin < 0 && J[i].st[J[i].k][0] === 'run').sort((a, b) => active(b) - active(a));
+      const run = ready.length ? ready[0] : -1;
+      tl.push(run); act.push(run >= 0 ? active(run) : 0);
+      if (run >= 0) { const j = J[run]; j.st[j.k][1]--; if (j.st[j.k][1] === 0) { j.k++; zero(run); if (j.k >= j.st.length) j.fin = t + 1; } }
+    }
+    return { tl, act, fin: J.map((j) => j.fin), names: J.map((j) => j.n), owner };
+  };
+
+  // Práctica 3.4: un generador y n lectores; nadie se adelanta (cada lector lee cada valor una vez)
+  P.almacen = (nLect, nVal, seed) => {
+    const r = P.mulberry(seed), trace = [], reads = Array.from({ length: nLect }, () => []);
+    let valor = -1, escritos = 0; const leido = new Array(nLect).fill(true);
+    for (;;) {
+      const op = [];
+      if (escritos < nVal && leido.every(Boolean)) op.push(-1);
+      for (let i = 0; i < nLect; i++) if (valor >= 0 && !leido[i]) op.push(i);
+      if (!op.length) break;
+      const a = op[Math.floor(r() * op.length)];
+      if (a < 0) { valor = escritos++; leido.fill(false); trace.push({ who: 'G', v: valor, text: 'Generador escribe ' + valor }); }
+      else { leido[a] = true; reads[a].push(valor); trace.push({ who: a, v: valor, text: 'Lector ' + a + ' lee ' + valor }); }
+    }
+    return { trace, reads, ok: reads.every((l) => l.length === nVal && l.every((v, k) => v === k)) };
+  };
+  P.mulberry = (a) => () => { a |= 0; a = (a + 0x6d2b79f5) | 0; let t = Math.imul(a ^ (a >>> 15), 1 | a); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
+  root.PSTR = P;
+})(typeof window !== 'undefined' ? window : module.exports);
+</script><script>(function(){
+const P=window.PSTR,S=window.PSTR_SIMS=window.PSTR_SIMS||{};
+const NS='http://www.w3.org/2000/svg';
+function h(tag,props,...kids){const e=document.createElement(tag);for(const k in(props||{})){if(k==='on')for(const ev in props.on)e.addEventListener(ev,props.on[ev]);else if(k==='html')e.innerHTML=props[k];else if(k in e&&k!=='list')try{e[k]=props[k]}catch(_){e.setAttribute(k,props[k])}else e.setAttribute(k,props[k])}
+ kids.flat().forEach(c=>{if(c!=null)e.append(c.nodeType?c:document.createTextNode(c))});return e}
+const COL=['#2456d6','#d9480f','#2b8a3e','#a61e4d','#862e9c','#0b7285'];
+function gantt(tl,labels,o){o=o||{};const n=tl.length,cw=Math.max(10,Math.min(26,Math.floor(720/Math.max(n,1)))),rh=24,L=50,W=L+n*cw+10,Hh=labels.length*rh+30;
+ let s=`<svg xmlns="${NS}" viewBox="0 0 ${W} ${Hh}" width="${W}" role="img" aria-label="Diagrama de Gantt">`;
+ labels.forEach((l,i)=>{s+=`<text x="4" y="${i*rh+17}" font-size="13" fill="currentColor">${l}</text><line x1="${L}" x2="${W-10}" y1="${i*rh+22}" y2="${i*rh+22}" stroke="currentColor" opacity=".2"/>`});
+ tl.forEach((r,t)=>{if(r>=0)s+=`<rect x="${L+t*cw}" y="${r*rh+3}" width="${cw-1}" height="${rh-8}" fill="${COL[r%COL.length]}" rx="2"><title>t=${t}</title></rect>`});
+ (o.marks||[]).forEach(m=>{s+=`<text x="${L+m[1]*cw}" y="${m[0]*rh+14}" font-size="14" fill="#c92a2a" font-weight="700">✗</text>`});
+ const step=n>60?10:(n>30?5:1);for(let t=0;t<=n;t+=step)s+=`<text x="${L+t*cw}" y="${labels.length*rh+16}" font-size="10" text-anchor="middle" fill="currentColor">${t}</text>`;
+ return s+'</svg>'}
+function box(root,title){root.innerHTML='';root.append(h('div',{className:'stt'},title));return root}
+function num(v,min,max,w,cb){return h('input',{type:'number',value:v,min,max,on:{input:cb}})}
+function fmt(x,d){return Number(x).toFixed(d==null?2:d).replace('.',',')}
+function reg(root,load){const id=root.id.replace(/^sim-/,'');S[id]={load}}
+
+// ---------- planificación ----------
+const PRE={feb17:[[4,60,20,2],[4,10,10,1],[8,50,50,0]],jun16:[[4,100,15,2],[4,10,10,2],[8,50,50,0],[6,40,25,2]],sep16:[[12,120,120,0],[8,500,25,3],[10,20,20,3]],burns:[[3,7,7,0],[3,12,12,0],[5,20,20,0]],ej1:[[1,4,4,0],[2,6,6,0],[3,12,12,0]],fallo:[[2,4,4,0],[3,6,6,0],[3,12,12,0]]};
+function rta(root,arg){box(root,'Simulador de planificación: RM / DM / EDF y tiempo de respuesta');
+ let rows=(PRE[arg]||PRE.burns).map(r=>r.slice());
+ const tb=h('table'),out=h('div'),pol=h('select',{on:{change:run}},h('option',{value:'RM'},'RM (periodo)'),h('option',{value:'DM'},'DM (plazo)'),h('option',{value:'EDF'},'EDF'));
+ function draw(){tb.innerHTML='<tr><th>Tarea</th><th>C</th><th>T</th><th>D</th><th>B</th><th></th></tr>';rows.forEach((r,i)=>{const tr=h('tr',null,h('td',null,'τ'+(i+1)));[0,1,2,3].forEach(j=>tr.append(h('td',null,num(r[j],0,999,0,e=>{r[j]=+e.target.value;run()}))));tr.append(h('td',null,h('button',{on:{click:()=>{rows.splice(i,1);draw();run()}}},'×')));tb.append(tr)})}
+ function run(){const ts=rows.map(r=>({C:r[0],T:r[1],D:r[2]||r[1],B:r[3]}));if(!ts.length){out.textContent='';return}
+  const u=P.util(ts),n=ts.length,lb=P.llBound(n),H=P.hyper(ts),p=pol.value;let html=`<p>Utilización U = <b>${fmt(u,3)}</b> · cota de Liu–Layland (n=${n}) = <b>${fmt(lb,3)}</b> · hiperperiodo = <b>${H}</b>. `;
+  html+=p==='EDF'?(u<=1?'EDF: U ≤ 1, planificable (si D = T).':'U &gt; 1: no planificable.'):(u<=lb?'U ≤ cota: planificable por la condición suficiente.':'U &gt; cota: la condición suficiente no concluye; usa el tiempo de respuesta.')+'</p>';
+  if(p!=='EDF'){const r=P.rta(ts,p);html+='<div class="tw"><table><tr><th>Tarea</th><th>Prioridad</th><th>Iteraciones de R</th><th>R</th><th>D</th><th>¿Cumple?</th></tr>';ts.forEach((t,i)=>{const x=r.res[i];html+=`<tr><td>τ${i+1}</td><td>${r.order.length-r.order.indexOf(i)}</td><td>${x.hist.join(' → ')}</td><td>${x.R}</td><td>${t.D}</td><td>${x.ok?'✔':'✘'}</td></tr>`});html+='</table></div>'}
+  const hh=Math.min(H,120),sim=P.simulate(ts,p,hh);html+=`<p>Cronograma (primeros ${hh} instantes, sin bloqueos). ${sim.misses.length?'<b style="color:#c92a2a">Hay plazos incumplidos (✗).</b>':'Ningún plazo incumplido.'}</p>`+gantt(sim.tl,ts.map((_,i)=>'τ'+(i+1)),{marks:sim.misses.map(m=>[m[0],m[1]-1])});
+  out.innerHTML=html}
+ root.append(h('div',{className:'row'},h('label',null,'Política: ',pol),h('button',{on:{click:()=>{rows.push([1,10,10,0]);draw();run()}}},'+ tarea'),h('small',null,'C = cómputo, T = periodo, D = plazo, B = bloqueo máximo')),h('div',{className:'tw'},tb),out);
+ draw();run();root.__load=a=>{rows=(PRE[a]||PRE.burns).map(r=>r.slice());draw();run()};reg(root,root.__load)}
+// ---------- ejecutivo cíclico ----------
+function frames(root,arg){box(root,'Ejecutivo cíclico: tamaño del ciclo secundario');let rows=[[40,10,40],[80,8,80],[120,12,120]];
+ const tb=h('table'),out=h('div');
+ function draw(){tb.innerHTML='<tr><th>Tarea</th><th>T</th><th>C</th><th>D</th><th></th></tr>';rows.forEach((r,i)=>{const tr=h('tr',null,h('td',null,'τ'+(i+1)));[0,1,2].forEach(j=>tr.append(h('td',null,num(r[j],1,999,0,e=>{r[j]=+e.target.value;run()}))));tr.append(h('td',null,h('button',{on:{click:()=>{rows.splice(i,1);draw();run()}}},'×')));tb.append(tr)})}
+ function run(){if(!rows.length)return;const f=P.frames(rows.map(r=>({T:r[0],C:r[1],D:r[2]})));let html=`<p>Ciclo principal Tm = mcm(T) = <b>${f.Tm}</b>. Cómputo máximo = <b>${f.maxC}</b>. El ciclo secundario Ts debe cumplir: Ts ≥ ${f.maxC}, Ts divide a Tm y 2·Ts − mcd(Ts, Tᵢ) ≤ Dᵢ para toda tarea.</p><div class="tw"><table><tr><th>Ts</th>`+rows.map((_,i)=>`<th>2Ts−mcd (τ${i+1})</th>`).join('')+'<th>¿Válido?</th></tr>';f.frames.forEach(x=>{html+=`<tr><td>${x.Ts}</td>`+x.checks.map(c=>`<td>${c.v} ${c.ok?'≤':'&gt;'} ${c.D}</td>`).join('')+`<td>${x.ok?'✔':'✘'}</td></tr>`});out.innerHTML=html+'</table></div>'}
+ root.append(h('div',{className:'tw'},tb),h('button',{on:{click:()=>{rows.push([100,5,100]);draw();run()}}},'+ tarea'),out);draw();run();reg(root,()=>{})}
+// ---------- carrera ----------
+function race(root){box(root,'Condición de carrera: dos hilos hacen x += 2 (x empieza en 0)');
+ const n=h('input',{type:'range',min:10,max:2000,value:500}),m=h('input',{type:'checkbox'}),out=h('div'),lab=h('span',null,'500 ejecuciones');
+ function run(){lab.textContent=n.value+' ejecuciones';const r=P.mulberry(Date.now()%100000),c={};for(let i=0;i<+n.value;i++){const x=P.raceRandom(m.checked,r);c[x]=(c[x]||0)+1}
+  const ks=Object.keys(c).sort(),mx=Math.max(...Object.values(c));let s=`<svg xmlns="${NS}" viewBox="0 0 300 120" width="300">`;ks.forEach((k,i)=>{const hh=100*c[k]/mx;s+=`<rect class="bar" x="${30+i*90}" y="${105-hh}" width="60" height="${hh}"/><text x="${60+i*90}" y="118" text-anchor="middle" font-size="12" fill="currentColor">x=${k}</text><text x="${60+i*90}" y="${100-hh}" text-anchor="middle" font-size="12" fill="currentColor">${c[k]}</text>`});
+  out.innerHTML=s+'</svg><p>'+(ks.length>1||ks[0]!=='4'?'Aparece <b>x = 2</b>: se pierde una actualización (los dos hilos leyeron 0).':'Con mutex solo sale <b>x = 4</b> en todas las ejecuciones.')+'</p>'}
+ root.append(h('div',{className:'row'},h('label',null,'Ejecuciones: ',n),lab,h('label',null,h('input',{type:'checkbox',id:'m'+Math.random(),on:{change:run}}),' con mutex')),out);
+ root.querySelector('input[type=checkbox]').onchange=e=>{m.checked=e.target.checked;run()};n.oninput=run;root.append(h('button',{on:{click:run}},'Repetir'));run();reg(root,()=>{})}
+// ---------- vector ----------
+function vec(root){box(root,'std::vector: capacidad y copias con push_back');const n=h('input',{type:'range',min:1,max:64,value:20}),f=h('select',null,h('option',{value:'2'},'factor 2 (GCC)'),h('option',{value:'1.5'},'factor 1,5 (MSVC)')),r=h('input',{type:'number',value:0,min:0,max:64}),out=h('div');
+ function run(){const x=P.vecGrow(+n.value,+f.value,+r.value),mx=Math.max(...x.steps.map(s=>s.cap)),w=Math.max(6,Math.floor(560/x.steps.length));let s=`<svg xmlns="${NS}" viewBox="0 0 ${w*x.steps.length+20} 130" width="${w*x.steps.length+20}">`;x.steps.forEach((t,i)=>{const hc=110*t.cap/mx,hs=110*t.size/mx;s+=`<rect x="${10+i*w}" y="${120-hc}" width="${w-1}" height="${hc}" fill="none" stroke="currentColor" opacity=".5"/><rect x="${10+i*w}" y="${120-hs}" width="${w-1}" height="${hs}" class="bar" ${t.moved?'style="fill:#d9480f"':''}/>`});
+  out.innerHTML=s+`</svg><p>size final = <b>${n.value}</b>, capacity final = <b>${x.steps[x.steps.length-1].cap}</b>, realocaciones = <b>${x.reallocs}</b> (barras naranjas), elementos copiados = <b>${x.copies}</b>. Con <code>reserve(${n.value})</code> serían 1 realocación y 0 copias.</p>`}
+ root.append(h('div',{className:'row'},h('label',null,'push_back ×',n),h('label',null,'crecimiento ',f),h('label',null,'reserve inicial ',r)),out);[n,f,r].forEach(e=>e.addEventListener('input',run));run();reg(root,()=>{})}
+// ---------- Patriot ----------
+function patriot(root){box(root,'Error de coma flotante: el reloj del Patriot');const hr=h('input',{type:'range',min:0,max:120,value:100}),out=h('div');
+ function run(){const p=P.patriot(+hr.value);out.innerHTML=`<p>0,1 s en binario: <code>${P.bits(0.1,40)}…</code> (infinito periódico). Truncado a 23 bits tras la coma: error por tic = <b>${p.e.toExponential(3).replace('.',',')}</b> s.</p><p>Tras <b>${hr.value} h</b> hay ${p.ticks.toLocaleString('es-ES')} tics → deriva = <b>${fmt(p.drift,4)} s</b> → un Scud a 1676 m/s se «desplaza» <b>${fmt(p.dist,0)} m</b> respecto a donde el sistema lo busca.</p>`}
+ root.append(h('div',{className:'row'},h('label',null,'Horas encendido: ',hr),h('span',null,'')),out);hr.oninput=run;run();reg(root,()=>{})}
+// ---------- inversión ----------
+function inv(root){box(root,'Inversión de prioridad: L (baja), M (media), H (alta) y un mutex');const sel=h('select',null,h('option',{value:'none'},'sin protocolo'),h('option',{value:'pip'},'herencia de prioridad'),h('option',{value:'icpp'},'techo de prioridad inmediato')),out=h('div');
+ function run(){const r=P.inversion(sel.value);out.innerHTML=gantt(r.tl,['L','M','H'])+`<p>H termina en <b>t = ${r.fin[2]}</b> (llega en t = 3). Tiempo de respuesta de H = <b>${r.fin[2]-3}</b>; su cómputo propio es 4, luego pierde <b>${r.fin[2]-3-4}</b> unidades esperando.</p><p>L: 1 + sección crítica de 3 + 1. M llega en 2 y dura 4. H llega en 3: 1 + sección crítica de 2 + 1.</p>`}
+ root.append(h('div',{className:'row'},h('label',null,'Protocolo: ',sel)),out);sel.onchange=run;run();reg(root,a=>{if(a){sel.value=a;run()}})}
+// ---------- filósofos ----------
+function philo(root){box(root,'Cena de los filósofos (3 cubiertos por filósofo, n+1 cubiertos)');const n=h('input',{type:'number',min:3,max:8,value:3}),md=h('select',null,h('option',{value:'seq'},'lock() de cada mutex uno a uno'),h('option',{value:'lock'},'std::lock / scoped_lock (todos a la vez)')),seed=h('input',{type:'number',value:1}),ro=h('input',{type:'number',value:20,min:1,max:200}),out=h('div');
+ function run(){const r=P.philosophers(+n.value,md.value,+ro.value,P.mulberry(+seed.value));out.innerHTML=r.deadlock?`<p><b style="color:#c92a2a">INTERBLOQUEO.</b> Comidas por filósofo: ${r.eaten.join(', ')}. Cubiertos tomados por: ${r.held.map((x,i)=>`C${i+1}:${x<0?'libre':'F'+(x+1)}`).join(' · ')}</p>`:`<p><b style="color:#2b8a3e">Terminan todos.</b> Comidas por filósofo: ${r.eaten.join(', ')}.</p>`;
+  let t=0;if(md.value==='seq'){let d=0;for(let s=1;s<=50;s++)if(P.philosophers(+n.value,'seq',+ro.value,P.mulberry(s)).deadlock)d++;out.innerHTML+=`<p>En 50 semillas distintas hay interbloqueo en <b>${d}</b>.</p>`}}
+ root.append(h('div',{className:'row'},h('label',null,'Filósofos ',n),h('label',null,'Ciclos ',ro),h('label',null,'Semilla ',seed),md,h('button',{on:{click:run}},'Simular')),out);[n,md,seed,ro].forEach(e=>e.addEventListener('input',run));run();reg(root,()=>{})}
+// ---------- laboratorio: histograma ----------
+const Q='En un lugar de la Mancha, de cuyo nombre no quiero acordarme, no ha mucho tiempo que vivía un hidalgo de los de lanza en astillero, adarga antigua, rocín flaco y galgo corredor. Una olla de algo más vaca que carnero, salpicón las más noches, duelos y quebrantos los sábados, lentejas los viernes, algún palomino de añadidura los domingos, consumían las tres partes de su hacienda.';
+function labWords(root,arg){box(root,'Práctica 1: histograma de palabras (map<string,int>)');const ta=h('textarea',null,Q),cs=h('input',{type:'checkbox',checked:true,on:{change:run}}),out=h('div');
+ function run(){const txt=cs.checked?ta.value.toLowerCase():ta.value,w=txt.split(/[^A-Za-zÁÉÍÓÚÜÑáéíóúüñ]+/).filter(Boolean),m={};w.forEach(x=>m[x]=(m[x]||0)+1);const e=Object.entries(m).sort((a,b)=>b[1]-a[1]||(a[0]<b[0]?-1:1)),top=e.slice(0,8),mx=top.length?top[0][1]:1;
+  let s=`<svg xmlns="${NS}" viewBox="0 0 420 ${top.length*22+6}" width="420">`;top.forEach((t,i)=>{s+=`<text x="2" y="${i*22+16}" font-size="13" fill="currentColor">${t[0]}</text><rect class="bar" x="90" y="${i*22+4}" width="${300*t[1]/mx}" height="16"/><text x="${95+300*t[1]/mx}" y="${i*22+16}" font-size="12" fill="currentColor">${t[1]}</text>`});
+  const cons=top.slice(0,2).map(t=>t[0]+': '+t[1]).join('\n');out.innerHTML=s+`</svg><div class="cons">Palabras totales: ${w.length}\nPalabras distintas: ${e.length}\nLas dos más repetidas:\n${cons}</div><pre><code>map&lt;string,int&gt; hist;\nwhile (in &gt;&gt; palabra) {\n    for (char&amp; c : palabra) c = tolower((unsigned char)c);   // ${cs.checked?'activo':'desactivado'}\n    palabra.erase(remove_if(palabra.begin(), palabra.end(), [](unsigned char c){ return ispunct(c); }), palabra.end());\n    if (!palabra.empty()) ++hist[palabra];\n}</code></pre>`}
+ root.append(ta,h('div',{className:'row'},h('label',null,cs,' ignorar mayúsculas')),out);ta.oninput=run;run();reg(root,a=>{if(a==='mayus'){ta.value='Programación de Tiempo Real o programación de tiempo real';cs.checked=false}else if(a==='quijote')ta.value=Q;run()})}
+// ---------- laboratorio: filas por hilo ----------
+function labRows(root){box(root,'Práctica 3.1: suma de matrices por filas con n hilos');const t=h('input',{type:'number',min:1,max:16,value:6}),nh=h('input',{type:'number',min:1,max:8,value:3}),out=h('div');
+ function run(){const tam=+t.value,k=+nh.value,rows=P.rows(tam,k);let html='<div class="tw"><table><tr><th>Hilo</th><th>Filas que suma (inicial = id, incremento = n)</th><th>nº filas</th></tr>';rows.forEach((r,i)=>html+=`<tr><td>${i}</td><td>${r.join(', ')||'—'}</td><td>${r.length}</td></tr>`);const mxr=Math.max(...rows.map(r=>r.length));
+  html+=`</table></div><div class="cons">tiempo modelo = filas del hilo más cargado × tam = ${mxr} × ${tam} = ${mxr*tam} sumas\ntiempo con 1 hilo = ${tam*tam} sumas\nmejora teórica = ${fmt(tam*tam/(mxr*tam),2)}×</div><pre><code>vector&lt;thread&gt; v;\nfor (int id = 0; id &lt; ${k}; ++id)\n    v.emplace_back(suma_fila, ref(a), ref(b), ref(c), id, ${k});   // fila inicial id, salto ${k}\nfor (auto&amp; h : v) h.join();</code></pre>`;out.innerHTML=html}
+ root.append(h('div',{className:'row'},h('label',null,'Tamaño (tam×tam) ',t),h('label',null,'Hilos ',nh)),out);[t,nh].forEach(e=>e.addEventListener('input',run));run();reg(root,()=>{})}
+// ---------- enlace dinámico ----------
+function bind(root){box(root,'¿Qué método se ejecuta? Enlace estático frente a dinámico');const sv=h('select',null,h('option',{value:'v'},'método virtual'),h('option',{value:'n'},'método no virtual')),how=h('select',null,h('option',{value:'ptr'},'a través de Base* (apunta a Derivada)'),h('option',{value:'ref'},'a través de Base& (referida a Derivada)'),h('option',{value:'val'},'copia por valor: Base b = derivada;'),h('option',{value:'obj'},'directamente sobre un objeto Derivada')),out=h('div');
+ function run(){const virt=sv.value==='v',h2=how.value;const dyn=(h2==='ptr'||h2==='ref')&&virt,d=h2==='obj'||dyn;out.innerHTML=`<p>Se ejecuta <b>${d?'Derivada::f()':'Base::f()'}</b>.</p><p>${h2==='val'?'La copia por valor «recorta» el objeto (slicing): ya solo es un Base.':virt?(d&&h2!=='obj'?'La tabla de métodos virtuales del objeto real decide en tiempo de ejecución.':'El tipo del objeto es Derivada.'):'Sin <code>virtual</code> el compilador decide por el tipo estático (Base): enlace estático.'}</p>`}
+ root.append(h('div',{className:'row'},sv,how),out);[sv,how].forEach(e=>e.onchange=run);run();reg(root,()=>{})}
+
+function complejo(root){box(root,'Práctica 2.1: número complejo (C_Complejo)');
+ const mk=(v)=>h('input',{type:'number',step:'0.5',value:v}),ar=mk(3),ai=mk(4),br=mk(1),bi=mk(-2),out=h('div');
+ const fmt=(re,im)=>`${+re.toFixed(6)}${im<0?'-':'+'}${+Math.abs(im).toFixed(6)}i`;
+ function run(){const a=[+ar.value,+ai.value],b=[+br.value,+bi.value];const m=Math.hypot(a[0],a[1]),g=Math.atan2(a[1],a[0]);
+  const code=`C_Complejo a{${a[0]}, ${a[1]}}, b{${b[0]}, ${b[1]}};\ncout << "a+b=" << a + b << "  a-b=" << a - b << '\\n';\nauto [m, arg] = modulo_argumento(a);\ncout << "|a|=" << m << " arg(a)=" << arg << " rad\\n";`;
+  out.innerHTML='<pre><code></code></pre><div class="cons"></div>';out.querySelector('code').textContent=code;
+  out.querySelector('.cons').textContent=`a=${fmt(...a)} b=${fmt(...b)}\na+b=${fmt(a[0]+b[0],a[1]+b[1])}  a-b=${fmt(a[0]-b[0],a[1]-b[1])}\n|a|=${+m.toFixed(6)} arg(a)=${+g.toFixed(6)} rad`}
+ root.append(h('div',{className:'row'},h('label',null,'a = ',ar,' + ',ai,'i'),h('label',null,' b = ',br,' + ',bi,'i')),out);[ar,ai,br,bi].forEach(e=>e.oninput=run);run();reg(root,()=>{})}
+function almacen(root){box(root,'Práctica 3.4: almacén con un generador y varios lectores (monitor)');
+ const nl=h('input',{type:'range',min:1,max:5,value:3}),lab=h('span',null,'3 lectores'),sd=h('input',{type:'number',value:1,min:1,max:9999,style:'width:6em'}),out=h('div');
+ function run(){lab.textContent=nl.value+' lectores';const r=P.almacen(+nl.value,7,+sd.value);
+  const rows=r.trace.map((t,k)=>`<tr><td>${k+1}</td><td>${t.who==='G'?'<b>Generador</b>':'Lector '+t.who}</td><td>${t.who==='G'?'escribe':'lee'} ${t.v}</td></tr>`).join('');
+  out.innerHTML=`<p>${r.ok?'✔ Cada lector leyó los 7 valores <b>una vez y en orden</b>; el generador nunca escribió antes de que todos leyeran.':'✘ Algo falló'}</p><p>Suma que ve cada lector: <b>${r.reads.map(l=>l.reduce((a,b)=>a+b,0)).join(', ')}</b> (esperado 21).</p><div class="tw" style="max-height:260px;overflow:auto"><table><tr><th>Paso</th><th>Hilo</th><th>Acción</th></tr>${rows}</table></div><p><small>El orden de los lectores cambia con la semilla; el resultado, no.</small></p>`}
+ root.append(h('div',{className:'row'},h('label',null,'Lectores: ',nl),lab,h('label',null,' semilla: ',sd)),out);nl.oninput=run;sd.oninput=run;run();reg(root,()=>{})}
+const R={rta,frames,race,vec,patriot,inv,philo,'lab-words':labWords,'lab-rows':labRows,bind,complejo,almacen};
+function init(){document.querySelectorAll('.sim[data-sim]').forEach(el=>{const[name,arg]=el.dataset.sim.split(':');try{R[name](el,arg)}catch(e){el.textContent='Error en el simulador: '+e.message;console.error(e)}})}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
+})();
+</script><script>(function(){
+const $=(s,r=document)=>r.querySelector(s),$$=(s,r=document)=>[...r.querySelectorAll(s)];
+const ls={get(k,d){try{const v=localStorage.getItem(k);return v==null?d:JSON.parse(v)}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+// tema claro/oscuro
+function applyTheme(t){if(t)document.documentElement.setAttribute('data-theme',t);}
+applyTheme(ls.get('theme',null));
+$('#tbtn').onclick=()=>{const cur=document.documentElement.getAttribute('data-theme')||(matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');const n=cur==='dark'?'light':'dark';applyTheme(n);ls.set('theme',n)};
+$('#menu').onclick=()=>$('#side').classList.toggle('open');
+$$('#side a').forEach(a=>a.addEventListener('click',()=>$('#side').classList.remove('open')));
+// abrir <details> si el hash apunta dentro
+function openHash(){const id=decodeURIComponent(location.hash.slice(1));if(!id)return;const e=document.getElementById(id);if(!e)return;let p=e;while(p){if(p.tagName==='DETAILS')p.open=true;p=p.parentElement}e.scrollIntoView()}
+addEventListener('hashchange',openHash);setTimeout(openHash,300);
+// resaltar sección activa
+const secs=$$('section.sec');if(secs.length>1&&'IntersectionObserver'in window){const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){$$('#side a.top').forEach(a=>a.classList.toggle('on',a.getAttribute('href')==='#'+e.target.id))}}),{rootMargin:'-20% 0px -70% 0px'});secs.forEach(s=>io.observe(s))}
+// buscador
+let IDX=null;const res=$('#res');
+async function loadIdx(){if(IDX)return IDX;const el=$('#sidx');if(el){IDX=JSON.parse(el.textContent)}else{try{IDX=await (await fetch('search.json')).json()}catch(e){IDX=[]}}return IDX}
+const norm=s=>s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'');
+$('#q').addEventListener('input',async e=>{const q=norm(e.target.value.trim());if(q.length<2){res.style.display='none';return}const ix=await loadIdx();const ws=q.split(/\s+/);
+ const out=[];for(const it of ix){const t=norm(it.title),b=it.n;let sc=0;let ok=true;for(const w of ws){if(t.includes(w))sc+=5;else if(b.includes(w))sc+=1;else{ok=false;break}}if(ok)out.push([sc,it])}
+ out.sort((a,b)=>b[0]-a[0]);res.innerHTML=out.slice(0,25).map(([s,it])=>`<a href="${it.href}"><b>${it.title}</b> <small>${it.sec}</small><br><small>${it.snip}</small></a>`).join('')||'<small>Sin resultados</small>';res.style.display='block'});
+document.addEventListener('click',e=>{if(!res.contains(e.target)&&e.target.id!=='q')res.style.display='none'});
+document.addEventListener('keydown',e=>{if(e.key==='/'&&document.activeElement.tagName!=='INPUT'&&document.activeElement.tagName!=='TEXTAREA'){e.preventDefault();$('#q').focus()}});
+// checklist
+const checks=$$('.chk input');const kk='chk:'+(document.body.dataset.site||'x');let st=ls.get(kk,{});
+function updProg(){const n=checks.filter(c=>c.checked).length;$$('.prog>i').forEach(i=>i.style.width=(100*n/Math.max(1,checks.length))+'%');$$('.progn').forEach(s=>s.textContent=n+' / '+checks.length)}
+checks.forEach(c=>{c.checked=!!st[c.dataset.id];c.onchange=()=>{st[c.dataset.id]=c.checked;ls.set(kk,st);updProg()}});updProg();
+// pestañas
+$$('.tabs').forEach(tb=>{const bs=$$('button',tb);bs.forEach(b=>b.onclick=()=>{bs.forEach(x=>x.classList.toggle('on',x===b));const g=tb.dataset.g;$$('.panel[data-g="'+g+'"]').forEach(p=>p.classList.toggle('on',p.dataset.t===b.dataset.t))})});
+// filtros exámenes
+const fchips=$$('.chips[data-f] .chip'),fq=$('#exq');
+function filt(){const act=fchips.filter(c=>c.classList.contains('on')).map(c=>c.dataset.v);const q=fq?norm(fq.value):'';let shown=0;
+ $$('details.exam').forEach(d=>{const ok=(!act.length||act.some(a=>d.dataset.f.split(' ').includes(a)))&&(!q||norm(d.dataset.txt).includes(q));d.style.display=ok?'':'none';if(ok)shown++;if(q&&ok)d.open=true});
+ $$('details.cur').forEach(c=>{const any=$$('details.exam',c).some(d=>d.style.display!=='none');c.style.display=any?'':'none'});const s=$('#exn');if(s)s.textContent=shown+' exámenes'}
+fchips.forEach(c=>c.onclick=()=>{c.classList.toggle('on');filt()});if(fq)fq.addEventListener('input',filt);
+// test
+$$('.q').forEach(q=>{const ok=+q.dataset.ok;$$('.o',q).forEach((o,i)=>o.onclick=()=>{if(q.dataset.done)return;q.dataset.done=1;o.classList.add(i+1===ok?'ok':'bad');$$('.o',q)[ok-1].classList.add('ok');$('.ex',q).style.display='block';upd()})});
+function upd(){const all=$$('.q'),d=all.filter(q=>q.dataset.done),g=d.filter(q=>$('.o.bad',q)==null).length;const s=$('#qscore');if(s)s.textContent=g+' aciertos de '+d.length+' respondidas ('+all.length+' preguntas)'}
+const rq=$('#qreset');if(rq)rq.onclick=()=>{$$('.q').forEach(q=>{delete q.dataset.done;$$('.o',q).forEach(o=>o.className='o');$('.ex',q).style.display='none'});upd()};
+// tarjetas
+const cards=window.CARDS||[];let ci=0,flip=false;const cd=$('#card');
+function showCard(){if(!cd||!cards.length)return;const c=cards[ci];cd.textContent=flip?c[1]:c[0];cd.style.fontWeight=flip?'400':'700';$('#cn').textContent=(ci+1)+' / '+cards.length}
+if(cd&&cards.length){cd.onclick=()=>{flip=!flip;showCard()};$('#cnext').onclick=()=>{ci=(ci+1)%cards.length;flip=false;showCard()};$('#cprev').onclick=()=>{ci=(ci+cards.length-1)%cards.length;flip=false;showCard()};$('#cshuf').onclick=()=>{for(let i=cards.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[cards[i],cards[j]]=[cards[j],cards[i]]}ci=0;flip=false;showCard()};showCard()}
+// botones "abrir en el simulador"
+$$('.open-sim').forEach(b=>b.onclick=()=>{const s=document.getElementById('sim-'+b.dataset.sim);if(!s)return;let p=s;while(p){if(p.tagName==='DETAILS')p.open=true;p=p.parentElement}s.scrollIntoView({behavior:'smooth',block:'center'});const S=(window.PSTR_SIMS||{})[b.dataset.sim];if(S&&S.load)S.load(b.dataset.arg)});
+// PWA
+if('serviceWorker'in navigator&&location.protocol.startsWith('http')){navigator.serviceWorker.register('sw.js').catch(()=>{})}
+})();
+</script></body></html>

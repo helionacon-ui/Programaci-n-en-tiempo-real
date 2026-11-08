@@ -1,0 +1,6 @@
+a={1, 2, 3, 4} b={3, 4, 5}
+union: {1, 2, 3, 4, 5}  interseccion: {3, 4}  a-b: {1, 2}
+{3,4} en a: true, b en a: false
+"": set=false sin colecciones=false
+"hola": set=false sin colecciones=false
+"hello": set=true sin colecciones=true

@@ -1,0 +1,12 @@
+[Robot 1] ha procesado pieza 0
+[Robot 3] ha procesado pieza 0
+[Robot 2] ha procesado pieza 0
+[Robot 1] ha procesado pieza 1
+[Robot 3] ha procesado pieza 1
+[Robot 2] ha procesado pieza 1
+[Robot 1] ha procesado pieza 2
+[Robot 1] ha terminado
+[Robot 3] ha procesado pieza 2
+[Robot 2] ha procesado pieza 2
+[Robot 3] ha terminado
+[Robot 2] ha terminado

@@ -1,0 +1,6 @@
+Mario (ccc 12345678): 150.5 euros
+Lucia (ccc 87654321): 0 euros
+transferencia 50: true
+transferencia 500: false
+Mario (ccc 12345678): 100.5 euros
+Lucia (ccc 87654321): 50 euros

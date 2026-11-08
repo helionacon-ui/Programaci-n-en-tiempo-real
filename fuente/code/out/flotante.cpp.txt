@@ -1,0 +1,7 @@
+0.1 + 0.2 == 0.3 ? false
+0.1 + 0.2 = 0.30000000000000004
+|0.1+0.2-0.3| < 1e-9 ? true
+suma de diez 0.1 = 0.99999999999999989 (== 1 ? false)
+error por tic   = 9.537e-08 s
+deriva en 100 h = 0.3433 s
+desplazamiento  = 575 m (Scud a 1676 m/s)

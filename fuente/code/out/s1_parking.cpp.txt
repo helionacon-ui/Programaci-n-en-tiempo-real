@@ -1,0 +1,3 @@
+entradas = 6
+max ocupadas <= 2: true
+entrada tras cierre: false

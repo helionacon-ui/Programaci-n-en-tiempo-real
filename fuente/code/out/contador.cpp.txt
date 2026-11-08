@@ -1,0 +1,4 @@
+esperado:  400000
+con mutex: 400000
+atomico:   400000
+sin proteger acierta: false (casi nunca)

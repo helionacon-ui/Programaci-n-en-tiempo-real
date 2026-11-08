@@ -1,0 +1,14 @@
+false
+Central 'Central eventos' con 3 temas:
+humedad:
+|Pantalla| : De 15, |Alarma| : Beep, 
+presion:
+|Alarma| : Beep, 
+temperatura:
+|Pantalla| : De 15, |Alarma| : Beep, 
+Temperatura act
+ual: 25 grados
+Temperatura actual: 25 grados
+humedad sin dat
+o
+false

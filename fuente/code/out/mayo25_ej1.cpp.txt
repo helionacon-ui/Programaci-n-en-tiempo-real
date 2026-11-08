@@ -1,0 +1,11 @@
+truetruetruefalse
+Madrid: 3 envios
+Envio #12345 (90€), destinatario: Mario, UPCT, 30202, Cartagena
+Envio #12346 (70€), destinatario: Maria, UPCT, 30202, Cartagena
+Envio #54321 (50€), destinatario: Xi Ling, Gran Muralla (China + 15€)
+2 1 2
+coste (polimorfismo): 65
+truefalse
+Madrid: 2 envios
+Envio #12345 (90€), destinatario: Mario, UPCT, 30202, Cartagena
+Envio #54321 (50€), destinatario: Xi Ling, Gran Muralla (China + 15€)

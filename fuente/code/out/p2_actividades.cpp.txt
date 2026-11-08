@@ -1,0 +1,2 @@
+S (en orden) dura 8 { [P (a la vez) dura 5 { [T1 (cavar) dura 3] [T2 (cimentar) dura 5] }] [T3 (pintar) dura 2] [T4 (limpiar) dura 1] }
+duracion total = 8 (max(3,5) + 2 + 1)

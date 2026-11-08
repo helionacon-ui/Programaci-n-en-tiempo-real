@@ -1,0 +1,60 @@
+Tren [NS1] para cruzar: º
+Tren [NS1] cruzando: |
+Tren [SN1] para cruzar: º
+Tren [SN2] para cruzar: º
+Tren [NS3] para cruzar: º
+Tren [SN3] para cruzar: º
+Tren [NS4] para cruzar: º
+Tren [SN4] para cruzar: º
+Tren [NS5] para cruzar: º
+Tren [NS2] para cruzar: º
+Tren [NS6] para cruzar: º
+Tren [SN5] para cruzar: º
+Tren [SN6] para cruzar: º
+Tren [NS7] para cruzar: º
+Tren [SN7] para cruzar: º
+Tren [NS8] para cruzar: º
+Tren [SN8] para cruzar: º
+Tren [NS9] para cruzar: º
+Tren [SN9] para cruzar: º
+Tren [NS10] para cruzar: º
+Tren [SN10] para cruzar: º
+Tren [NS1] ha cruzado: x
+Tren [SN1] cruzando: |
+Tren [SN1] ha cruzado: x
+Tren [NS8] cruzando: |
+Tren [NS8] ha cruzado: x
+Tren [SN8] cruzando: |
+Tren [SN8] ha cruzado: x
+Tren [NS9] cruzando: |
+Tren [NS9] ha cruzado: x
+Tren [SN10] cruzando: |
+Tren [SN10] ha cruzado: x
+Tren [NS7] cruzando: |
+Tren [NS7] ha cruzado: x
+Tren [SN4] cruzando: |
+Tren [SN4] ha cruzado: x
+Tren [NS4] cruzando: |
+Tren [NS4] ha cruzado: x
+Tren [SN6] cruzando: |
+Tren [SN6] ha cruzado: x
+Tren [NS5] cruzando: |
+Tren [NS5] ha cruzado: x
+Tren [SN5] cruzando: |
+Tren [SN5] ha cruzado: x
+Tren [NS6] cruzando: |
+Tren [NS6] ha cruzado: x
+Tren [SN7] cruzando: |
+Tren [SN7] ha cruzado: x
+Tren [SN2] cruzando: |
+Tren [SN2] ha cruzado: x
+Tren [NS2] cruzando: |
+Tren [NS2] ha cruzado: x
+Tren [NS3] cruzando: |
+Tren [NS3] ha cruzado: x
+Tren [SN9] cruzando: |
+Tren [SN9] ha cruzado: x
+Tren [SN3] cruzando: |
+Tren [SN3] ha cruzado: x
+Tren [NS10] cruzando: |
+Tren [NS10] ha cruzado: x

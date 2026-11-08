@@ -1,0 +1,8 @@
+Esfera d=2 centro (0, 0, 0) area=12.5664 volumen=4.18879
+(0.5,0,0) dentro: true, (1,0,0) en superficie: true
+true false true
+Caja 1x1x1 libre=0 (llena)
+Caja 1x1x1 libre=1
+diametro leido: diametro? valor no valido
+diametro? valor no valido
+diametro? 4.5

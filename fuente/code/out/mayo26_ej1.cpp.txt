@@ -1,0 +1,13 @@
+true true true false
+StreamMaster: 3 usuarios
+Suscripcion #101 (15.5€), Titular: Juan Perez
+Suscripcion #102 (12€), Titular: Ana Garcia
+Suscripcion #202 (20€), Titular: Luis Lopez (Premium: Soporte 24h - España + 5.5€)
+Estandar: 2, Premium: 1
+Titulares con 'Juan': 1
+Factura premium (via referencia base): 25.5
+Suscripcion #101 (15.5€), Titular: Juan Perez (Premium: Soporte basico + 0€)
+Cancelar 102: true, cancelar 999: false
+StreamMaster: 2 usuarios
+Suscripcion #101 (15.5€), Titular: Juan Perez
+Suscripcion #202 (20€), Titular: Luis Lopez (Premium: Soporte 24h - España + 5.5€)

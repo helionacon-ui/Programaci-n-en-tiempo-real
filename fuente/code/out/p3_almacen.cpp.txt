@@ -1,0 +1,4 @@
+lector 0: 7 valores, suma 21
+lector 1: 7 valores, suma 21
+lector 2: 7 valores, suma 21
+(cada lector debe leer 7 valores y sumar 21)
