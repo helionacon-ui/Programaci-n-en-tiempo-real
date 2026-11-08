@@ -102,10 +102,21 @@ def head(title, desc, multi, css, ver, mj):
     css_tag = '<link rel="stylesheet" href="style.css?v=%s">' % ver if multi else '<style>%s</style>' % css
     return ('<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>%s</title><meta name="description" content="%s">'
             '<meta name="theme-color" content="#2456d6">%s<meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Tiempo real">%s%s%s'
-            '<style>html{-webkit-text-size-adjust:100%%}body{margin:0}img{max-width:100%%}[hidden]{display:none!important}</style></head>' % (html.escape(title), html.escape(desc), man, fonts, mj, css_tag))
+            '<style>html{-webkit-text-size-adjust:100%%}body{margin:0}img{max-width:100%%}[hidden]{display:none!important}</style></head>' % (html.escape(title), html.escape(desc), man, fonts, katex_tag(multi, ver), css_tag))
 
-MJ = ('<script>window.MathJax={tex:{inlineMath:[["\\\\(","\\\\)"]],displayMath:[["\\\\[","\\\\]"]]},svg:{fontCache:"global"},options:{skipHtmlTags:["script","noscript","style","textarea","pre","code"]}};</script>'
-      '<script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-svg.js"></script>')
+_KB64 = {}
+def katex_tag(multi, ver=''):
+    """Hoja de estilos de KaTeX: enlazada en el sitio multipágina, incrustada (con las fuentes) en la guía de una sola página."""
+    if multi: return '<link rel="stylesheet" href="katex.css%s">' % (('?v=' + ver) if ver else '')
+    if 'c' not in _KB64:
+        import base64
+        d = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'assets', 'katex')
+        css = open(os.path.join(d, 'katex.css'), encoding='utf-8').read()
+        css = re.sub(r'url\(fonts/([^)]+\.woff2)\)', lambda m: 'url(data:font/woff2;base64,%s)' % base64.b64encode(open(os.path.join(d, 'fonts', m.group(1)), 'rb').read()).decode(), css)
+        _KB64['c'] = '<style>' + css + '</style>'
+    return _KB64['c']
+
+MJ = None
 
 def page(sid, title, secs, pages, content_html, extra, stats, art, date, css, js_tag, ver, TITLE, sidx_inline=''):
     multi = True
@@ -173,7 +184,7 @@ def write_site(site, secs, pages, extras, stats, art, date, base_css, ours_css, 
                icons=[dict(src='icon-192.png', sizes='192x192', type='image/png'), dict(src='icon-512.png', sizes='512x512', type='image/png'), dict(src='icon-maskable-512.png', sizes='512x512', type='image/png', purpose='maskable')])
     json.dump(man, open(os.path.join(site, 'manifest.webmanifest'), 'w', encoding='utf-8'), ensure_ascii=False, indent=2)
     core = ['./'] + ['./' + PG[s[0]][0] for s in secs] + ['./style.css?v=' + ver, './app.js?v=' + ver, './search-index.js?v=' + ver, './manifest.webmanifest', './formulario_1_pagina.pdf', './icon-192.png', './icon-512.png', './icon-maskable-512.png', './apple-touch-icon.png',
-                                                             'https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-svg.js']
+                                                             './katex.css?v=' + ver] + ['./fonts/' + f for f in sorted(os.listdir(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'assets', 'katex', 'fonts')))]
     sw = ("// Service worker: guarda la guía para usarla sin conexión.\nconst CACHE = 'tr-%s';\nconst CORE = %s;\n" % (ver, json.dumps(core)) + r"""self.addEventListener('install', e => {
   e.waitUntil(caches.open(CACHE).then(c => Promise.all(CORE.map(u => c.add(new Request(u, {mode: u.startsWith('http') ? 'no-cors' : 'same-origin'})).catch(() => {})))).then(() => self.skipWaiting()));
 });

@@ -12,7 +12,7 @@ La página de simulacros incluye un **modo examen** con reloj de 2 h 30 min (la 
 
 Cada tema lleva figuras (pulsa una para ampliarla), simuladores interactivos, ejemplos de código compilados y comprobados, cuadros de trucos y errores típicos, y vídeos recomendados de YouTube que se cargan al pulsar.
 
-Se puede instalar como aplicación (pantalla de inicio en el móvil, «Instalar» en el ordenador) y funciona sin conexión después de abrirla una vez con internet.
+Se puede instalar como aplicación (pantalla de inicio en el móvil, «Instalar» en el ordenador) y funciona sin conexión después de abrirla una vez con internet. Las fórmulas se generan al construir la guía (KaTeX, MIT) y llevan sus propias fuentes: se ven también sin conexión.
 
 ## Descargas en PDF
 

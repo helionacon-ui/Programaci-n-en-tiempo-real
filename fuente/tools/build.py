@@ -167,8 +167,7 @@ def side_nav(pages, active, multi):
 
 def shell(body, title, nav, multi, sidx_inline='', pagerhtml='', site='guia'):
     css, js = asset('style.css'), asset('app.js')
-    mj = ('<script>window.MathJax={tex:{inlineMath:[["\\\\(","\\\\)"]],displayMath:[["\\\\[","\\\\]"]]},svg:{fontCache:"global"},options:{skipHtmlTags:["script","noscript","style","textarea","pre","code"]}};</script>'
-          '<script async src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-svg.js"></script>')
+    mj = S.katex_tag(False)
     man = '<link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="icon-192.png">' if multi else ''
     return f'''<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>{esc(title)}</title><meta name="description" content="Guía de estudio de Programación de Sistemas en Tiempo Real: teoría, ejemplos, prácticas y exámenes resueltos.">
@@ -220,5 +219,14 @@ def main():
     site = os.path.join(dist, 'site')
     m = S.write_site(site, SECS, pages, extras, stats, art, DATE, asset('cxc_base.css'), asset('ours.css'), js, TITLE, ix_site, ix_master)
     open(os.path.join(dist, 'guia.html'), 'w', encoding='utf-8').write(m)
+    # fórmulas: se convierten ya en el HTML (KaTeX), así se ven sin conexión y sin JavaScript
+    import subprocess, shutil
+    kd = os.path.join(ROOT, 'assets', 'katex')
+    shutil.copy(os.path.join(kd, 'katex.css'), os.path.join(site, 'katex.css'))
+    shutil.rmtree(os.path.join(site, 'fonts'), ignore_errors=True); shutil.copytree(os.path.join(kd, 'fonts'), os.path.join(site, 'fonts'))
+    files = [os.path.join(site, f) for f in os.listdir(site) if f.endswith('.html')] + [os.path.join(dist, 'guia.html')]
+    r = subprocess.run(['node', os.path.join(ROOT, 'tools', 'prerender_math.js')] + files, capture_output=True, text=True)
+    print(r.stdout.strip(), r.stderr.strip()[:500])
+    if r.returncode: raise SystemExit('fórmulas con error')
     print('OK', len(ix_site), 'entradas;', os.path.getsize(os.path.join(dist, 'guia.html')) // 1024, 'KB maestro;', len(os.listdir(site)), 'archivos en site/')
 if __name__ == '__main__': main()
