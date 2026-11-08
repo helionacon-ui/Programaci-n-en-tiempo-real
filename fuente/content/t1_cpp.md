@@ -87,7 +87,7 @@ for (auto it = v.begin(); it != v.end();) {
 
 **Vídeo recomendado** (en inglés): repaso de los contenedores de la STL con ejemplos; fíjate en cuándo conviene `vector`, `map` y `set`.
 
-[[yt:6OoSgY6NVVk|Back To Basics: C++ Containers|javidx9|31:41]]
+[[yt:6OoSgY6NVVk|Back To Basics: C++ Containers|javidx9|31:41|EN|Intermedio]]
 
 ## Lambdas y algoritmos {#t1-lambdas}
 

@@ -27,14 +27,37 @@ function filt(){const act=fchips.filter(c=>c.classList.contains('on')).map(c=>c.
  $$('details.exam').forEach(d=>{const ok=(!act.length||act.some(a=>d.dataset.f.split(' ').includes(a)))&&(!q||norm(d.dataset.txt).includes(q));d.style.display=ok?'':'none';if(ok)shown++;if(q&&ok)d.open=true});
  $$('details.cur').forEach(c=>{const any=$$('details.exam',c).some(d=>d.style.display!=='none');c.style.display=any?'':'none'});const s=$('#exn');if(s)s.textContent=shown+' exámenes'}
 fchips.forEach(c=>c.onclick=()=>{c.classList.toggle('on');filt()});if(fq)fq.addEventListener('input',filt);
-// test
-$$('.q').forEach(q=>{const ok=+q.dataset.ok;$$('.o',q).forEach((o,i)=>o.onclick=()=>{if(q.dataset.done)return;q.dataset.done=1;o.classList.add(i+1===ok?'ok':'bad');$$('.o',q)[ok-1].classList.add('ok');$('.ex',q).style.display='block';upd()})});
-function upd(){const all=$$('.q'),d=all.filter(q=>q.dataset.done),g=d.filter(q=>$('.o.bad',q)==null).length;const s=$('#qscore');if(s)s.textContent=g+' aciertos de '+d.length+' respondidas ('+all.length+' preguntas)'}
-const rq=$('#qreset');if(rq)rq.onclick=()=>{$$('.q').forEach(q=>{delete q.dataset.done;$$('.o',q).forEach(o=>o.className='o');$('.ex',q).style.display='none'});upd()};
-// tarjetas
-const cards=window.CARDS||[];let ci=0,flip=false;const cd=$('#card');
-function showCard(){if(!cd||!cards.length)return;const c=cards[ci];cd.textContent=flip?c[1]:c[0];cd.style.fontWeight=flip?'400':'700';$('#cn').textContent=(ci+1)+' / '+cards.length}
-if(cd&&cards.length){cd.onclick=()=>{flip=!flip;showCard()};$('#cnext').onclick=()=>{ci=(ci+1)%cards.length;flip=false;showCard()};$('#cprev').onclick=()=>{ci=(ci+cards.length-1)%cards.length;flip=false;showCard()};$('#cshuf').onclick=()=>{for(let i=cards.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[cards[i],cards[j]]=[cards[j],cards[i]]}ci=0;flip=false;showCard()};showCard()}
+// test (con repaso de falladas: se guardan en este navegador)
+const site=document.body.dataset.site||'x',QK='sr:quiz:'+site;let failed=new Set(ls.get(QK,[]));
+const qkey=q=>($('b',q)||q).textContent.replace(/^\d+\.\s*/,'').slice(0,60);
+$$('.q').forEach(q=>{const ok=+q.dataset.ok;$$('.o',q).forEach((o,i)=>o.onclick=()=>{if(q.dataset.done)return;q.dataset.done=1;o.classList.add(i+1===ok?'ok':'bad');$$('.o',q)[ok-1].classList.add('ok');$('.ex',q).style.display='block';
+ if(i+1===ok)failed.delete(qkey(q));else failed.add(qkey(q));ls.set(QK,[...failed]);upd()})});
+function upd(){const all=$$('.q'),d=all.filter(q=>q.dataset.done),g=d.filter(q=>$('.o.bad',q)==null).length;const s=$('#qscore');if(s)s.textContent=g+' aciertos de '+d.length+' respondidas ('+all.filter(q=>q.style.display!=='none').length+' preguntas)';const rb=$('#qfail');if(rb)rb.textContent='Repasar falladas ('+all.filter(q=>failed.has(qkey(q))).length+')'}
+function resetQ(){$$('.q').forEach(q=>{delete q.dataset.done;$$('.o',q).forEach(o=>o.className='o');$('.ex',q).style.display='none'})}
+const rq=$('#qreset');if(rq){rq.onclick=()=>{resetQ();$$('.q').forEach(q=>q.style.display='');upd()};
+ const fb=document.createElement('button');fb.id='qfail';fb.type='button';fb.style.marginLeft='6px';rq.after(fb);
+ fb.onclick=()=>{resetQ();const n=$$('.q').filter(q=>failed.has(qkey(q)));$$('.q').forEach(q=>q.style.display=failed.has(qkey(q))?'':'none');if(!n.length)alert('No tienes preguntas falladas guardadas. ¡Bien!');else n[0].scrollIntoView({block:'center'});upd()};
+ upd()}
+// tarjetas con repetición espaciada (cajas de Leitner: 1 → 5; los intervalos crecen si aciertas)
+const all=window.CARDS||[],CK='sr:cards:'+site,DAY=864e5,INT=[0,10*60e3,DAY,3*DAY,7*DAY,21*DAY];
+let sr=ls.get(CK,{}),onlyDue=ls.get('sr:mode:'+site,false),ci=0,flip=false;const cd=$('#card');
+const isDue=c=>!sr[c[0]]||sr[c[0]][1]<=Date.now();
+const deck=()=>onlyDue?all.filter(isDue):all;
+function srStats(){const m=all.filter(c=>sr[c[0]]&&sr[c[0]][0]>=4).length,d=all.filter(isDue).length;return d+' pendientes · '+m+' dominadas de '+all.length}
+function showCard(){if(!cd||!all.length)return;const dk=deck(),st=$('#srstat');if(st)st.textContent=srStats();const ctl=$('#srctl');
+ if(!dk.length){cd.textContent='¡Todo al día! No hay tarjetas pendientes ahora mismo.';cd.style.fontWeight='700';$('#cn').textContent='0 / 0';if(ctl)ctl.style.visibility='hidden';return}
+ if(ci>=dk.length)ci=0;const c=dk[ci];cd.textContent=flip?c[1]:c[0];cd.style.fontWeight=flip?'400':'700';$('#cn').textContent=(ci+1)+' / '+dk.length;if(ctl)ctl.style.visibility=flip?'visible':'hidden'}
+if(cd&&all.length){
+ const bar=document.createElement('div');bar.style.cssText='margin-top:8px;display:flex;gap:8px;align-items:center;flex-wrap:wrap';
+ bar.innerHTML='<span id="srctl" style="visibility:hidden"><button id="srok" type="button">✔ La sabía</button> <button id="srko" type="button">✘ Fallé</button></span><label><input type="checkbox" id="srdue"> Solo pendientes</label><small id="srstat"></small><button id="srreset" type="button" title="Borra el progreso de repaso guardado en este navegador">Reiniciar progreso</button>';
+ cd.parentNode.insertBefore(bar,$('#cprev').parentNode.nextSibling);$('#srdue').checked=onlyDue;
+ cd.onclick=()=>{flip=!flip;showCard()};$('#cnext').onclick=()=>{ci++;flip=false;showCard()};$('#cprev').onclick=()=>{ci=Math.max(0,ci-1);flip=false;showCard()};
+ $('#cshuf').onclick=()=>{for(let i=all.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[all[i],all[j]]=[all[j],all[i]]}ci=0;flip=false;showCard()};
+ const grade=ok=>{const dk=deck();if(!dk.length)return;const c=dk[ci],b=ok?Math.min(Math.max(2,((sr[c[0]]||[0])[0]||0)+1),5):1;sr[c[0]]=[b,Date.now()+INT[b]];ls.set(CK,sr);flip=false;if(!onlyDue)ci++;showCard()};
+ $('#srok').onclick=()=>grade(true);$('#srko').onclick=()=>grade(false);
+ $('#srdue').onchange=e=>{onlyDue=e.target.checked;ls.set('sr:mode:'+site,onlyDue);ci=0;flip=false;showCard()};
+ $('#srreset').onclick=()=>{if(confirm('¿Borrar el progreso de repaso de las tarjetas y las preguntas falladas?')){sr={};ls.set(CK,sr);failed=new Set();ls.set(QK,[]);ci=0;flip=false;showCard();upd()}};
+ showCard()}
 // botones "abrir en el simulador"
 $$('.open-sim').forEach(b=>b.onclick=()=>{const s=document.getElementById('sim-'+b.dataset.sim);if(!s)return;let p=s;while(p){if(p.tagName==='DETAILS')p.open=true;p=p.parentElement}s.scrollIntoView({behavior:'smooth',block:'center'});const S=(window.PSTR_SIMS||{})[b.dataset.sim];if(S&&S.load)S.load(b.dataset.arg)});
 // vídeos de YouTube: se cargan al pulsar (no se descarga nada antes)

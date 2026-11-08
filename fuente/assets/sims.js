@@ -93,7 +93,107 @@ function almacen(root){box(root,'Práctica 3.4: almacén con un generador y vari
   const rows=r.trace.map((t,k)=>`<tr><td>${k+1}</td><td>${t.who==='G'?'<b>Generador</b>':'Lector '+t.who}</td><td>${t.who==='G'?'escribe':'lee'} ${t.v}</td></tr>`).join('');
   out.innerHTML=`<p>${r.ok?'✔ Cada lector leyó los 7 valores <b>una vez y en orden</b>; el generador nunca escribió antes de que todos leyeran.':'✘ Algo falló'}</p><p>Suma que ve cada lector: <b>${r.reads.map(l=>l.reduce((a,b)=>a+b,0)).join(', ')}</b> (esperado 21).</p><div class="tw" style="max-height:260px;overflow:auto"><table><tr><th>Paso</th><th>Hilo</th><th>Acción</th></tr>${rows}</table></div><p><small>El orden de los lectores cambia con la semilla; el resultado, no.</small></p>`}
  root.append(h('div',{className:'row'},h('label',null,'Lectores: ',nl),lab,h('label',null,' semilla: ',sd)),out);nl.oninput=run;sd.oninput=run;run();reg(root,()=>{})}
-const R={rta,frames,race,vec,patriot,inv,philo,'lab-words':labWords,'lab-rows':labRows,bind,complejo,almacen};
+
+// ---------- modo examen ----------
+const EXAMS=[['mayo26','Mayo 2026',['ex-mayo26-1','ex-mayo26-2']],['junio26','Junio 2026',['ex-junio26-1','ex-junio26-2']],['mayo25','Mayo 2025',['ex-mayo25-1','ex-mayo25-2']],['junio25','Junio 2025',['ex-junio25-1','ex-junio25-2']],['mayo24','Mayo 2024',['ex-mayo24-1','ex-mayo24-2']],['junio23','Junio 2023',['ex-junio23-1','ex-junio23-2']],['abril24','Abril 2024 (solo el ejercicio 2 está resuelto)',['ex-abril24-2']]];
+function lsGet(k,d){try{const v=localStorage.getItem(k);return v==null?d:JSON.parse(v)}catch(e){return d}}
+function lsSet(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
+function href(id){return document.getElementById(id)?'#'+id:'examenes.html#'+id}
+function examen(root){box(root,'Modo examen: 2 h 30 min, enunciado primero y solución al entregar');
+ const KEY='pstr:examen',HIS='pstr:examen:hist';let st=lsGet(KEY,null),tick=null;
+ const body=h('div');root.append(body);
+ function save(){lsSet(KEY,st)}
+ function setup(){clearInterval(tick);body.innerHTML='';
+  const sel=h('select',null,...EXAMS.map(e=>h('option',{value:e[0]},e[1]))),dur=h('select',null,h('option',{value:150},'Examen completo (2 h 30 min)'),h('option',{value:75},'Un ejercicio (1 h 15 min)'),h('option',{value:10},'Prueba rápida (10 min)'));
+  const his=lsGet(HIS,[]);
+  body.append(h('p',null,'Reparto habitual: ',h('b',null,'70 % programación orientada a objetos'),' y ',h('b',null,'30 % concurrencia'),'. Las soluciones quedan ocultas hasta que entregues. Si tu código no compila, la nota de ese ejercicio se divide por 2.'),
+   h('div',{className:'row'},h('label',null,'Examen: ',sel),h('label',null,'Duración: ',dur),h('button',{on:{click:()=>{st={key:sel.value,start:Date.now(),total:+dur.value*60000,phase:'run',marks:{poo:[],conc:[]},compila:{poo:true,conc:true}};save();run()}}},'Empezar')),
+   his.length?h('div',null,h('p',null,h('b',null,'Tus últimos intentos')),h('ul',null,...his.slice(-5).reverse().map(x=>h('li',null,`${x.label} · ${x.fecha} · nota estimada ${fmt(x.nota,1)} / 10`)))):h('small',null,'Aún no has guardado ningún intento.'))}
+ function run(){clearInterval(tick);body.innerHTML='';const ex=EXAMS.find(e=>e[0]===st.key);
+  if(st.phase==='grade')return grade();
+  const t=h('div',{className:'examtimer',style:'font-size:2.4rem;font-weight:800;font-variant-numeric:tabular-nums'}),warn=h('small',null,'');
+  body.append(h('p',null,'Estás haciendo: ',h('b',null,ex[1])),t,warn,
+   h('p',null,h('a',{className:'btn',href:href('exam-'+st.key),target:'_blank',rel:'noopener'},'Abrir enunciado'),' ',h('small',null,'(se abre en otra pestaña; en el examen real no tendrás la solución delante)')),
+   h('div',{className:'row'},h('button',{on:{click:()=>{if(confirm('¿Entregar ahora?')){st.phase='grade';save();run()}}}},'Entregar'),h('button',{on:{click:()=>{if(confirm('¿Abandonar este intento?')){st=null;lsSet(KEY,null);setup()}}}},'Abandonar')),
+   h('p',null,h('small',null,'Consejo: compila con ',h('code',null,'g++ -std=c++17 -Wall -Wextra -pthread'),' antes de entregar y pasa tu código por el ',h('a',{href:'#sim-revisor'},'revisor de código'),'.')));
+  function upd(){const r=P.examTimer(st.start,Date.now(),st.total);t.textContent=r.text;if(r.rest<600000)t.style.color='#c92a2a';warn.textContent=r.rest<600000&&!r.over?'Quedan menos de 10 minutos: revisa que compile.':'';if(r.over){clearInterval(tick);st.phase='grade';save();run()}}
+  upd();tick=setInterval(upd,1000)}
+ function grade(){body.innerHTML='';const ex=EXAMS.find(e=>e[0]===st.key);
+  const out=h('div',{className:'examout'});
+  function calc(){const g=P.examGrade(st.marks,st.compila);out.innerHTML=`<p>POO: <b>${fmt(g.poo.final,1)}</b> / 70${g.poo.compila?'':' (no compila: ÷ 2)'} · Concurrencia: <b>${fmt(g.conc.final,1)}</b> / 30${g.conc.compila?'':' (no compila: ÷ 2)'}</p><p style="font-size:1.4rem">Nota estimada: <b>${fmt(g.sobre10,1)}</b> / 10 ${g.sobre10>=5?'✔ aprobado':'✘ por debajo del 5'}</p>`;return g}
+  body.append(h('p',null,'Tiempo agotado o entrega hecha. Autoevalúate con honestidad: marca solo lo que de verdad tendrías en el papel. ',h('small',null,'(Rúbrica orientativa propia; cada convocatoria reparte los puntos a su manera.)')));
+  [['poo','Programación orientada a objetos (70 puntos)'],['conc','Concurrencia (30 puntos)']].forEach(([k,tt])=>{
+   const c=h('input',{type:'checkbox',checked:st.compila[k],on:{change:e=>{st.compila[k]=e.target.checked;save();calc()}}});
+   body.append(h('h4',null,tt),h('label',null,c,' Mi código de este ejercicio compila sin errores'),h('ul',{style:'list-style:none;padding-left:0'},...P.RUBRICA[k].items.map((it,i)=>h('li',null,h('label',null,h('input',{type:'checkbox',checked:!!st.marks[k][i],on:{change:e=>{st.marks[k][i]=e.target.checked;save();calc()}}}),` ${it[0]} `,h('small',null,`(${it[1]})`))))))});
+  body.append(out,h('h4',null,'Soluciones de referencia'),h('p',null,...ex[2].map(id=>h('a',{className:'btn',href:href(id),style:'margin-right:8px'},id.replace('ex-','').replace(/-/g,' · ejercicio ')))),
+   h('div',{className:'row'},h('button',{on:{click:()=>{const g=calc(),his=lsGet(HIS,[]);his.push({label:ex[1],nota:g.sobre10,fecha:new Date().toLocaleDateString('es-ES')});lsSet(HIS,his.slice(-20));st=null;lsSet(KEY,null);setup()}}},'Guardar resultado y empezar de nuevo'),h('button',{on:{click:()=>{st=null;lsSet(KEY,null);setup()}}},'Descartar')));
+  calc()}
+ st?run():setup();reg(root,()=>{})}
+// ---------- revisor de código ----------
+const EJ_REV={herencia:`#include <iostream>
+#include <vector>
+using namespace std;
+
+class Figura {
+public:
+    virtual double area() const = 0;
+    double get_lado() { return lado_; }
+protected:
+    double lado_ = 1;
+};
+
+class Cuadrado : public Figura {
+public:
+    double area() const { return lado_ * lado_; }
+    ostream& operator<<(ostream& os) { return os << "cuadrado"; }
+};
+
+int main() {
+    vector<Figura*> v;
+    v.push_back(new Cuadrado);
+    cout << v[0]->area() << endl;
+}`,monitor:`#include <iostream>
+#include <thread>
+#include <vector>
+using namespace std;
+
+class Cola {
+public:
+    void poner(int x) { lock_guard<mutex> lk{m_}; datos_.push_back(x); cv_.notify_one(); }
+    int sacar(void) {
+        unique_lock<mutex> lk{m_};
+        if (datos_.empty()) cv_.wait(lk);
+        int v = datos_.front(); datos_.erase(datos_.begin());
+        return v;
+    }
+    int esperar_dos() {
+        lock_guard<mutex> g{m_};
+        cv_.wait(g, [this]{ return datos_.size() >= 2; });
+        return datos_.size();
+    }
+private:
+    mutex m_; condition_variable cv_; vector<int> datos_;
+};
+
+void consumidor(Cola& c, int n) { for (int i = 0; i < n; ++i) cout << c.sacar() << endl; }
+
+int main() {
+    Cola c;
+    thread t{consumidor, c, 3};
+    c.poner(1); c.poner(2); c.poner(3);
+}`};
+function revisor(root,arg){box(root,'Revisor de código: busca los fallos típicos antes de entregar');
+ const ta=h('textarea',{rows:16,spellcheck:false,style:'width:100%;font-family:ui-monospace,Consolas,monospace;font-size:.85rem;padding:8px;border:1px solid var(--bd);border-radius:8px;background:var(--bg);color:var(--fg);tab-size:4'}),out=h('div');
+ const sel=h('select',{on:{change:()=>{if(sel.value&&EJ_REV[sel.value])ta.value=EJ_REV[sel.value];run()}}},h('option',{value:''},'(pega tu código o elige un ejemplo con fallos)'),h('option',{value:'herencia'},'Ejemplo con fallos de herencia'),h('option',{value:'monitor'},'Ejemplo con fallos de monitor'));
+ const COLR={error:'#c92a2a',warn:'#e67700',info:'#1971c2'},ETQ={error:'Error',warn:'Aviso',info:'Sugerencia'};
+ function run(){const c=ta.value;if(!c.trim()){out.innerHTML='<p><small>Pega aquí tu solución. La revisión es heurística: detecta patrones típicos, <b>no sustituye al compilador</b>.</small></p>';return}
+  const f=P.review(c),v=P.reviewVerdict(f);
+  let html=`<p>${v.compilaria?'<b style="color:#2b8a3e">No veo errores de compilación evidentes</b>':'<b style="color:#c92a2a">Veo '+v.errores+' error'+(v.errores>1?'es':'')+' que impedirían compilar</b>'} · ${v.avisos} aviso${v.avisos===1?'':'s'}. Compila siempre con <code>g++ -std=c++17 -Wall -Wextra -pthread</code>.</p>`;
+  html+=f.length?'<ol style="padding-left:1.2em">'+f.map(x=>`<li style="margin:6px 0"><span style="color:${COLR[x.level]};font-weight:700">${ETQ[x.level]}</span> · línea <b>${x.line}</b> <small>(${x.id})</small><br>${x.msg}</li>`).join('')+'</ol>':'<p>✔ Ningún patrón problemático detectado.</p>';
+  out.innerHTML=html}
+ root.append(h('div',{className:'row'},sel),ta,out);ta.addEventListener('input',run);run();
+ reg(root,a=>{if(EJ_REV[a]){ta.value=EJ_REV[a];sel.value=a;run()}});if(arg&&EJ_REV[arg]){ta.value=EJ_REV[arg];sel.value=arg;run()}}
+const R={rta,frames,race,vec,patriot,inv,philo,'lab-words':labWords,'lab-rows':labRows,bind,complejo,almacen,examen,revisor};
 function init(){document.querySelectorAll('.sim[data-sim]').forEach(el=>{const[name,arg]=el.dataset.sim.split(':');try{R[name](el,arg)}catch(e){el.textContent='Error en el simulador: '+e.message;console.error(e)}})}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
 })();

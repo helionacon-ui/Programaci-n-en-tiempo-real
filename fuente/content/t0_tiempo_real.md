@@ -24,7 +24,7 @@ Pregúntate: «¿qué pasa si esta tarea acaba tarde?». Si la respuesta es «al
 
 **Vídeo para entrar en materia** (4 min, en inglés): qué significa «tiempo real» y por qué no es «ir rápido».
 
-[[yt:ocHjg6bVZX0|What is a Real-Time System?|JLabs|4:45]]
+[[yt:ocHjg6bVZX0|What is a Real-Time System?|JLabs|4:45|EN|Introductorio]]
 
 ## Plazos, periodos y jitter {#t0-plazos}
 

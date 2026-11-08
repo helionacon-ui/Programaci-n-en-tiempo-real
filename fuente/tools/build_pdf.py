@@ -187,6 +187,12 @@ def doc(body, acrobat=False, variant='', title=B.TITLE, toc=True):
     d = preamble(acrobat, title) + '\\begin{document}\n'
     d += TITLEPAGE % dict(date=DATE, variant=variant, cover='\\centering\\includegraphics[width=\\linewidth,height=7.5cm,keepaspectratio]{%s}' % T.fig_pdf('portada'))
     if toc: d += '\\tableofcontents\\clearpage\n'
+    if acrobat:
+        d += ('\\begin{tcolorbox}[bxgray,title={Cómo usar las respuestas ocultas (versión para Acrobat)}]'
+              'Las respuestas del test van en una capa que se muestra u oculta con el botón «Mostrar / ocultar respuesta». '
+              'Este formato \\textbf{no recoloca la página}: al ocultar una respuesta queda un espacio en blanco donde estaba. '
+              'Funciona en Adobe Acrobat; muchos visores (navegador, vista previa) ignoran las capas y muestran todo. '
+              'Si prefieres un test que se corrija solo y sin huecos, usa la versión web de la guía.\\end{tcolorbox}\\bigskip\n')
     return d + body + '\\end{document}\n'
 
 def compile_tex(name, tex, runs=2):

@@ -23,7 +23,7 @@ Reglas que debes saber de memoria:
 
 **Vídeo recomendado** (en inglés, 11 min): crear y esperar hilos con `std::thread`.
 
-[[yt:wXBcwHwIt_I|Threads in C++|The Cherno|11:35]]
+[[yt:wXBcwHwIt_I|Threads in C++|The Cherno|11:35|EN|Introductorio]]
 
 ## La condición de carrera {#t4-carrera}
 
@@ -54,11 +54,15 @@ Un `mutex` **protege datos**, no código. Para cada dato compartido, deberías p
 
 **Vídeo recomendado** (en inglés, 12 min): qué es un mutex y cómo evita las carreras.
 
-[[yt:-Qa1RqmXKG0|What is Mutex in C++ (Multithreading for Beginners)|CodeBeauty|12:29]]
+[[yt:-Qa1RqmXKG0|What is Mutex in C++ (Multithreading for Beginners)|CodeBeauty|12:29|EN|Introductorio]]
+
+**Alternativa en español** (24 min): exclusión mutua, bloqueos e interbloqueos con hilos de C++.
+
+[[yt:BedUiLRDOKo|Mutex y bloqueos en C++|DeepDiveDev|23:47|ES|Intermedio]]
 
 **Opcional y avanzado** (en inglés, 1 h 14 min): variables atómicas (`std::atomic`) y sus órdenes de memoria. Para el examen basta con saber que una operación atómica sobre una variable no necesita mutex.
 
-[[yt:ZQFzMfHIxng|C++ atomics, from basic to advanced. What do they really do?|CppCon (Fedor Pikus)|1:14:22]]
+[[yt:ZQFzMfHIxng|C++ atomics, from basic to advanced. What do they really do?|CppCon (Fedor Pikus)|1:14:22|EN|Avanzado · opcional]]
 
 ## Interbloqueo (deadlock) {#t4-deadlock}
 

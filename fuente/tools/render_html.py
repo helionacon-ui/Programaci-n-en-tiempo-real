@@ -77,8 +77,9 @@ class R:
         if t == 'yt':
             u = 'https://www.youtube.com/watch?v=' + n['id']
             return ('<div class="yt" data-id="%s"><button class="ytbtn" type="button" aria-label="Reproducir: %s"><span class="ytplay">▶</span></button>'
-                    '<div class="ytmeta"><b>%s</b><small>%s · %s</small><a href="%s" target="_blank" rel="noopener">Abrir en YouTube ↗</a></div></div>') % (
-                n['id'], html.escape(n['title']), esc(n['title']), esc(n['chan']), esc(n['dur']), u)
+                    '<div class="ytmeta"><b>%s</b><small>%s · %s</small>%s<a href="%s" target="_blank" rel="noopener">Abrir en YouTube ↗</a></div></div>') % (
+                n['id'], html.escape(n['title']), esc(n['title']), esc(n['chan']), esc(n['dur']),
+                ('<span class="ytags"><span class="ytag lang">%s</span><span class="ytag">%s</span></span>' % (esc(n.get('lang', '')), esc(n.get('lvl', '')))) if n.get('lang') else '', u)
         if t == 'fig':
             name = n['name']
             return '<figure class="fig">%s</figure>' % FIGS[name]()

@@ -18,7 +18,7 @@ public:
 
 **Vídeo recomendado** (en inglés, 8 min): herencia en C++ con ejemplos.
 
-[[yt:X8nYM8wdNRE|Inheritance in C++|The Cherno|8:00]]
+[[yt:X8nYM8wdNRE|Inheritance in C++|The Cherno|8:00|EN|Introductorio]]
 
 ## Polimorfismo: un puntero a la base, muchos comportamientos {#t3-poli}
 
@@ -44,9 +44,9 @@ Cada objeto con métodos virtuales lleva oculto un puntero a una **tabla de mét
 
 **Vídeos recomendados** (en inglés): funciones virtuales y, después, cómo las implementa el compilador con la tabla virtual (la que dibuja la figura de arriba).
 
-[[yt:oIV2KchSyGQ|Virtual Functions in C++|The Cherno|6:45]]
+[[yt:oIV2KchSyGQ|Virtual Functions in C++|The Cherno|6:45|EN|Introductorio]]
 
-[[yt:FncNE2vdtwQ|How VIRTUAL functions work in C++|Lukasz Lipski|4:41]]
+[[yt:FncNE2vdtwQ|How VIRTUAL functions work in C++|Lukasz Lipski|4:41|EN|Intermedio]]
 
 ## Clases abstractas y destructor virtual {#t3-abstractas}
 

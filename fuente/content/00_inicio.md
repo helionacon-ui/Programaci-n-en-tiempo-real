@@ -53,6 +53,10 @@ Un **hilo** es una secuencia de instrucciones que el sistema operativo puede eje
 - Marca tu progreso abajo. Se guarda en tu navegador.
 - Pulsa `/` para buscar en cualquier momento.
 
+:::tip Sobre los vídeos
+Cada vídeo lleva su **idioma** (ES/EN) y su **nivel** (introductorio, intermedio, avanzado). Casi todos están en inglés: activa en YouTube los subtítulos automáticos y la traducción al español. Son un **complemento**: ningún vídeo sustituye a escribir el código tú mismo. Se eligieron por su título, canal y descripción; si alguno ya no está disponible, la guía se estudia igual sin él.
+:::
+
 :::warn Qué suele fallar al estudiar esta asignatura
 Leer soluciones no es lo mismo que saber escribirlas. El examen es **escribir código a mano** (o en un editor sin ayuda) con una hoja de referencia de la biblioteca estándar. Practica escribiendo, no leyendo.
 :::

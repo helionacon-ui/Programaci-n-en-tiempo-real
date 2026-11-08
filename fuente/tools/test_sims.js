@@ -23,3 +23,26 @@ console.log('sims_core OK; interbloqueos en 20 semillas:',dl);
   for (let seed = 1; seed <= 50; seed++) { const r = A.almacen(3, 7, seed); if (!r.ok || r.trace.length !== 7 * 4) throw new Error('almacen ' + seed); }
   console.log('almacen OK');
 }
+{
+  const P = require('../assets/sims_core.js').PSTR; const assert = require('assert'); const fs = require('fs');
+  // nota estimada
+  const full = { poo: [1, 1, 1, 1, 1, 1], conc: [1, 1, 1, 1, 1] };
+  assert.strictEqual(P.examGrade(full, { poo: true, conc: true }).sobre10, 10);
+  assert.strictEqual(P.examGrade(full, { poo: false, conc: true }).sobre10, 6.5);   // 70/2 + 30 = 65
+  assert.strictEqual(P.examGrade({ poo: [], conc: [] }, { poo: true, conc: true }).sobre10, 0);
+  assert.strictEqual(P.RUBRICA.poo.items.reduce((a, i) => a + i[1], 0), 70); assert.strictEqual(P.RUBRICA.conc.items.reduce((a, i) => a + i[1], 0), 30);
+  const t = P.examTimer(1000, 1000 + 3723000, 150 * 60000); assert.strictEqual(t.text, '01:27:57'); assert(P.examTimer(0, 1e9, 1000).over);
+  // revisor: los ejemplos con fallos los detectan y NINGUNA solución de referencia da error ni aviso
+  const src = fs.readFileSync(__dirname + '/../assets/sims.js', 'utf8'); const m = src.match(/const EJ_REV=\{herencia:`([\s\S]*?)`,monitor:`([\s\S]*?)`\};/);
+  const ids = (c) => P.review(c).map((x) => x.id);
+  for (const id of ['destructor-no-virtual', 'falta-const', 'falta-override', 'operator-miembro', 'new-sin-delete']) assert(ids(m[1]).includes(id), 'herencia ' + id);
+  for (const id of ['falta-include', 'wait-sin-predicado', 'if-wait', 'wait-lock_guard', 'falta-ref', 'sin-join']) assert(ids(m[2]).includes(id), 'monitor ' + id);
+  assert(ids('class A {\n int x;\n}\nint main(){}').includes('punto-coma-clase'));
+  assert(!P.reviewVerdict(P.review(m[1])).compilaria && !P.reviewVerdict(P.review(m[2])).compilaria);
+  let n = 0;
+  for (const d of ['exams', 'exams2']) for (const f of fs.readdirSync(__dirname + '/../code/' + d).filter((x) => x.endsWith('.cpp'))) {
+    const r = P.review(fs.readFileSync(__dirname + '/../code/' + d + '/' + f, 'utf8')).filter((x) => x.level !== 'info');
+    assert.deepStrictEqual(r, [], 'falso positivo en ' + f); n++;
+  }
+  console.log('examen + revisor OK; soluciones de referencia sin avisos:', n);
+}

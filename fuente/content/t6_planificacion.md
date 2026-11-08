@@ -42,7 +42,7 @@ Ventajas: simple y predecible. Inconvenientes: rígido, difícil con tareas espo
 
 **Vídeo recomendado** (en inglés, 28 min, curso universitario): ejecutivos cíclicos, ciclo principal y ciclos secundarios.
 
-[[yt:arF8CJzJxa4|Lección 3: Ejecutivos cíclicos|Real Time Operating System - IITKGP|27:45]]
+[[yt:arF8CJzJxa4|Lección 3: Ejecutivos cíclicos|Real Time Operating System - IITKGP|27:45|EN|Intermedio]]
 
 ## Prioridades fijas: RM y DM {#t6-rmdm}
 
@@ -81,7 +81,7 @@ Ejemplo: $(C,T)=(3,7),(3,12),(5,20)$ con $D=T$. Es $U = 0{,}929 > 0{,}780$, así
 
 **Vídeo recomendado** (explicación breve de la planificación monotónica por tasa).
 
-[[yt:xgW8VhEOpFg|Planificación monotónica por tasa|Manoj MVR|8:51]]
+[[yt:xgW8VhEOpFg|Planificación monotónica por tasa|Manoj MVR|8:51|ES|Introductorio]]
 
 ## Recursos compartidos: inversión de prioridad {#t6-inversion}
 
@@ -120,9 +120,9 @@ donde $c_{k,r}$ es la duración máxima de la sección crítica de $k$ sobre $r$
 
 **Vídeos recomendados** sobre inversión de prioridad (en inglés) y protocolo de techo de prioridad (curso universitario, en inglés).
 
-[[yt:C2xKhxROmhA|Introduction to RTOS Part 11 - Priority Inversion|DigiKey|12:35]]
+[[yt:C2xKhxROmhA|Introduction to RTOS Part 11 - Priority Inversion|DigiKey|12:35|EN|Introductorio]]
 
-[[yt:cI5wjYkShMI|Lecture 16 : Priority Ceiling Protocol|Real Time Operating System - IITKGP|30:47]]
+[[yt:cI5wjYkShMI|Lecture 16 : Priority Ceiling Protocol|Real Time Operating System - IITKGP|30:47|EN|Avanzado]]
 
 ## EDF y utilización {#t6-edf}
 
@@ -160,7 +160,7 @@ donde $c_{k,r}$ es la duración máxima de la sección crítica de $k$ sobre $r$
 
 **Vídeo recomendado** (en inglés, 6 min): EDF paso a paso.
 
-[[yt:lZdS9offd5s|OS22 - Earliest Deadline First (EDF) Scheduling|EZCSE|6:27]]
+[[yt:lZdS9offd5s|OS22 - Earliest Deadline First (EDF) Scheduling|EZCSE|6:27|EN|Introductorio]]
 
 ## Cuando RM falla y EDF no: ejemplo explicado {#t6-rm-edf}
 

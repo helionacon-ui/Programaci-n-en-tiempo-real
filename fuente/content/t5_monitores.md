@@ -48,7 +48,7 @@ Por qué **con predicado**:
 
 **Vídeo recomendado** (en inglés, 16 min): el problema del productor y el consumidor con `condition_variable`.
 
-[[yt:rKGq9AlfPR4|Producer Consumer Problem|CppNuts|15:42]]
+[[yt:rKGq9AlfPR4|Producer Consumer Problem|CppNuts|15:42|EN|Intermedio]]
 
 ## Monitor {#t5-monitor}
 
@@ -68,7 +68,7 @@ Observa:
 
 **Vídeo recomendado** (en inglés, 6 min): por qué la espera usa `unique_lock` y no `lock_guard`.
 
-[[yt:uxMRTDxO1bQ|Why C++ Producer-Consumer Pattern Requires std::unique_lock|Suboptimal Engineer|6:25]]
+[[yt:uxMRTDxO1bQ|Why C++ Producer-Consumer Pattern Requires std::unique_lock|Suboptimal Engineer|6:25|EN|Intermedio]]
 
 ## Cómo resolver un ejercicio de monitor en el examen {#t5-receta}
 

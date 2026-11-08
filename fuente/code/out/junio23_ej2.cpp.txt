@@ -1,0 +1,34 @@
+[Intermedio] durmiendo ...
+[Productor] genera 1
+[Productor] genera 2
+[Productor] genera 3
+[Intermedio] obtiene 1 y produce 10
+[Consumidor] obtiene 10
+[Productor] genera 4
+[Intermedio] obtiene 2 y produce 20
+[Consumidor] obtiene 20
+[Productor] genera 5
+[Intermedio] obtiene 3 y produce 30
+[Consumidor] obtiene 30
+[Productor] genera 6
+[Intermedio] obtiene 4 y produce 40
+[Consumidor] obtiene 40
+[Productor] genera 7
+[Intermedio] obtiene 5 y produce 50
+[Productor] genera 8
+[Intermedio] obtiene 6 y produce 60
+[Productor] genera 9
+[Intermedio] obtiene 7 y produce 70
+[Consumidor] obtiene 50
+[Productor] genera 10
+[Intermedio] obtiene 8 y produce 80
+[Consumidor] obtiene 60
+[Productor] ha terminado
+[Intermedio] obtiene 9 y produce 90
+[Consumidor] obtiene 70
+[Intermedio] obtiene 10 y produce 100
+[Consumidor] obtiene 80
+[Intermedio] ha terminado
+[Consumidor] obtiene 90
+[Consumidor] obtiene 100
+[Consumidor] la media es 55 y termina

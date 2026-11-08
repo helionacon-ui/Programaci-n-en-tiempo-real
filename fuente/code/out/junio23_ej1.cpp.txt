@@ -1,0 +1,14 @@
+tamano: -1x-1
+fila de 2: true
+Imagen en 2, 3, 4; umbral 20
+(200, 10, 10) (10, 10, 200) 
+fila de 2: true
+Imagen en 2, 3, 4; umbral 20
+(200, 10, 10) (10, 10, 200) 
+(10, 200, 10) (100, 100, 100) 
+fila de 3: false
+Imagen en 2, 3, 4; umbral 20
+(200, 10, 10) (10, 10, 200) 
+(10, 200, 10) (100, 100, 100) 
+tierra=1 agua=1 vegetal=1 urbano=1 mixto=0
+imagen con mas tierra: 1

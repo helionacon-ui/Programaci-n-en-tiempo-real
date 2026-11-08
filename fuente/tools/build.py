@@ -84,14 +84,14 @@ def norm_exams(exams):
         for it in e['items']: it['text'] = norm_text(it['text'])
     return exams
 
-def exkey(e): return re.sub(r'.*__', '', e['key']).replace('solucionExamen_', '').replace('examen_', '')
+def exkey(e): return re.sub(r'^(solucionExamen_?|examen_)', '', re.sub(r'.*__', '', e['key']))
 
 def exam_section(exams, solved):
     R_.ctx['sec'] = 'examenes'
     byexam = {}
     for m in solved: byexam.setdefault(m.get('exam', ''), []).append(m)
     p1 = '<p>Los más recientes y los que mejor reflejan el examen actual (POO 70 %, concurrencia 30 %). Empieza por el primero y ve hacia atrás.</p>'
-    for k in ['mayo26', 'junio26', 'mayo25', 'junio25']:
+    for k in ['mayo26', 'junio26', 'mayo25', 'junio25', 'mayo24', 'abril24', 'junio23']:
         e = next((x for x in exams if exkey(x) == k), None)
         if not e: continue
         links = ''.join('<a class="excard" href="#%s"><b>%s</b> <span class="chip">%s</span></a>' % (m['id'], esc(m['title']), esc(TEMA_NAMES.get(m.get('tema', '').split(',')[0].strip(), ''))) for m in byexam.get(k, []))

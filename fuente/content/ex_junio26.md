@@ -60,15 +60,15 @@ En `Barrera`, el estado es una sola bandera `abierta_`. La condición para segui
 @paso 2. `Barrera`
 `entrar` hace `wait` con predicado. `abrir` cambia la bandera **con el mutex** y despierta a **todos** con `notify_all` (si usaras `notify_one`, solo saldría un hilo).
 
-@include cpp code/exams/junio26_ej2.cpp 12-26
+@include cpp code/exams/junio26_ej2.cpp 13-27
 @paso 3. `Barrera_Num`
 El estado ahora es un contador `llegados_` y la bandera. Cada hilo que entra cuenta; si es el último (`>= max_`), abre y avisa a todos; si no, espera el predicado. El hilo que abre **no espera** (ya sabe que está abierta).
 
-@include cpp code/exams/junio26_ej2.cpp 28-42
+@include cpp code/exams/junio26_ej2.cpp 29-43
 @paso 4. `main`
 Un `mutex` global `consola` y una función `imprimir` que lo toma para cada línea. En el primer ejemplo, cinco hilos entran y se bloquean; el `main` espera 100 ms, abre y todos salen. En el segundo, los hilos llegan escalonados cada 30 ms y la barrera se abre al llegar el tercero: los dos últimos pasan directamente.
 
-@include cpp code/exams/junio26_ej2.cpp 44-68
+@include cpp code/exams/junio26_ej2.cpp 45-69
 @paso 5. Comprobación
 - ¿Todos los cambios de `abierta_` y `llegados_` se hacen con el `mutex` tomado? Sí.
 - ¿Hay `notify_all` tras cambiar la bandera? Sí.

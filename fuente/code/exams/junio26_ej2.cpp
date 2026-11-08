@@ -2,6 +2,7 @@
 #include <condition_variable>
 #include <iostream>
 #include <mutex>
+#include <string>
 #include <thread>
 #include <vector>
 using namespace std;

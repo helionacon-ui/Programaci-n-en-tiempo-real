@@ -191,5 +191,114 @@
     return { trace, reads, ok: reads.every((l) => l.length === nVal && l.every((v, k) => v === k)) };
   };
   P.mulberry = (a) => () => { a |= 0; a = (a + 0x6d2b79f5) | 0; let t = Math.imul(a ^ (a >>> 15), 1 | a); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
+
+  // ---------- modo examen: nota estimada ----------
+  // Rúbrica orientativa (la real la marca cada convocatoria): POO 70 %, concurrencia 30 %.
+  P.RUBRICA = {
+    poo: { peso: 70, items: [['Clases, atributos y constructores (incluido el delegado o el de valores por defecto)', 15], ['Métodos con const y tipos de retorno correctos', 15], ['operator<< (friend) y reutilización del código de la base', 10], ['Herencia, virtual y abstracta, o contenedores STL bien usados', 15], ['Funciones auxiliares pedidas', 10], ['main que prueba exactamente lo que pide el enunciado', 5]] },
+    conc: { peso: 30, items: [['Monitor: un mutex y TODOS los accesos al estado protegidos', 10], ['Esperas bien hechas (predicado, sleep_until/sleep_for, sin espera activa)', 6], ['Hilos: creación, ref(), join y cierre limpio', 6], ['Consola protegida con su propio mutex', 4], ['Sin carreras ni interbloqueos', 4]] }
+  };
+  P.examGrade = (marks, compila) => {
+    // marks = { poo: [bool...], conc: [bool...] }; compila = { poo: bool, conc: bool }
+    const res = {}; let total = 0;
+    for (const k of ['poo', 'conc']) {
+      const r = P.RUBRICA[k]; let pts = 0;
+      r.items.forEach((it, i) => { if (marks[k] && marks[k][i]) pts += it[1]; });
+      const ok = !compila || compila[k] !== false;
+      const fin = ok ? pts : pts / 2;
+      res[k] = { bruto: pts, final: fin, max: r.peso, compila: ok };
+      total += fin;
+    }
+    res.total = total; res.sobre10 = Math.round(total) / 10;
+    return res;
+  };
+  P.examTimer = (startMs, nowMs, totalMs) => {
+    const rest = Math.max(0, startMs + totalMs - nowMs);
+    return { rest, over: rest === 0, text: [Math.floor(rest / 3600000), Math.floor(rest / 60000) % 60, Math.floor(rest / 1000) % 60].map((x) => String(x).padStart(2, '0')).join(':') };
+  };
+
+  // ---------- revisor de código: heurísticas sobre errores típicos ----------
+  // Devuelve [{line, level: 'error'|'warn'|'info', id, msg}]. No sustituye al compilador.
+  P.review = (code) => {
+    const out = [], L = code.split('\n');
+    const add = (i, level, id, msg) => out.push({ line: i + 1, level, id, msg });
+    const noStr = (l) => l.replace(/"(?:\\.|[^"\\])*"/g, '""').replace(/\/\/.*$/, '');
+    const clean = L.map(noStr);
+    const all = clean.join('\n');
+    // bloques de clase con llaves
+    const classes = [];
+    const re = /\b(class|struct)\s+(\w+)(?:\s*:\s*(?:public|private|protected)?\s*(\w+))?[^;{]*\{/g; let m;
+    while ((m = re.exec(all))) {
+      let d = 1, j = re.lastIndex; while (j < all.length && d) { if (all[j] === '{') d++; else if (all[j] === '}') d--; j++; }
+      const body = all.slice(re.lastIndex, j - 1);
+      const startLine = all.slice(0, m.index).split('\n').length - 1;
+      const endLine = all.slice(0, j - 1).split('\n').length - 1;
+      let k = j; while (k < all.length && /\s/.test(all[k])) k++;
+      classes.push({ kind: m[1], name: m[2], base: m[3] || null, body, startLine, endLine, semi: all[k] === ';' || /^\w+\s*[;,=]/.test(all.slice(k, k + 40)) });
+    }
+    // 1. falta ; tras la clase
+    classes.forEach((c) => { if (!c.semi) add(c.endLine, 'error', 'punto-coma-clase', `Falta «;» después de la llave de cierre de «${c.name}». Es error de compilación (en el examen reciente, un código que no compila divide la nota por 2).`); });
+    // 2. virtuales y override
+    const virt = new Set(); const rv = /\bvirtual\s+[\w:<>,\s*&]+?\b(\w+)\s*\(/g; while ((m = rv.exec(all))) virt.add(m[1]);
+    classes.filter((c) => c.base).forEach((c) => {
+      clean.slice(c.startLine, c.endLine + 1).forEach((l, i) => {
+        const mm = l.match(/(?:^|[\s*&>])(\w+)\s*\([^)]*\)\s*(const)?\s*(noexcept)?\s*(\{|;|$)/);
+        if (!mm || !virt.has(mm[1]) || /\b(override|final)\b/.test(l) || /\bvirtual\b/.test(l) || /\b(return|new|delete|else|if|for|while)\b/.test(l.split(mm[1])[0])) return;
+        if (/^\s*(\w+)\s*\(/.test(l) && mm[1] === c.name) return;
+        add(c.startLine + i, 'warn', 'falta-override', `«${mm[1]}» es virtual en la base: en «${c.name}» escribe «override». Si te equivocas en la firma (p. ej. olvidas const), con override el compilador te avisa; sin él creas un método nuevo y no hay polimorfismo.`);
+      });
+    });
+    // 3. destructor no virtual en base polimórfica
+    classes.filter((c) => !c.base && /\bvirtual\b/.test(c.body)).forEach((c) => {
+      if (!/virtual\s*~/.test(c.body)) add(c.startLine, 'warn', 'destructor-no-virtual', `«${c.name}» tiene métodos virtuales pero su destructor no es virtual: borrar una derivada a través de un puntero a «${c.name}» es comportamiento indefinido. Añade «virtual ~${c.name}() = default;».`);
+    });
+    // 4. operator<< dentro de la clase sin friend
+    classes.forEach((c) => clean.slice(c.startLine, c.endLine + 1).forEach((l, i) => {
+      if (/operator\s*<<\s*\(/.test(l) && !/\bfriend\b/.test(l)) add(c.startLine + i, 'error', 'operator-miembro', 'operator<< dentro de la clase sin «friend» sería un método con el objeto a la izquierda (obj << cout): no compila con cout << obj. Decláralo «friend» o sácalo fuera de la clase.');
+    }));
+    // 5. consultas sin const
+    classes.forEach((c) => clean.slice(c.startLine, c.endLine + 1).forEach((l, i) => {
+      const mm = l.match(/(?:^|[\s>*&])(?!return\b)[\w:<>,*&]+\s+(get_\w+|tam_\w+|num_\w+|n_\w+|size|sueldo|total_\w+|es_\w+|horas_\w+)\s*\(\s*\)\s*(\{|;)/);
+      if (mm && !/\bconst\b/.test(l.slice(0, l.indexOf(mm[0]) + mm[0].length)) && !/=\s*0\s*;/.test(l) && !/\bvirtual\b/.test(l.split(mm[1])[0] + '') ) add(c.startLine + i, 'warn', 'falta-const', `«${mm[1]}()» parece una consulta: márcala «const» para poder llamarla sobre objetos constantes y desde otras funciones const.`);
+    }));
+    // 6. wait sin predicado / if en vez de while
+    clean.forEach((l, i) => {
+      if (/\.wait\(\s*\w+\s*\)/.test(l)) add(i, 'warn', 'wait-sin-predicado', 'wait(lk) sin predicado: un despertar espurio (o un notify que llegó antes) te deja continuar sin que se cumpla la condición. Usa «cv.wait(lk, [&]{ return condicion; });» o un while.');
+      if (/\bif\s*\(.*\)\s*\{?\s*(\w+\.)?wait\s*\(/.test(l) || (/\bif\s*\(/.test(l) && /\.wait\s*\(\s*\w+\s*\)/.test(clean[i + 1] || '') ) || (/\bif\s*\([^{]*\)\s*$/.test(l) && /\.wait\(/.test(clean[i + 1] || ''))) add(i, 'warn', 'if-wait', 'La condición de espera se comprueba con «if»: tras despertar hay que volver a comprobarla. Cámbialo por «while» (o usa el wait con predicado).');
+    });
+    // 7. wait con lock_guard (se mira la declaración más cercana por encima de cada wait)
+    const decl = {};
+    clean.forEach((l, i) => {
+      const d = l.match(/\b(lock_guard|unique_lock|scoped_lock)\s*(?:<[^>]*>)?\s*(\w+)\s*[{(]/); if (d) decl[d[2]] = d[1];
+      const mm = l.match(/\.wait(?:_for|_until)?\(\s*(\w+)/);
+      if (mm && decl[mm[1]] && decl[mm[1]] !== 'unique_lock') add(i, 'error', 'wait-lock_guard', `La variable condicional necesita «unique_lock», no «${decl[mm[1]]}» (wait debe poder desbloquear y volver a bloquear). Cambia «${mm[1]}».`);
+    });
+    // 8. lock()/unlock() manual
+    clean.forEach((l, i) => { const mm = l.match(/\b(\w+)\.lock\(\)/); if (mm && !/^(lk|lock|ul|lg|guard)\w*$/.test(mm[1]) && !/unique_lock|scoped|lg|lk/.test(mm[1])) add(i, 'info', 'lock-manual', `«${mm[1]}.lock()» manual: si hay un return o una excepción antes del unlock(), el mutex se queda bloqueado para siempre. Usa lock_guard o scoped_lock (RAII).`); });
+    // 9. thread con referencias sin ref()
+    const refFns = new Set(); const rf = /\b(\w+)\s*\(([^)]*&[^)]*)\)\s*\{/g; while ((m = rf.exec(all))) if (!/\b(if|for|while|switch)\b/.test(m[1])) refFns.add(m[1]);
+    clean.forEach((l, i) => {
+      const mm = l.match(/\bthread\s*(?:\w+\s*)?[({]\s*(\w+)\s*,([^;]*)/) || l.match(/emplace_back\(\s*(\w+)\s*,([^;]*)/);
+      if (mm && refFns.has(mm[1]) && !/\bref\(/.test(mm[2]) && /\w/.test(mm[2])) add(i, 'error', 'falta-ref', `«${mm[1]}» recibe parámetros por referencia: al crear el hilo hay que pasarlos con «ref(obj)». Sin ref() se copian y no compila (el mutex no es copiable) o trabajas sobre una copia.`);
+    });
+    // 10. hilos sin join
+    if (/\bthread\b/.test(all) && !/\bjthread\b/.test(all) && !/\.join\(\)|\.detach\(\)/.test(all)) { const i = clean.findIndex((l) => /\bthread\b/.test(l) && !/#include/.test(l)); add(Math.max(i, 0), 'error', 'sin-join', 'Hay hilos pero ningún join()/detach(): si un thread se destruye sin join, el programa termina con std::terminate. Haz join de todos antes de salir de main.'); }
+    // 11. cout compartido sin mutex
+    if (/\bthread\b/.test(all) && /\bcout\b/.test(all) && !/(lock_guard|scoped_lock|unique_lock)/.test(all)) { const i = clean.findIndex((l) => /\bcout\b/.test(l)); add(i, 'warn', 'cout-sin-mutex', 'Varios hilos escriben en cout sin ningún mutex: las líneas se mezclan. La consola es un recurso compartido: protégela con su propio mutex.'); }
+    // 12. new sin delete
+    if (/\bnew\s+\w+/.test(all) && !/\bdelete\b/.test(all) && !/(unique_ptr|shared_ptr|make_unique|make_shared)/.test(all)) { const i = clean.findIndex((l) => /\bnew\s+\w+/.test(l)); add(i, 'warn', 'new-sin-delete', 'Reservas con «new» pero no hay «delete» (ni punteros inteligentes): fuga de memoria. Si guardas punteros en un vector, libéralos en el destructor.'); }
+    // 13. includes que faltan
+    const need = [['mutex', /\b(mutex|lock_guard|unique_lock|scoped_lock)\b/], ['thread', /\b(thread|this_thread)\b/], ['condition_variable', /\bcondition_variable\b/], ['vector', /\bvector\s*</], ['map', /\bmap\s*</], ['set', /\bset\s*</], ['string', /\bstring\b/], ['optional', /\boptional\s*</], ['chrono', /\bchrono\b/], ['iostream', /\b(cout|cin|cerr)\b/], ['numeric', /\baccumulate\b/], ['algorithm', /\b(sort|max_element|min_element|find_if|count_if|for_each)\b/], ['memory', /\b(unique_ptr|shared_ptr|make_unique|make_shared)\b/], ['utility', /\bpair\s*</]];
+    need.forEach(([h, rx]) => { if (rx.test(all) && !new RegExp('#include\\s*<' + h + '>').test(code)) { const i = clean.findIndex((l) => rx.test(l)); add(i, 'warn', 'falta-include', `Usas algo de <${h}> pero no hay «#include <${h}>». Puede compilar por casualidad en tu máquina y fallar en la del examen.`); } });
+    // 14. paso por valor de contenedores grandes
+    clean.forEach((l, i) => {
+      if (/^\s*#/.test(l) || !/\(.*\)/.test(l)) return;
+      const mm = l.match(/\(\s*(?:[^()]*,\s*)?(?:std::)?(string|vector\s*<[^()]*?>|map\s*<[^()]*?>|set\s*<[^()]*?>)\s+(\w+)\s*[,)]/);
+      if (mm && !/\bmove\s*\(/.test(all) ) add(i, 'info', 'paso-por-valor', `«${mm[2]}» se pasa por valor (${mm[1].replace(/\s+/g, '')}): copia el contenido entero. Si solo lo lees, usa «const ${mm[1].replace(/\s+/g, '')}&».`);
+    });
+    out.sort((a, b) => a.line - b.line);
+    return out;
+  };
+  P.reviewVerdict = (f) => { const e = f.filter((x) => x.level === 'error').length, w = f.filter((x) => x.level === 'warn').length; return { errores: e, avisos: w, compilaria: e === 0 }; };
   root.PSTR = P;
 })(typeof window !== 'undefined' ? window : module.exports);

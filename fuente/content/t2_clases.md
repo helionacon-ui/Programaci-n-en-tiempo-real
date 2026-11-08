@@ -43,7 +43,11 @@ La asignación usa el truco **copy-and-swap**: copia a un temporal y intercambia
 
 **Vídeo recomendado** (en inglés, 5 min): regla de tres y de cinco, es decir, cuándo escribir destructor, copia y asignación.
 
-[[yt:RspbK8tfU0Y|Rule Of Three And Rule Of Five In C++ Programming|CppNuts|4:57]]
+[[yt:RspbK8tfU0Y|Rule Of Three And Rule Of Five In C++ Programming|CppNuts|4:57|EN|Intermedio]]
+
+**Alternativa en español** (8 min): la regla de tres explicada paso a paso.
+
+[[yt:F-7Rpt2D-zo|Regla de tres en C++|ReelLearning|8:30|ES|Intermedio]]
 
 ## Sobrecarga de operadores {#t2-operadores}
 

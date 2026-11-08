@@ -1,0 +1,13 @@
+cine:
+  04/05/2024 @ana: mi pelicula favorita de cine (7 likes)
+  02/05/2024 @luis: futbol y cine el mismo dia (3 likes)
+futbol:
+  01/05/2024 @ana: gran partido de futbol (10 likes)
+  02/05/2024 @luis: futbol y cine el mismo dia (3 likes)
+otras:
+  03/05/2024 @eva: hoy llueve (1 likes)
+cine=2 futbol=2 otras=1 
+total=5 (un post puede contar en varias tematicas)
+futbol: 2 posts (set<C_Post> compara solo por usuario)
+usuario con mas posts en futbol: ana
+tematica que no existe: []

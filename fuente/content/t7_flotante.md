@@ -28,9 +28,9 @@ Consecuencias prácticas:
 
 **Vídeos recomendados:** uno en español sobre cómo se representan los reales y otro (en inglés) de Computerphile.
 
-[[yt:bbkcEiUjehk|Cómo se representan los números de punto flotante|Spanning Tree|9:56]]
+[[yt:bbkcEiUjehk|Cómo se representan los números de punto flotante|Spanning Tree|9:56|ES|Introductorio]]
 
-[[yt:PZRI1IfStY0|Floating Point Numbers - Computerphile|Computerphile|9:16]]
+[[yt:PZRI1IfStY0|Floating Point Numbers - Computerphile|Computerphile|9:16|EN|Introductorio]]
 
 ## Caso 1: el misil Patriot (Dhahran, 1991) {#t7-patriot}
 

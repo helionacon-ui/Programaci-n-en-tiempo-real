@@ -6,6 +6,18 @@ Tres simulacros para practicar con reloj. Cada uno imita el examen: **2 h 30 min
 3. Al terminar, abre los pasos y compara. Anota qué te ha fallado en la lista de «Qué suele fallar» del tema.
 :::
 
+## Modo examen con reloj {#modo-examen}
+
+Elige un examen real de los resueltos en la guía, pulsa **Empezar** y trabaja con el reloj en marcha (2 h 30 min). El enunciado se abre en otra pestaña y **las soluciones no aparecen hasta que entregas**. Al terminar te autoevalúas con una rúbrica (70 % programación orientada a objetos, 30 % concurrencia) y la herramienta calcula una nota estimada, dividiendo por 2 el ejercicio que no compile. Tus últimos intentos se guardan en este navegador.
+
+[[sim:examen]]
+
+## Revisor de código {#revisor}
+
+Pega tu solución (se revisa mientras escribes): el revisor busca los fallos que más se repiten en los exámenes (falta de `override`, destructor no virtual, `if` en lugar de `while` en una espera, `wait` sin predicado, `lock_guard` con `wait`, falta de `ref()` al crear el hilo, hilos sin `join`, `operator<<` sin `friend`, consultas sin `const`, `#include` que faltan, `;` después de la clase…). Es una revisión por patrones: **no sustituye al compilador**, pero te avisa antes de entregar.
+
+[[sim:revisor]]
+
 ## Simulacro 1 · Biblioteca y parking {#sim1}
 
 @ejercicio sim1-ej1 | Simulacro 1 · Ejercicio 1: préstamos de una biblioteca (POO, 70 %) | tema=herencia | tipo=simulacro
