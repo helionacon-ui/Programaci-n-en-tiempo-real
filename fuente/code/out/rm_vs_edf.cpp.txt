@@ -1,0 +1,6 @@
+U = 0.971429 (<= 1: EDF puede) ; cota RM n=2 = 0.828 (U la supera: RM no es seguro)
+R2 (RM): 4 6 8 > D=7 -> NO planificable con RM
+Simulación de 35 unidades:
+ RM : fallos = 1
+      t=7: tau2 NO terminó antes de su nuevo periodo
+ EDF: fallos = 0

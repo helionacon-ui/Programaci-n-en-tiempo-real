@@ -1,19 +1,35 @@
-# Programación de Sistemas en Tiempo Real · guía de estudio
+# Programación de Sistemas en Tiempo Real · Guía para aprobar
 
-Guía completa para aprobar la asignatura: teoría desde cero, prácticas, exámenes resueltos, hojas, demostraciones, autoevaluación, simulacros, formularios y plan de estudio.
+**Proyecto iniciado el 8 de noviembre de 2026.**
 
-- **Web (multipágina, instalable como app):** `index.html` (GitHub Pages)
-- **HTML maestro de un solo archivo:** `guia.html`
-- **PDF:** carpeta `pdf/` (guía completa, versión Acrobat con botones de mostrar/ocultar solución, exámenes resueltos, hojas resueltas, formulario de una página)
-- **Scripts de las prácticas:** `scripts_practicas/`
-- **Fuentes y generador:** `fuente/` (contenido en mini-DSL, código verificado, scripts de Python)
+Guía de estudio interactiva de Programación de Sistemas en Tiempo Real (UPCT, GIEyA): C++ y STL, clases, herencia y polimorfismo, hilos, monitores, planificación y coma flotante.
+
+Ábrela en: https://helionacon-ui.github.io/Programaci-n-en-tiempo-real/
+
+Está dividida en varias páginas: portada con buscador, una página por tema (`tema-0.html` … `tema-7.html`), prácticas, exámenes resueltos paso a paso, hojas de problemas, demostraciones, autoevaluación, simulacros, formulario, glosario y plan de estudio. Todas comparten `style.css` y `app.js`, y el buscador busca en toda la guía. `guia-completa.html` es la misma guía en una sola página.
+
+Cada tema lleva figuras (pulsa una para ampliarla), simuladores interactivos, ejemplos de código compilados y comprobados, cuadros de trucos y errores típicos, y vídeos recomendados de YouTube que se cargan al pulsar.
+
+Se puede instalar como aplicación (pantalla de inicio en el móvil, «Instalar» en el ordenador) y funciona sin conexión después de abrirla una vez con internet.
+
+## Descargas en PDF
+
+- [Guía completa, PDF navegable](guia_tiempo_real.pdf) (cualquier visor)
+- [Guía completa, PDF con botones](guia_tiempo_real_acrobat.pdf) (Adobe Acrobat / Reader: mostrar u ocultar cada solución)
+- [Exámenes resueltos paso a paso](examenes_resueltos.pdf)
+- [Hojas de problemas resueltas](hojas_resueltas.pdf)
+- [Formulario en una página](formulario_1_pagina.pdf)
+
+## Código
+
+- `scripts_practicas/`: programas de las prácticas.
+- `ejemplos/`: siete programas de trucos y ejemplos explicados (STL, clase completa, trampas del polimorfismo, hilos, plantilla de monitor, RM frente a EDF, coma flotante). Compilan con `g++ -std=c++17 -Wall -Wextra -pthread`.
+- `fuente/`: contenido en mini-DSL, código verificado y generador en Python.
 
 ## Regenerar
 
 ```
 cd fuente
-python3 tools/build.py        # HTML maestro y web multipágina en dist/
-python3 tools/build_pdf.py all   # PDF (requiere xelatex, rsvg-convert)
+python3 tools/build.py           # web multipágina y guía completa en dist/
+python3 tools/build_pdf.py all   # PDF (requiere xelatex y rsvg-convert)
 ```
-
-El contenido está en `fuente/content/*.md` (formato descrito en `fuente/tools/dsl.py`). Las fórmulas usan MathJax (se carga desde un CDN).

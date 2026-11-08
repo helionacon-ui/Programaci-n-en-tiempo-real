@@ -40,6 +40,10 @@ while (true) {
 
 Ventajas: simple y predecible. Inconvenientes: rígido, difícil con tareas esporádicas y con periodos «incómodos» (hiperperiodo enorme).
 
+**Vídeo recomendado** (en inglés, 28 min, curso universitario): ejecutivos cíclicos, ciclo principal y ciclos secundarios.
+
+[[yt:arF8CJzJxa4|Lección 3: Ejecutivos cíclicos|Real Time Operating System - IITKGP|27:45]]
+
 ## Prioridades fijas: RM y DM {#t6-rmdm}
 
 - **RM (Rate Monotonic):** menor **periodo** ⇒ mayor prioridad. Óptimo cuando $D_i = T_i$.
@@ -74,6 +78,10 @@ Ejemplo: $(C,T)=(3,7),(3,12),(5,20)$ con $D=T$. Es $U = 0{,}929 > 0{,}780$, así
 [[sim:rta:burns]]
 
 [[fig:gantt_rm]]
+
+**Vídeo recomendado** (explicación breve de la planificación monotónica por tasa).
+
+[[yt:xgW8VhEOpFg|Planificación monotónica por tasa|Manoj MVR|8:51]]
 
 ## Recursos compartidos: inversión de prioridad {#t6-inversion}
 
@@ -110,6 +118,12 @@ donde $c_{k,r}$ es la duración máxima de la sección crítica de $k$ sobre $r$
 - Mezclar «prioridad más alta» con «número más grande»: fija la convención (aquí, mayor número = mayor prioridad).
 :::
 
+**Vídeos recomendados** sobre inversión de prioridad (en inglés) y protocolo de techo de prioridad (curso universitario, en inglés).
+
+[[yt:C2xKhxROmhA|Introduction to RTOS Part 11 - Priority Inversion|DigiKey|12:35]]
+
+[[yt:cI5wjYkShMI|Lecture 16 : Priority Ceiling Protocol|Real Time Operating System - IITKGP|30:47]]
+
 ## EDF y utilización {#t6-edf}
 
 **EDF (Earliest Deadline First)** da la prioridad a la tarea cuyo plazo absoluto es más próximo. Con $D=T$ y una CPU, el conjunto es planificable si y solo si $U \le 1$ (Liu y Layland, 1973). Es más eficiente que RM, pero las prioridades cambian en tiempo de ejecución y el análisis con recursos es más complejo.
@@ -143,3 +157,45 @@ donde $c_{k,r}$ es la duración máxima de la sección crítica de $k$ sobre $r$
 @card Recurrencia del tiempo de respuesta | R = C + B + Σ ⌈R/Tj⌉·Cj sobre las tareas más prioritarias; iterar hasta punto fijo.
 @card Bloqueo con ICPP | B_i = máx. sección crítica de tareas de menor prioridad sobre recursos con techo ≥ P_i.
 @card Condición del ciclo secundario | Ts divide a Tm, Ts ≥ máx C, 2Ts − mcd(Ts,Ti) ≤ Di.
+
+**Vídeo recomendado** (en inglés, 6 min): EDF paso a paso.
+
+[[yt:lZdS9offd5s|OS22 - Earliest Deadline First (EDF) Scheduling|EZCSE|6:27]]
+
+## Cuando RM falla y EDF no: ejemplo explicado {#t6-rm-edf}
+
+Dos tareas, $\tau_1=(C{=}2,T{=}5)$ y $\tau_2=(C{=}4,T{=}7)$. La utilización es $U=0{,}4+0{,}571=0{,}971$.
+
+- **Test de utilización RM:** $0{,}971>0{,}828$. El test no decide.
+- **Tiempo de respuesta de $\tau_2$:** $R=4\to4+\lceil4/5\rceil2=6\to4+\lceil6/5\rceil2=8>7$. **No es planificable con RM.**
+- **EDF:** $U\le1$ ⇒ **sí es planificable**.
+
+El programa de abajo lo confirma simulando un hiperperiodo (35 unidades de tiempo). Con RM, $\tau_2$ no acaba antes de su siguiente liberación en $t=7$.
+
+[[fig:rm_falla]]
+
+[[fig:edf_ok]]
+
+@include cpp code/t6/rm_vs_edf.cpp runout
+
+:::tip Receta: ¿es planificable? (el orden que da más puntos)
+1. **Calcula $U$.** Si $U>1$: **no** es planificable con ningún algoritmo. Fin.
+2. **RM, test de la cota** $n(2^{1/n}-1)$. Si $U\le$ cota: **sí**. Si no, no concluye: sigue.
+3. **Tiempo de respuesta**, tarea por tarea, de **mayor a menor prioridad**. Si todas cumplen $R_i\le D_i$: **sí**. Si una no: **no** con RM.
+4. **EDF** (con $D=T$): $U\le1$ ⇒ sí.
+5. **Con recursos:** calcula $B_i$ con los techos y repite el paso 3 sumando $B_i$.
+:::
+
+:::tip Trucos de cálculo a mano
+- **Techo rápido:** $\lceil R/T\rceil$ es «cuántas veces cabe $T$ en $R$, redondeando **hacia arriba**». Si $R=T$ exacto, sale 1, no 2.
+- **Arranca la iteración** en $R^{(0)}=C_i+B_i$ y **para** cuando dos valores seguidos coinciden o cuando pasas de $D_i$.
+- **Prioridades RM:** ordena por periodo (menor = más prioridad). Si dos coinciden, el enunciado decide el desempate.
+- **Hiperperiodo:** $\operatorname{mcm}(T_i)$. Con periodos $5$ y $7$ es $35$; si son muchos, factoriza.
+:::
+
+:::warn Qué suele fallar
+- **Aplicar el test de utilización de RM a $D<T$.** Solo vale con plazo igual a periodo.
+- **Usar $\lfloor\cdot\rfloor$ en vez de $\lceil\cdot\rceil$** en la recurrencia.
+- **Olvidar el bloqueo $B_i$ de las tareas intermedias** con ICPP: aunque $\tau_2$ no use el recurso, sufre bloqueo si su techo es $\ge P_2$.
+- **Declarar «no planificable»** solo porque $U$ supera la cota. La cota es suficiente, no necesaria: hay que mirar el tiempo de respuesta.
+:::

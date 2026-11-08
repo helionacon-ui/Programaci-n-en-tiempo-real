@@ -125,6 +125,9 @@ class RT:
             if not os.path.exists(f): return ''
             return ('\\begin{figure}[H]\\centering\\includegraphics[width=\\linewidth,height=0.42\\textheight,keepaspectratio]{%s}\\par\\smallskip{\\scriptsize\\color{gray}Captura del simulador interactivo (disponible en la versión web de la guía).}\\end{figure}\n' % f)
         if t == 'open': return ''
+        if t == 'yt':
+            return ('\\begin{tcolorbox}[bxgray,title={Vídeo recomendado}]\\textbf{%s}\\par{\\small %s · %s}\\par\\href{https://www.youtube.com/watch?v=%s}{\\texttt{youtube.com/watch?v=%s}}\\end{tcolorbox}\n'
+                    % (inline(n['title']), inline(n['chan']), inline(n['dur']), n['id'], n['id'].replace('_', '\\_')))
         if t == 'fig':
             if n['name'] == 'stats': return self.stats_hook()
             return '\\begin{figure}[H]\\centering\\includegraphics[width=0.92\\linewidth,height=0.4\\textheight,keepaspectratio]{%s}\\end{figure}\n' % fig_pdf(n['name'])

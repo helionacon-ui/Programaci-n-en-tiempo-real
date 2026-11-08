@@ -139,9 +139,9 @@ def fig_monitor():
     b = DEFS + rect(120, 20, 330, 190, 'var(--bg2)') + text(285, 42, 'Monitor (clase)', 14, 'middle', weight='bold')
     b += rect(140, 55, 130, 56, 'none') + text(205, 78, 'datos privados', 12, 'middle') + text(205, 96, 'vector, contadores…', 11, 'middle', fill='var(--muted)')
     b += rect(290, 55, 140, 26, '#2f7dd1', extra='fill-opacity=".3"') + text(360, 73, 'mutex m_', 12, 'middle', mono=True)
-    b += rect(290, 85, 140, 26, '#9a4fc7', extra='fill-opacity=".3"') + text(360, 103, 'condition_variable cv_', 11, 'middle', mono=True)
-    b += rect(140, 130, 290, 60, 'none') + text(285, 150, 'métodos públicos: 1) coger m_  2) esperar con cv_.wait(lk, cond)', 11, 'middle')
-    b += text(285, 170, '3) modificar datos  4) notify  5) soltar m_ (RAII)', 11, 'middle')
+    b += rect(290, 85, 140, 26, '#9a4fc7', extra='fill-opacity=".3"') + text(360, 103, 'condition_variable cv_', 10, 'middle', mono=True)
+    b += rect(140, 130, 290, 60, 'none') + text(285, 150, 'métodos públicos: 1) coger m_  2) esperar con cv_.wait(lk, cond)', 10, 'middle')
+    b += text(285, 170, '3) modificar datos  4) notify  5) soltar m_ (RAII)', 10, 'middle')
     for k, h in enumerate(['hilo A', 'hilo B', 'hilo C']):
         b += rect(10, 45 + k * 50, 70, 30, 'var(--bg2)') + text(45, 65 + k * 50, h, 12, 'middle') + line(80, 60 + k * 50, 120, 100, arrow=True)
     return svg(470, 225, b, 'Estructura de un monitor')
@@ -181,5 +181,126 @@ def fig_ciclo_vida():
     b += text(430, 130, 'lock/wait/sleep/E-S', 10, 'middle') + text(215, 130, 'notify/unlock/fin E-S', 10, 'middle')
     return svg(660, 195, b, 'Estados de hilo')
 
+
+def fig_portada(art=False):
+    b = DEFS + '<defs><linearGradient id="pg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2f7dd1" stop-opacity=".30"/><stop offset="1" stop-color="#9a4fc7" stop-opacity=".22"/></linearGradient></defs>'
+    b += rect(0, 0, 760, 330, 'url(#pg)', 'var(--muted)', 1, 14)
+    # chip
+    b += rect(48, 70, 120, 120, 'var(--bg)', 'var(--fg)', 2.5, 10)
+    for k in range(5):
+        b += line(66 + k * 22, 70, 66 + k * 22, 54, 'var(--fg)', 2.5) + line(66 + k * 22, 190, 66 + k * 22, 206, 'var(--fg)', 2.5)
+        b += line(48, 88 + k * 22, 32, 88 + k * 22, 'var(--fg)', 2.5) + line(168, 88 + k * 22, 184, 88 + k * 22, 'var(--fg)', 2.5)
+    b += rect(78, 100, 60, 60, '#2f7dd1', 'var(--fg)', 1.5, 6, 'fill-opacity=".45"') + text(108, 137, 'CPU', 18, 'middle', weight='bold')
+    b += (text(108, 232, 'hilos + C++', 13, 'middle', fill='var(--muted)') if not art else '')
+    # reloj
+    b += '<circle cx="300" cy="130" r="58" fill="var(--bg)" stroke="var(--fg)" stroke-width="3"/>'
+    for k in range(12):
+        import math
+        a = k * math.pi / 6
+        b += line(300 + 49 * math.sin(a), 130 - 49 * math.cos(a), 300 + 55 * math.sin(a), 130 - 55 * math.cos(a), 'var(--fg)', 2)
+    b += line(300, 130, 300, 90, 'var(--fg)', 3.5) + line(300, 130, 330, 142, '#d1642f', 3.5) + '<circle cx="300" cy="130" r="5" fill="var(--fg)"/>'
+    b += (text(300, 232, 'plazo (deadline)', 13, 'middle', fill='var(--muted)') if not art else '')
+    # gantt
+    gx, gy = 410, 70
+    rows = [('τ1', '#2f7dd1', [(0, 2), (5, 7), (10, 12)], [0, 5, 10]), ('τ2', '#d1642f', [(2, 5), (7, 9)], [0, 7]), ('τ3', '#2fa36b', [(9, 10), (12, 14)], [0, 12])]
+    u = 22
+    for r, (n, col, bl, ar) in enumerate(rows):
+        y = gy + r * 44
+        b += text(gx - 6, y + 22, n, 13, 'end', weight='bold') + line(gx, y + 30, gx + 15 * u, y + 30, 'var(--muted)', 1)
+        for a in ar: b += line(gx + a * u, y + 30, gx + a * u, y - 4, 'var(--fg)', 1.5, arrow=True)
+        for (a, c) in bl: b += rect(gx + a * u, y, (c - a) * u, 30, col, 'var(--bg)', 1, 3, 'fill-opacity=".85"')
+    b += (text(gx + 7 * u, 232, 'planificación de tareas periódicas', 13, 'middle', fill='var(--muted)') if not art else '')
+    if art:
+        return ('<svg viewBox="0 30 760 215" role="img" aria-label="Una CPU, un reloj con plazo y un diagrama de planificación de tareas" class="svgfig" xmlns="http://www.w3.org/2000/svg">%s</svg>' % b.replace(rect(0, 0, 760, 330, 'url(#pg)', 'var(--muted)', 1, 14), ''))
+    b += text(380, 275, 'Programación de Sistemas en Tiempo Real', 26, 'middle', weight='bold')
+    b += text(380, 305, 'STL · clases y herencia · hilos · monitores · planificación · coma flotante', 14, 'middle', fill='var(--muted)')
+    return svg(760, 330, b, 'Portada: una CPU, un reloj con plazo y un diagrama de planificación de tareas')
+
+def fig_clase_vida():
+    b = DEFS + text(10, 18, 'Ciclo de vida de un objeto y qué función especial se ejecuta en cada momento', 13, weight='bold')
+    xs = [20, 190, 360, 530]
+    tit = ['nace', 'se copia', 'se reasigna', 'muere']
+    fn = ['constructor', 'constructor de copia\n(o de movimiento)', 'operator=\n(copia o movimiento)', 'destructor']
+    ex = ['Fraccion f{1,2};', 'Fraccion g = f;', 'g = h;', '} // fin del ámbito']
+    col = ['#2fa36b', '#2f7dd1', '#9a4fc7', '#d1642f']
+    for k in range(4):
+        b += rect(xs[k], 40, 150, 120, 'var(--bg2)', col[k], 2.5, 8) + text(xs[k] + 75, 62, tit[k], 14, 'middle', weight='bold', fill=col[k])
+        for j, l in enumerate(fn[k].split('\n')): b += text(xs[k] + 75, 88 + j * 16, l, 12, 'middle')
+        b += text(xs[k] + 75, 140, ex[k], 11, 'middle', mono=True, fill='var(--muted)')
+        if k < 3: b += line(xs[k] + 150, 100, xs[k + 1], 100, arrow=True)
+    b += rect(20, 180, 660, 62, 'none', 'var(--fg)', 1, 6)
+    b += text(350, 202, 'Regla de los cinco: si escribes UNO de estos cinco, escribe (o prohíbe con =delete) los demás.', 12, 'middle', weight='bold')
+    b += text(350, 221, 'destructor · constr. de copia · = de copia · constr. de movimiento · = de movimiento', 11, 'middle', mono=True)
+    b += text(350, 238, 'Si la clase solo usa vector/string/unique_ptr: regla del cero (no escribas ninguno).', 11, 'middle', fill='var(--muted)')
+    return svg(700, 255, b, 'Ciclo de vida de un objeto')
+
+def fig_fork_join():
+    b = DEFS + text(10, 18, 'Hilos: el principal lanza (fork) y espera (join); cada hilo avanza por su cuenta', 13, weight='bold')
+    b += text(8, 62, 'main', 12, weight='bold') + line(60, 58, 580, 58, 'var(--fg)', 3)
+    b += rect(150, 46, 20, 24, '#c9a227', 'var(--bg)', 1, 3) + text(160, 40, 'lanza', 10, 'middle')
+    b += rect(470, 46, 20, 24, '#c9a227', 'var(--bg)', 1, 3) + text(480, 40, 'join', 10, 'middle')
+    cols = ['#2f7dd1', '#d1642f', '#2fa36b']
+    ends = [420, 520, 360]
+    for k in range(3):
+        y = 100 + k * 40
+        b += text(8, y + 5, 'hilo %d' % (k + 1), 12, weight='bold') + line(160, 62, 170, y, 'var(--muted)', 1, '3 3')
+        b += rect(170, y - 10, ends[k] - 170, 20, cols[k], 'var(--bg)', 1, 4, 'fill-opacity=".8"') + text((170 + ends[k]) / 2, y + 5, 'trabajo', 11, 'middle')
+        b += line(ends[k], y, 480, 62, 'var(--muted)', 1, '3 3')
+    b += text(10, 240, 'Sin join (ni detach) al destruir el thread: std::terminate. Datos compartidos: mutex o atomic.', 12)
+    return svg(600, 255, b, 'Fork y join de hilos')
+
+def fig_prodcons():
+    b = DEFS + text(10, 18, 'Productor–consumidor con cola acotada (monitor): quién espera y por qué', 13, weight='bold')
+    for k in range(2):
+        b += rect(10, 50 + k * 60, 90, 38, '#2f7dd1', 'var(--bg)', 1, 6, 'fill-opacity=".4"') + text(55, 74 + k * 60, 'productor %d' % (k + 1), 12, 'middle') + line(100, 69 + k * 60, 190, 110, arrow=True)
+    b += rect(190, 80, 220, 60, 'var(--bg2)', 'var(--fg)', 2, 8)
+    for k in range(4):
+        b += rect(200 + k * 50, 92, 40, 36, '#2fa36b' if k < 3 else 'none', 'var(--fg)', 1, 4, 'fill-opacity=".5"' if k < 3 else '')
+    b += text(300, 158, 'cola de capacidad 4 (3 ocupadas)', 11, 'middle', fill='var(--muted)')
+    for k in range(2):
+        b += rect(500, 50 + k * 60, 90, 38, '#d1642f', 'var(--bg)', 1, 6, 'fill-opacity=".4"') + text(545, 74 + k * 60, 'consumidor %d' % (k + 1), 12, 'middle') + line(410, 110, 500, 69 + k * 60, arrow=True)
+    b += text(10, 195, 'poner: wait(hay_hueco) si está llena  →  notify(hay_dato)', 12, mono=True)
+    b += text(10, 215, 'sacar: wait(hay_dato) si está vacía  →  notify(hay_hueco)', 12, mono=True)
+    b += text(10, 238, 'cerrar: bandera con el mutex + notify_all para que nadie se quede dormido', 12, fill='var(--muted)')
+    return svg(600, 252, b, 'Productor consumidor')
+
+def _g2(tasks, policy, horizon, title):
+    return gantt(tasks, policy, horizon, title)[0]
+
+def fig_rm_falla():
+    return _g2([dict(name='τ1', C=2, T=5, D=5), dict(name='τ2', C=4, T=7, D=7)], 'RM', 15, 'RM con τ1=(C2,T5) y τ2=(C4,T7): τ2 no termina antes de t=7')
+
+def fig_edf_ok():
+    return _g2([dict(name='τ1', C=2, T=5, D=5), dict(name='τ2', C=4, T=7, D=7)], 'EDF', 15, 'EDF con las mismas tareas (U=0,971≤1): todas cumplen el plazo')
+
+def fig_ieee():
+    b = DEFS + text(10, 18, 'Formato IEEE 754: valor = (−1)^s × 1,m × 2^(e − sesgo)', 13, weight='bold')
+    def barra(y, nm, parts, tot):
+        x = 90; r = text(8, y + 20, nm, 13, weight='bold')
+        cols = ['#d12f6a', '#c9a227', '#2f7dd1']
+        for (lab, n), c in zip(parts, cols):
+            w = max(24, n * 520 / tot)
+            r += rect(x, y, w, 30, c, 'var(--bg)', 1, 3, 'fill-opacity=".7"') + text(x + w / 2, y + 20, lab, 11, 'middle')
+            x += w
+        return r
+    b += barra(40, 'float', [('s 1', 1), ('exponente 8', 8), ('mantisa 23', 23)], 32)
+    b += barra(90, 'double', [('s 1', 1), ('exponente 11', 11), ('mantisa 52', 52)], 64)
+    b += text(10, 150, 'sesgo: 127 (float) · 1023 (double)   ·   ≈7 cifras decimales (float) · ≈15–16 (double)', 12)
+    b += text(10, 175, '0,1 en binario es periódico (0,0001100110011…): se redondea → 0,1+0,2 ≠ 0,3', 12)
+    b += text(10, 200, 'Épsilon de máquina: float ≈ 1,19e-7 · double ≈ 2,22e-16', 12, mono=True)
+    return svg(640, 215, b, 'Formato IEEE 754')
+
+def fig_contenedores():
+    b = DEFS + text(10, 18, '¿Qué contenedor de la STL uso?', 14, weight='bold')
+    bx = [('vector', 'secuencia con acceso por índice;\nel valor por defecto', '#2f7dd1'), ('map', 'clave → valor, ordenado por clave;\ncontar con ++m[k]', '#2fa36b'), ('set', 'elementos únicos y ordenados;\n¿está o no está?', '#9a4fc7'), ('unordered_map', 'clave → valor sin orden;\nbúsqueda media O(1)', '#d1642f')]
+    for k, (n, d, c) in enumerate(bx):
+        x = 10 + (k % 2) * 330; y = 34 + (k // 2) * 84
+        b += rect(x, y, 315, 72, 'var(--bg2)', c, 2.5, 8) + text(x + 12, y + 24, n, 15, weight='bold', mono=True, fill=c)
+        for j, l in enumerate(d.split('\n')): b += text(x + 12, y + 44 + j * 16, l, 12)
+    b += text(10, 218, 'Recorrer y modificar: for (auto& x : v) · ordenar: sort(begin,end,lambda) · borrar: erase(remove_if(...),end)', 11, mono=True)
+    return svg(660, 232, b, 'Elegir contenedor')
+
 FIGS = dict(mem=fig_mem, vec=fig_vec, herencia=fig_herencia, vtable=fig_vtable, race=fig_race, gantt_rm=fig_gantt_rm,
-            inversion=fig_inversion, monitor=fig_monitor, deadlock=fig_deadlock, cyc=fig_cyc, vida=fig_ciclo_vida)
+            inversion=fig_inversion, monitor=fig_monitor, deadlock=fig_deadlock, cyc=fig_cyc, vida=fig_ciclo_vida,
+            portada=fig_portada, portada_art=lambda: fig_portada(True), clase_vida=fig_clase_vida, fork_join=fig_fork_join, prodcons=fig_prodcons,
+            rm_falla=fig_rm_falla, edf_ok=fig_edf_ok, ieee=fig_ieee, contenedores=fig_contenedores)

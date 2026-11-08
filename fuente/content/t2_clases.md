@@ -39,6 +39,12 @@ La asignación usa el truco **copy-and-swap**: copia a un temporal y intercambia
 - Usar una variable no inicializada: los atributos `int`, `double` o punteros no tienen valor por defecto.
 :::
 
+[[fig:clase_vida]]
+
+**Vídeo recomendado** (en inglés, 5 min): regla de tres y de cinco, es decir, cuándo escribir destructor, copia y asignación.
+
+[[yt:RspbK8tfU0Y|Rule Of Three And Rule Of Five In C++ Programming|CppNuts|4:57]]
+
 ## Sobrecarga de operadores {#t2-operadores}
 
 Un operador es una función con un nombre especial. `a + b` es `operator+(a, b)`. Las reglas útiles:
@@ -91,3 +97,33 @@ private:
 @quiz ¿Qué atributos NO necesitan gestión manual de copia (regla de 0)? | `int*` con `new` | `string` y `vector` | Descriptores de fichero C | Memoria con `malloc` | 2 | `string` y `vector` ya gestionan su memoria y su copia correctamente.
 @card ¿Para qué sirve `const` al final de un método? | Garantiza que no modifica el objeto y permite llamarlo sobre objetos `const`.
 @card ¿Qué es copy-and-swap? | Asignar copiando a un temporal e intercambiando sus datos con los del objeto; seguro ante excepciones y autoasignación.
+
+## Ejemplo completo y plantilla de clase {#t2-plantilla}
+
+Una clase `Fraccion` que usa casi todo lo que se pide en un examen: constructor con valores por defecto, `const`, operadores aritméticos, comparaciones, `++` prefijo y sufijo, `operator<<` y una excepción. Está comentada con números `(1)`, `(2)`…
+
+@include cpp code/t2/fraccion.cpp runout
+
+:::tip Plantilla: qué escribir y en qué orden
+1. **Atributos privados** con sufijo `_`.
+2. **Constructor** con lista de inicialización (en el **orden en que declaraste los atributos**, no en el que los escribes).
+3. **Getters `const`** (todo método que no modifica el objeto lleva `const`).
+4. **Operadores** como métodos `const` que devuelven un objeto nuevo.
+5. **`operator<<` como `friend`** dentro de la clase, devolviendo `os`.
+6. Si usas memoria dinámica: **regla de los cinco** (destructor, copia, movimiento, asignación por valor con `swap`).
+:::
+
+:::tip Truco: qué operadores necesitas para cada contenedor
+- `set`, `map` (como clave) y `sort`: solo **`operator<`**.
+- `find`, `count` en vector, `==` entre objetos: **`operator==`**.
+- Imprimir con `cout`: **`operator<<`**.
+- `x++` y `++x`: el sufijo lleva un parámetro `int` que no se usa; devuelve una **copia del valor anterior**.
+:::
+
+:::warn Qué suele fallar
+- **Olvidar `const` en un getter** y que no compile al llamarlo desde una referencia `const&`.
+- **`explicit` olvidado** en un constructor de un solo parámetro: permite conversiones silenciosas (`Fraccion f = 3;`). Es práctico aquí, pero en otras clases puede dar sorpresas.
+- **`operator+` que modifica `*this`:** debe devolver un objeto nuevo; modificar es trabajo de `+=`.
+- **Orden de inicialización:** `Caja(int a) : area_{ancho_ * alto_}, ancho_{a}` usa `ancho_` antes de darle valor, porque se inicializa en el orden de **declaración**.
+- **Normalizar al construir** (aquí en `simplificar`) evita repetir lógica en cada operador y hace que `==` solo compare campos.
+:::

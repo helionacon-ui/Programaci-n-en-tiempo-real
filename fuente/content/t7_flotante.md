@@ -24,6 +24,14 @@ Consecuencias prácticas:
 - Restar dos números casi iguales: se pierden cifras significativas (cancelación).
 :::
 
+[[fig:ieee]]
+
+**Vídeos recomendados:** uno en español sobre cómo se representan los reales y otro (en inglés) de Computerphile.
+
+[[yt:bbkcEiUjehk|Cómo se representan los números de punto flotante|Spanning Tree|9:56]]
+
+[[yt:PZRI1IfStY0|Floating Point Numbers - Computerphile|Computerphile|9:16]]
+
 ## Caso 1: el misil Patriot (Dhahran, 1991) {#t7-patriot}
 
 El reloj interno del Patriot contaba el tiempo en **décimas de segundo** como un entero. Para convertirlo a segundos multiplicaba por $1/10$, almacenado con 24 bits y por tanto **truncado**. El error de cada tic era
@@ -85,3 +93,27 @@ El protocolo de herencia y el de techo de prioridad se deben a L. Sha, R. Rajkum
 @quiz ¿Cuál es la forma correcta de comparar dos `double`? | `a == b` | `fabs(a-b) < eps` | `a - b == 0` | `(int)a == (int)b` | 2 | Comparar con una tolerancia adecuada al problema.
 @card ¿Por qué 0,1 no es exacto en binario? | Es una fracción periódica infinita en base 2; solo cabe una aproximación.
 @card ¿Qué falló en Mars Pathfinder? | Inversión de prioridad con un mutex sin herencia de prioridad; el watchdog reinició el sistema. Se arregló activando la herencia.
+
+## Experimentos con coma flotante {#t7-experimentos}
+
+Cuatro experimentos que explican por qué falla `==` con reales y cómo evitarlo.
+
+@include cpp code/t7/kahan.cpp runout
+
+:::tip Qué enseña cada salida
+1. **Sumar 0,1 diez millones de veces:** `float` da 1 087 937 (error del 9 %), `double` da 999 999,9998 y **Kahan** da 1 000 000 exacto. Kahan guarda en `c` lo que se pierde en cada suma y lo recupera en la siguiente.
+2. **Bucle con paso 0,1:** tras 10 sumas, `x` vale 0,99999999999999989, no 1; con tolerancia el bucle da exactamente 10 vueltas. Por eso `x == 1.0` es falso y un bucle `while (x != 1.0)` **no termina**. Usa `<` con margen o cuenta con un entero.
+3. **Tolerancia absoluta frente a relativa:** con números grandes, `fabs(a-b) < 1e-9` da `false` aunque `a` y `b` sean prácticamente iguales; `casi_igual` compara la diferencia con **una fracción del valor** (`rel * max(|a|,|b|)`) y da `true`.
+4. **Orden de suma:** $10^8$ más cien unos da 100 000 000 si sumas primero el grande (los unos se pierden) y 100 000 096 si sumas primero los pequeños (exacto: 100 000 100). De menor a mayor se pierde menos.
+:::
+
+:::warn Qué suele fallar
+- `if (x == 0.3)` o `while (x != 1.0)` con reales: casi siempre un error.
+- **Mezclar `int` y `double`:** `1/2` vale 0; escribe `1.0/2`.
+- **Restar números casi iguales** (cancelación): se pierden cifras significativas. Reformula la fórmula si puedes.
+- **Esperar que `float` tenga más de 7 cifras:** a partir de ahí los números no son exactos.
+:::
+
+:::tip Regla práctica
+Si vas a comparar reales: **tolerancia relativa**. Si vas a sumar muchos: de pequeño a grande, o con Kahan. Si necesitas contar: **entero**.
+:::

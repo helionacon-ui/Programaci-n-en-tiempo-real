@@ -16,6 +16,10 @@ public:
 - La destrucción va en orden inverso: primero la derivada, después la base.
 - Con `protected`, los miembros son visibles para las derivadas pero no para el exterior.
 
+**Vídeo recomendado** (en inglés, 8 min): herencia en C++ con ejemplos.
+
+[[yt:X8nYM8wdNRE|Inheritance in C++|The Cherno|8:00]]
+
 ## Polimorfismo: un puntero a la base, muchos comportamientos {#t3-poli}
 
 Imagina un vector de figuras. Quieres recorrerlo y llamar a `area()` sin preguntar de qué tipo es cada una. Eso es el **polimorfismo**: la misma llamada ejecuta código distinto según el **tipo real** del objeto.
@@ -37,6 +41,12 @@ Cada objeto con métodos virtuales lleva oculto un puntero a una **tabla de mét
 - Firma ligeramente distinta (`const` o tipo del parámetro): no es una redefinición. **`override`** hace que el compilador te avise.
 - Llamar a un método virtual desde el constructor: aún no es el tipo derivado.
 :::
+
+**Vídeos recomendados** (en inglés): funciones virtuales y, después, cómo las implementa el compilador con la tabla virtual (la que dibuja la figura de arriba).
+
+[[yt:oIV2KchSyGQ|Virtual Functions in C++|The Cherno|6:45]]
+
+[[yt:FncNE2vdtwQ|How VIRTUAL functions work in C++|Lukasz Lipski|4:41]]
 
 ## Clases abstractas y destructor virtual {#t3-abstractas}
 
@@ -100,3 +110,28 @@ protected:
 @card ¿Qué es la vtable? | Tabla de punteros a métodos virtuales por clase; cada objeto polimórfico apunta a la de su clase real.
 @card ¿Qué es slicing? | Copiar un objeto derivado a una variable base por valor: se pierde la parte derivada y el polimorfismo.
 @card ¿Para qué sirve `override`? | Para que el compilador verifique que realmente redefines un virtual de la base.
+
+## Trampas del polimorfismo, con código {#t3-trampas}
+
+Cinco situaciones que se preguntan una y otra vez, todas en un programa. Ejecútalo mentalmente antes de mirar la salida.
+
+@include cpp code/t3/trampas.cpp runout
+
+:::tip Qué enseña cada salida
+1. **Constructor:** dentro del constructor de `Animal` se llama a `nombre()` y sale `animal`, no `perro`: la parte `Perro` **aún no existe**. Regla: no llames a métodos virtuales desde constructores ni destructores.
+2. **Slicing:** `vector<Animal>` guarda copias de la parte `Animal`. `push_back(Perro{})` **recorta** el objeto y pierde los métodos de `Perro`. Para polimorfismo necesitas **punteros** (`unique_ptr<Animal>`) o **referencias**.
+3. **Con `unique_ptr`** se conserva el tipo real: `perro dice guau`. Además, `Gato::sonido()` llama a `Animal::sonido()` para reutilizar la versión de la base: por eso sale `gato dice ...miau`.
+4. **`dynamic_cast<Gato*>`** devuelve `nullptr` si el objeto no es un `Gato`. Úsalo solo cuando necesites un método que **no** está en la base (`ronronear`). Si puedes poner el método en la base como virtual, mejor.
+5. **Referencia a la base** (`const Animal& r = p;`): tampoco hay slicing, `r.presentacion()` sigue dando `perro dice guau`.
+:::
+
+:::warn Qué suele fallar
+- **Destructor no virtual:** `unique_ptr<Animal> p = make_unique<Perro>()` destruiría solo la parte `Animal` y la clase derivada no liberaría sus recursos. Con jerarquías, el destructor de la base es **siempre** `virtual`.
+- **Firma distinta sin `override`:** si escribes `string nombre()` sin `const` en la hija, **no** sobrescribe: crea otro método. `override` hace que el compilador te avise.
+- **Clase abstracta instanciada:** si queda un método `= 0` sin implementar en la hija, la hija sigue siendo abstracta y `make_unique<Hija>()` no compila.
+- **`typeid(p)` frente a `typeid(*p)`:** el primero da el tipo del puntero, el segundo el del objeto apuntado (la base debe tener algún método virtual).
+:::
+
+:::tip Truco para el `operator<<` polimórfico
+Una sola función `friend` en la base llama a un método virtual protegido (`imprimir`). Cada hija lo redefine y empieza con `Base::imprimir(os)` para no repetir. Es la solución que más puntos da y la más corta.
+:::

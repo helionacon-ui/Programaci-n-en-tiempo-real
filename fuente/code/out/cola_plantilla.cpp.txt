@@ -1,0 +1,2 @@
+suma total = 7550 (esperado 7550)
+sacar_con_limite en cola vacia: false

@@ -19,6 +19,12 @@ Reglas que debes saber de memoria:
 - Compila con `-pthread` en Linux.
 - Un vector de hilos: `vector<thread> v; v.emplace_back(f, i); for (auto& h : v) h.join();`.
 
+[[fig:fork_join]]
+
+**Vídeo recomendado** (en inglés, 11 min): crear y esperar hilos con `std::thread`.
+
+[[yt:wXBcwHwIt_I|Threads in C++|The Cherno|11:35]]
+
 ## La condición de carrera {#t4-carrera}
 
 Dos hilos suben un contador compartido: `++x`. Parece una sola instrucción, pero la CPU hace **tres**: leer `x` a un registro, sumar, escribir. Si los dos leen el mismo valor antes de que ninguno escriba, uno de los incrementos se **pierde**.
@@ -45,6 +51,14 @@ Un **`mutex`** es una puerta con cerrojo: un hilo hace `lock()` y entra; los dem
 :::tip Cómo piensa un buen diseño
 Un `mutex` **protege datos**, no código. Para cada dato compartido, deberías poder decir «lo protege el `mutex` X». Si no puedes, hay una carrera.
 :::
+
+**Vídeo recomendado** (en inglés, 12 min): qué es un mutex y cómo evita las carreras.
+
+[[yt:-Qa1RqmXKG0|What is Mutex in C++ (Multithreading for Beginners)|CodeBeauty|12:29]]
+
+**Opcional y avanzado** (en inglés, 1 h 14 min): variables atómicas (`std::atomic`) y sus órdenes de memoria. Para el examen basta con saber que una operación atómica sobre una variable no necesita mutex.
+
+[[yt:ZQFzMfHIxng|C++ atomics, from basic to advanced. What do they really do?|CppCon (Fedor Pikus)|1:14:22]]
 
 ## Interbloqueo (deadlock) {#t4-deadlock}
 
@@ -102,3 +116,33 @@ Para una tarea con periodo $T$:
 @card ¿Cómo pasas una variable por referencia a `thread`? | Con `std::ref(var)`; si no, se copia.
 @card Cuatro condiciones del interbloqueo | Exclusión mutua, retener y esperar, no expulsión, espera circular.
 @card ¿`lock_guard` o `scoped_lock`? | `lock_guard` para un mutex; `scoped_lock` para varios a la vez.
+
+## Plantillas y trucos de hilos {#t4-trucos}
+
+Cinco trucos con su salida. Todos usan resultados que no dependen del orden entre hilos, así que la salida es siempre la misma.
+
+@include cpp code/t4/hilos_trucos.cpp runout
+
+:::tip Qué enseña cada salida
+1. **`thread` copia los argumentos.** `thread{f, a}` pasa una copia; si `f` recibe `int&`, hay que escribir `ref(a)` o no compila (o no cambia el original).
+2. **Reparte el trabajo en rangos y deja un hueco por hilo** (`parcial[i]`). Cada hilo escribe solo en su posición: **no necesita mutex**. Suma al final en el hilo principal.
+3. **Captura el índice por valor** (`[i, &orden]`). Con `[&]` el bucle cambia `i` mientras el hilo lo lee: carrera. Es la trampa de captura más frecuente.
+4. **`mutex` o `atomic`.** `atomic` sirve para una operación sobre **una** variable (`++`, `+=`). Si hay que hacer dos cosas a la vez (mover dinero de una cuenta a otra), necesitas `mutex`.
+5. **`join` siempre.** Un `thread` que se destruye sin `join` ni `detach` aborta el programa (`std::terminate`).
+:::
+
+:::tip Receta para «lanza N hilos y espera»
+```
+vector<thread> hilos;
+for (int i = 0; i < N; ++i) hilos.emplace_back([i, &datos] { /* trabajo */ });
+for (auto& h : hilos) h.join();
+```
+Usa `emplace_back` (construye el hilo en su sitio, no se puede copiar un `thread`) y haz **todos** los `join` en un segundo bucle.
+:::
+
+:::warn Qué suele fallar
+- **Mutex local:** si el `mutex` se declara dentro de la función del hilo, cada hilo tiene el suyo y no protege nada. Debe ser **compartido**.
+- **`lock_guard` con alcance demasiado grande:** si lo declaras antes de un `sleep_for`, bloqueas a todos los demás mientras duermes. Pon llaves `{ lock_guard … }` alrededor de lo estrictamente crítico.
+- **Imprimir con `cout` desde varios hilos** mezcla líneas. Protege la salida con su propio `mutex`.
+- **Dos mutex en orden distinto** en dos hilos = interbloqueo. Usa `scoped_lock(m1, m2)`: toma los dos a la vez.
+:::

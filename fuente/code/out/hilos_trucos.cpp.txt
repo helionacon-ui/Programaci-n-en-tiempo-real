@@ -1,0 +1,5 @@
+1) sin ref: a=0   con ref: b=1
+2) sumas parciales: 31375 93875 156375 218875  total=500500 (esperado 500500)
+3) cuadrados: 0 1 4 9
+4) mutex=40000 atomic=40000 (esperado 40000 los dos)
+5) joinable antes de join: true, despues: false

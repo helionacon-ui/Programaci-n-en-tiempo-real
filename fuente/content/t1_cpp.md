@@ -83,6 +83,12 @@ for (auto it = v.begin(); it != v.end();) {
 - `v.size()` es **sin signo**: `v.size() - 1` con un vector vacío da un número enorme.
 :::
 
+[[fig:contenedores]]
+
+**Vídeo recomendado** (en inglés): repaso de los contenedores de la STL con ejemplos; fíjate en cuándo conviene `vector`, `map` y `set`.
+
+[[yt:6OoSgY6NVVk|Back To Basics: C++ Containers|javidx9|31:41]]
+
 ## Lambdas y algoritmos {#t1-lambdas}
 
 Una **lambda** es una función sin nombre que escribes en el sitio donde la usas: `[captura](parámetros){ cuerpo }`. La captura `[&]` toma las variables locales por referencia; `[=]`, por copia.
@@ -131,3 +137,38 @@ Los **enlaces estructurados** de C++17 desempaquetan un `pair` o una estructura:
 @card ¿Qué devuelve `v.end()`? | Un iterador a una posición después del último elemento (no se puede desreferenciar).
 @card Diferencia entre `find` y `[]` en un map | `find` no modifica el mapa; `[]` crea la entrada si no existe.
 @card ¿Cuándo se invalidan iteradores de un vector? | Tras `push_back` con realocación y tras `erase` (el iterador borrado y los posteriores).
+
+## Trucos y ejemplos explicados {#t1-trucos}
+
+Nueve trucos que resuelven el 80 % de los ejercicios de STL. Léelos con el código delante: cada uno está marcado con un comentario `TRUCO n`.
+
+@include cpp code/t1/trucos.cpp runout
+
+:::tip Cómo leer cada truco
+1. **Partir una línea en palabras:** `istringstream` + `linea >> p`. Es lo mismo que leer de `cin`, pero de un `string`. Si en el examen te dan «una línea de texto», empieza siempre así.
+2. **Contar con `map`:** `++cuenta[p]`. Si `p` no existe, `[]` lo crea con valor 0 y después sube a 1. No necesitas `if (find…)`.
+3. **Ordenar por valor:** un `map` siempre está ordenado por **clave**. Para ordenar por frecuencia, copia a `vector<pair<…>>` y usa `sort` con lambda. Añade un **desempate** (`a.first < b.first`) para que el resultado sea siempre el mismo.
+4. **Borrar por condición:** `v.erase(remove_if(…), v.end())`. Se lee de dentro hacia fuera: `remove_if` empuja al final lo que se borra y `erase` lo corta.
+5. **Borrar dentro de un bucle:** `it = v.erase(it)` y **no** `++it` en ese caso. Si avanzas dos veces, te saltas elementos.
+6. **`auto` copia, `auto&` modifica.** Si quieres cambiar el vector, el bucle necesita `&`. Si solo lees objetos grandes, usa `const auto&` para no copiarlos.
+7. **`>>` seguido de `getline`:** `>>` deja el salto de línea sin leer; `getline` lo toma y devuelve cadena vacía. Solución: `in.ignore(1000, '\n')` entre ambos.
+8. **`at()` frente a `[]`:** `at` comprueba el rango y lanza excepción; `[]` no comprueba nada (comportamiento indefinido).
+9. **`find` frente a `[]` en `map`:** `find` solo consulta; `[]` **inserta** si no existe. Para preguntar «¿está?», usa `find` o `count`.
+:::
+
+:::warn Qué suele fallar (con código)
+- `for (auto it = v.begin(); it != v.end(); ++it) v.erase(it);` → **invalida el iterador**. Guarda el resultado de `erase`.
+- `v.push_back(x)` dentro de un `for (auto& e : v)` → puede reasignar el vector y dejar `e` colgando.
+- `int n = v.size();` con un `vector` vacío en la condición `i < v.size() - 1` → `size()` es sin signo y `0 - 1` es un número enorme. Usa `i + 1 < v.size()`.
+- `sort` con un comparador que usa `<=` → comportamiento indefinido. Usa siempre `<` o `>` estrictos.
+:::
+
+:::tip Plantilla para «lee un fichero y cuenta»
+```
+ifstream in{nombre};
+if (!in) { cerr << "no se pudo abrir\n"; return 1; }
+map<string,int> cuenta;
+for (string p; in >> p;) ++cuenta[p];
+```
+Es la base de la práctica 1. Todo lo demás (ordenar, filtrar, imprimir) son los trucos 3 y 4.
+:::

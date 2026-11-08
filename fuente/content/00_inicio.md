@@ -1,3 +1,4 @@
+
 ## De qué va esta asignatura {#inicio-que-es}
 
 **Programación de Sistemas en Tiempo Real** te enseña dos cosas a la vez:

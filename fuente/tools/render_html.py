@@ -66,13 +66,19 @@ class R:
             k = n['kind']; title = n['title'] or KIND_TITLES.get(k, k)
             inner = self.render(n['kids'])
             if k == 'deep':
-                return '<details class="box deep"><summary>%s</summary>%s</details>' % (inline(title), inner)
-            return '<aside class="box %s"><div class="bt">%s</div>%s</aside>' % (k, inline(title), inner)
+                return '<details class="box deep"><summary>%s</summary><div class="inner">%s</div></details>' % (inline(title), inner)
+            base = {'tip': 'key', 'intuicion': 'key', 'formula': 'key', 'warn': 'trap', 'ojo': 'trap'}.get(k, '')
+            return '<aside class="box %s %s"><h4>%s</h4>%s</aside>' % (base, k, inline(title), inner)
         if t == 'sim':
             return '<div class="sim" data-sim="%s" id="sim-%s"></div>' % (n['name'], n['name'].replace(':', '-'))
         if t == 'open':
             sim, _, arg = n['name'].partition(':')
             return '<button class="btn open-sim" data-sim="%s" data-arg="%s">Abrir en el simulador</button>' % (sim, arg)
+        if t == 'yt':
+            u = 'https://www.youtube.com/watch?v=' + n['id']
+            return ('<div class="yt" data-id="%s"><button class="ytbtn" type="button" aria-label="Reproducir: %s"><span class="ytplay">▶</span></button>'
+                    '<div class="ytmeta"><b>%s</b><small>%s · %s</small><a href="%s" target="_blank" rel="noopener">Abrir en YouTube ↗</a></div></div>') % (
+                n['id'], html.escape(n['title']), esc(n['title']), esc(n['chan']), esc(n['dur']), u)
         if t == 'fig':
             name = n['name']
             return '<figure class="fig">%s</figure>' % FIGS[name]()
@@ -89,17 +95,17 @@ class R:
         m = n['meta']; eid = m['id']
         chips = ''.join('<span class="chip">%s</span>' % esc(x.strip()) for x in (m.get('tema', '') + ',' + m.get('tipo', '')).split(',') if x.strip())
         self.index.append(dict(id=eid, title=m['title'], sec=self.ctx['sec']))
-        out = ['<article class="ex" id="%s" data-tags="%s" data-curso="%s" data-tipo="%s" data-tema="%s">' % (
+        out = ['<article class="ex prob" id="%s" data-tags="%s" data-curso="%s" data-tipo="%s" data-tema="%s">' % (
             eid, esc(m.get('exam', '') + ' ' + m['title']), esc(m.get('curso', '')), esc(m.get('tipo', '')), esc(m.get('tema', '')))]
-        out.append('<h3 class="exh">%s %s</h3>' % (inline(m['title']), chips))
-        out.append('<div class="enun"><div class="bt">Enunciado</div>%s</div>' % self.render(n['enun']))
-        out.append('<aside class="box antes"><div class="bt">Antes de empezar: qué piden y qué teoría usas</div>%s</aside>' % self.render(n['antes']))
+        out.append('<h3 class="exh ph">%s %s</h3>' % (inline(m['title']), chips))
+        out.append('<div class="enun"><p class="et">Enunciado</p>%s</div>' % self.render(n['enun']))
+        out.append('<div class="idea"><p class="et">Antes de empezar: qué piden y qué teoría usas</p>%s</div>' % self.render(n['antes']))
         out.append('<div class="pasos">')
         for k, p in enumerate(n['pasos'], 1):
-            out.append('<details class="paso"><summary><span class="pn">%d</span> %s</summary>%s</details>' % (k, inline(p['title']), self.render(p['kids'])))
+            out.append('<details class="paso"><summary><span class="pn">%d</span> %s</summary><div class="inner">%s</div></details>' % (k, inline(p['title']), self.render(p['kids'])))
         out.append('</div>')
         if n['ojo']:
-            out.append('<aside class="box ojo"><div class="bt">Ojo: errata en la solución de referencia</div>%s</aside>' % self.render(n['ojo']))
-        out.append('<details class="resultado"><summary>Resultado final</summary>%s</details>' % self.render(n['res']))
+            out.append('<aside class="box trap ojo"><h4>Ojo: errata en la solución de referencia</h4>%s</aside>' % self.render(n['ojo']))
+        out.append('<details class="resul resultado"><summary>Resultado final</summary><div class="inner">%s</div></details>' % self.render(n['res']))
         out.append('</article>')
         return ''.join(out)

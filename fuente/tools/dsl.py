@@ -75,6 +75,9 @@ def parse(text, base=ROOT):
         if m:
             nodes.append(dict(t=m.group(1), args=[p.strip() for p in m.group(2).split('|')]))
             i += 1; continue
+        m = re.match(r'^\[\[yt:([\w-]{11})\|([^|\]]+)\|([^|\]]+)\|([^\]]*)\]\]$', s)
+        if m:
+            nodes.append(dict(t='yt', id=m.group(1), title=m.group(2).strip(), chan=m.group(3).strip(), dur=m.group(4).strip())); i += 1; continue
         m = re.match(r'^\[\[(sim|fig|open):([\w\-:,.=]+)\]\]$', s)
         if m:
             nodes.append(dict(t=m.group(1), name=m.group(2))); i += 1; continue

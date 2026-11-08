@@ -1,0 +1,15 @@
+1) Constructor de Perro (la base llama a nombre() antes de que exista la parte Perro):
+  Animal() presenta: animal
+2) Slicing: guardar por VALOR corta el objeto
+  Animal() presenta: animal
+  animal dice ...   <- ya es un Animal, no un Perro
+3) Por puntero inteligente se conserva el tipo real
+  Animal() presenta: animal
+  Animal() presenta: animal
+  perro dice guau
+  gato dice ...miau
+4) dynamic_cast: pregunta '¿eres un Gato?' (devuelve nullptr si no)
+  perro no es un gato
+  es un gato:  ...purrr
+5) Referencia a la base: tampoco hay slicing
+  perro dice guau

@@ -44,6 +44,12 @@ Por qué **con predicado**:
 - Olvidar la condición de **cierre**: los hilos quedan dormidos para siempre y el `join` no termina.
 :::
 
+[[fig:prodcons]]
+
+**Vídeo recomendado** (en inglés, 16 min): el problema del productor y el consumidor con `condition_variable`.
+
+[[yt:rKGq9AlfPR4|Producer Consumer Problem|CppNuts|15:42]]
+
 ## Monitor {#t5-monitor}
 
 Un **monitor** es una clase que **encapsula**: los datos compartidos, el `mutex` que los protege y las variables condición. Los hilos solo usan los métodos públicos y cada uno hace internamente su `lock`. Es la forma de dar la respuesta de «la clase `Almacén`/`Puente`/`Barrera`» del examen.
@@ -59,6 +65,10 @@ Observa:
 - Dos variables condición (`no_lleno_` y `no_vacio_`), una para cada condición de espera distinta.
 - `sacar` devuelve `false` cuando el buffer está **cerrado y vacío**; así los consumidores acaban sin esperar para siempre.
 - El estado del cierre se cambia **con el `mutex`** y se avisa con `notify_all`.
+
+**Vídeo recomendado** (en inglés, 6 min): por qué la espera usa `unique_lock` y no `lock_guard`.
+
+[[yt:uxMRTDxO1bQ|Why C++ Producer-Consumer Pattern Requires std::unique_lock|Suboptimal Engineer|6:25]]
 
 ## Cómo resolver un ejercicio de monitor en el examen {#t5-receta}
 
@@ -104,3 +114,28 @@ private:
 @card Patrón de espera | `unique_lock lk{m}; cv.wait(lk, [&]{ return cond; });`
 @card Patrón de aviso | Cambiar el estado con el mutex, soltar y `cv.notify_one()` / `notify_all()`.
 @card ¿Cuándo `notify_all` en lugar de `notify_one`? | Cuando varios hilos con predicados distintos comparten la variable o puede quedar más de uno listo.
+
+## Plantilla de monitor genérica {#t5-plantilla}
+
+Esta cola acotada sirve de **esqueleto** para casi cualquier ejercicio de monitor. Fíjate en los cuatro pasos comentados en `poner`: son siempre los mismos.
+
+@include cpp code/t5/cola_plantilla.cpp runout
+
+:::tip Receta de monitor en 5 pasos
+1. Decide el **estado compartido** (aquí `q_`, `cap_`, `cerrada_`) y ponlo `private`, junto a **un** `mutex`.
+2. Escribe las **condiciones de espera** como frases: «puedo poner si hay hueco **o** se cerró», «puedo sacar si hay dato **o** se cerró».
+3. Cada método público hace: `unique_lock` → `wait(lk, predicado)` → comprobar cierre → **cambiar estado** → `notify`.
+4. Avisa a **quien espera lo contrario**: tras `poner` avisas a los que sacan; tras `sacar`, a los que ponen.
+5. El **cierre** pone la bandera con el mutex tomado y hace `notify_all` a todas las variables de condición.
+:::
+
+:::warn Los cuatro errores clásicos
+- **`if` en lugar de `while` / predicado.** Otro hilo puede haber cambiado el estado entre el aviso y tu despertar (y existen despertares espurios). El `wait` con predicado ya contiene el bucle.
+- **Cambiar el estado fuera del mutex.** Toda lectura y escritura del estado, también la de la bandera de cierre, va con el mutex tomado.
+- **Olvidar la condición de cierre en el predicado.** Sin `|| cerrada_`, los hilos dormidos nunca despiertan al terminar.
+- **`notify_one` donde hace falta `notify_all`.** Si varios hilos esperan condiciones **distintas** sobre la misma variable de condición, un solo aviso puede despertar al que no toca y quedarse todos dormidos. Ante la duda: `notify_all`.
+:::
+
+:::tip Truco: esperar con tiempo límite
+`wait_for(lk, 50ms, predicado)` devuelve `false` si pasó el tiempo y el predicado sigue sin cumplirse. Útil cuando el enunciado pide «espera como mucho X ms».
+:::

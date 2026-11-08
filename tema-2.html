@@ -1,0 +1,141 @@
+<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>T2 · Clases y objetos · Programación de Sistemas en Tiempo Real</title><meta name="description" content="Guía de estudio de Programación de Sistemas en Tiempo Real: teoría, ejemplos, prácticas, vídeos y exámenes resueltos."><meta name="theme-color" content="#0d6e5a"><link rel="manifest" href="manifest.webmanifest"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png"><link rel="apple-touch-icon" href="apple-touch-icon.png"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Tiempo real"><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&amp;family=IBM+Plex+Sans:ital,wght@0,400;0,600;1,400&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/><script>window.MathJax={tex:{inlineMath:[["\\(","\\)"]],displayMath:[["\\[","\\]"]]},svg:{fontCache:"global"},options:{skipHtmlTags:["script","noscript","style","textarea","pre","code"]}};</script><script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-svg.js"></script><link rel="stylesheet" href="style.css?v=bca5da"><style>html{-webkit-text-size-adjust:100%}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style></head><body data-site="guia"><div class="hub-bar" style="max-width:1180px;margin:0 auto;padding:10px 16px 0"><a href="https://helionacon-ui.github.io/GIEIA-UPCT/" style="display:inline-flex;align-items:center;gap:6px;font:600 13.5px/1 system-ui,sans-serif;padding:8px 12px;border-radius:999px;border:1px solid var(--line,#d3dcdf);background:var(--surface,var(--card,#fff));color:var(--fg,#18232b);text-decoration:none">← Todas las guías GIEyA</a><p class="fecha" style="margin:6px 0 0;max-width:none;font:13px/1.45 system-ui,sans-serif;color:var(--muted,#5b6660)">Proyecto iniciado el <time datetime="2026-11-08">8 de noviembre de 2026</time> · Última actualización: <time datetime="2026-11-08">8 de noviembre de 2026</time></p></div><div class="crumb"><a href="index.html">Tiempo real</a><span class="sep">›</span><span>Teoría</span><span class="sep">›</span><span>T2 · Clases y objetos</span></div><a href="#top" class="totop" id="totop" aria-label="Volver arriba">↑</a><div class="wrap" id="top"><nav aria-label="Índice" class="toc"><a href="index.html" style="--tc:var(--c0)">Portada</a><div class="grp">Empezar</div><a href="index.html" style="--tc:var(--c0)">Empieza aquí desde cero</a><a href="empezar.html" style="--tc:var(--c0)">El examen y cómo estudiar</a><div class="grp">Teoría</div><a href="tema-0.html" style="--tc:var(--c1)">T0 Sistemas de tiempo real</a><a href="tema-1.html" style="--tc:var(--c2)">T1 Repaso de C y C++</a><a aria-current="page" class="cur" href="tema-2.html" style="--tc:var(--c3)">T2 Clases y objetos</a><a href="tema-3.html" style="--tc:var(--c4)">T3 Herencia y polimorfismo</a><a href="tema-4.html" style="--tc:var(--c5)">T4 Hilos y exclusión mutua</a><a href="tema-5.html" style="--tc:var(--c6)">T5 Monitores y variables condición</a><a href="tema-6.html" style="--tc:var(--c7)">T6 Planificación</a><a href="tema-7.html" style="--tc:var(--c8)">T7 Coma flotante y casos reales</a><div class="grp">Práctica</div><a href="practicas.html" style="--tc:var(--c7)">Prácticas</a><a href="examenes.html" style="--tc:var(--c8)">Exámenes resueltos</a><a href="hojas.html" style="--tc:var(--c3)">Hojas de problemas</a><a href="demostraciones.html" style="--tc:var(--c8)">Demostraciones</a><div class="grp">Repasar</div><a href="autoevaluacion.html" style="--tc:var(--c8)">Autoevaluación</a><a href="simulacro.html" style="--tc:var(--c8)">Simulacros</a><a href="formulario.html" style="--tc:var(--c0)">Formularios</a><a href="glosario.html" style="--tc:var(--c0)">Glosario</a><a href="plan.html" style="--tc:var(--c0)">Plan de estudio</a><div class="grp">Todo junto</div><a href="guia-completa.html" style="--tc:var(--c7)">Guía completa en una sola página</a><a href="guia_tiempo_real.pdf" style="--tc:var(--c7)">Guía en PDF (navegable)</a></nav><main><div class="srch-card gs"><label class="srch-lab" for="gsrch">Buscar en toda la guía</label><input type="search" id="gsrch" placeholder="Por ejemplo: monitor, vtable, RM, Kahan, regla de cinco…" autocomplete="off" spellcheck="false"><div id="gsrch-out" class="gs-out" hidden></div></div><section class="sec tema" id="sec-t2" style="--tc:var(--c3);--tcs:var(--c3s)"><div class="sh"><span aria-hidden="true" class="badge">2</span><div class="shx"><p class="kick">Teoría · Tema 2</p><h2 id="t2">Clases y objetos</h2><div class="tags"><span class="tag">Teoría</span></div></div></div><div class="onthispage"><span>En esta página</span><a href="#t2-clase">Clase, objeto y encapsulación</a><a href="#t2-regla">Cuándo hay que escribir copia y destructor (regla de 0, 3 y 5)</a><a href="#t2-operadores">Sobrecarga de operadores</a><a href="#t2-static">Miembros estáticos y composición</a><a href="#t2-plantilla">Ejemplo completo y plantilla de clase</a></div><h3 id="t2-clase" data-s="1">Clase, objeto y encapsulación</h3><p>Una <b>clase</b> agrupa <b>datos</b> (atributos) y <b>operaciones</b> (métodos) que van juntos. La parte <code>private</code> esconde los datos; la parte <code>public</code> es la «interfaz»: lo único que el resto del programa puede usar. Así puedes cambiar el interior sin romper a nadie y garantizar que el objeto siempre está en un estado válido.</p><p>Un ejemplo completo y verificado, el del gestor de cuentas bancarias:</p><pre class="lang-cpp"><span class="lbl">CPP</span><code>#include &lt;iostream&gt;
+#include &lt;string&gt;
+using namespace std;
+
+class C_Cuenta {
+public:
+    C_Cuenta(string titular, int numero) : titular_{std::move(titular)}, numero_{numero} {}
+    C_Cuenta() : C_Cuenta("sin titular", 0) {}                 // constructor delegado
+    int numero() const { return numero_; }
+    double saldo() const { return saldo_; }
+    bool ingresar(double c) {
+        if (c &lt;= 0) return false;
+        saldo_ += c; return true;
+    }
+    bool reintegrar(double c) {
+        if (c &lt;= 0 || saldo_ - c &lt; 0) return false;
+        saldo_ -= c; return true;
+    }
+    bool transferencia(double c, C_Cuenta&amp; destino) {
+        if (!reintegrar(c)) return false;
+        destino.ingresar(c); return true;
+    }
+    friend ostream&amp; operator&lt;&lt;(ostream&amp; os, const C_Cuenta&amp; c) {
+        return os &lt;&lt; c.titular_ &lt;&lt; " (ccc " &lt;&lt; c.numero_ &lt;&lt; "): " &lt;&lt; c.saldo_ &lt;&lt; " euros";
+    }
+private:
+    string titular_;
+    int numero_;
+    double saldo_ = 0;           // inicializador en la clase
+};
+
+int main() {
+    C_Cuenta a{"Mario", 12345678}, b{"Lucia", 87654321};
+    a.ingresar(150.5);
+    cout &lt;&lt; a &lt;&lt; '\n' &lt;&lt; b &lt;&lt; '\n';
+    cout &lt;&lt; "transferencia 50: " &lt;&lt; boolalpha &lt;&lt; a.transferencia(50, b) &lt;&lt; '\n';
+    cout &lt;&lt; "transferencia 500: " &lt;&lt; a.transferencia(500, b) &lt;&lt; '\n';
+    cout &lt;&lt; a &lt;&lt; '\n' &lt;&lt; b &lt;&lt; '\n';
+}</code></pre><pre class="out"><span class="lbl">Salida</span><code>Mario (ccc 12345678): 150.5 euros
+Lucia (ccc 87654321): 0 euros
+transferencia 50: true
+transferencia 500: false
+Mario (ccc 12345678): 100.5 euros
+Lucia (ccc 87654321): 50 euros</code></pre><p>Fíjate en cuatro cosas, todas habituales en los exámenes:</p><ol><li>Los métodos que <b>no modifican</b> el objeto llevan <code>const</code> (<code>saldo() const</code>). Solo con <code>const</code> se pueden llamar sobre un objeto <code>const</code> o a través de <code>const&amp;</code>.</li><li>El atributo <code>saldo_</code> tiene un <b>inicializador en la clase</b> (<code>= 0</code>).</li><li>El <code>operator&lt;&lt;</code> es un <code>friend</code> que recibe <code>ostream&amp;</code> y <b>devuelve</b> el mismo flujo (para encadenar <code>cout &lt;&lt; a &lt;&lt; b</code>).</li><li><code>transferencia</code> recibe la cuenta destino <b>por referencia</b> (<code>C_Cuenta&amp;</code>): si fuera por valor, ingresaría el dinero en una copia que desaparece.</li></ol><aside class="box key tip"><h4>Constructores</h4><ul><li>La <b>lista de inicialización</b> (<code>: titular_{...}, numero_{...}</code>) construye los atributos directamente. Es lo normal y a veces obligatorio (atributos <code>const</code> o referencias).</li><li>Los atributos se inicializan <b>en el orden en que están declarados</b> en la clase, no en el orden de la lista.</li><li>Un <b>constructor delegado</b> (<code>C_Cuenta() : C_Cuenta("sin titular", 0) {}</code>) reutiliza otro constructor.</li><li>Si marcas un constructor con <code>explicit</code>, evitas conversiones implícitas no deseadas.</li></ul></aside><h3 id="t2-regla" data-s="1">Cuándo hay que escribir copia y destructor (regla de 0, 3 y 5)</h3><p>Cuando copias un objeto, C++ copia sus atributos uno a uno. Si el objeto guarda un <b>puntero</b> a memoria dinámica, copia el puntero, no la memoria: los dos objetos comparten el bloque, y al destruirse <b>liberan el mismo bloque dos veces</b>.</p><ul><li><b>Regla de 0:</b> si tus atributos son <code>string</code>, <code>vector</code>, <code>map</code>, <code>unique_ptr</code>…, <b>no escribas</b> destructor ni copias. El compilador hace lo correcto. Es lo que quieres casi siempre.</li><li><b>Regla de 3:</b> si escribes uno de estos, escribe los tres: <b>destructor</b>, <b>constructor de copia</b> y <b>asignación por copia</b>.</li><li><b>Regla de 5:</b> añade también <b>constructor de movimiento</b> y <b>asignación por movimiento</b>.</li></ul><pre class="lang-cpp"><span class="lbl">CPP</span><code>#include &lt;algorithm&gt;
+#include &lt;iostream&gt;
+using namespace std;
+
+// Clase que posee memoria dinámica: necesita copia profunda (regla de los 3)
+class Buffer {
+public:
+    explicit Buffer(size_t n) : n_{n}, d_{new int[n]{}} { cout &lt;&lt; "ctor(" &lt;&lt; n_ &lt;&lt; ")\n"; }
+    Buffer(const Buffer&amp; o) : n_{o.n_}, d_{new int[o.n_]} { copy(o.d_, o.d_ + n_, d_); cout &lt;&lt; "copia\n"; }
+    Buffer&amp; operator=(const Buffer&amp; o) {
+        if (this != &amp;o) { Buffer tmp{o}; swap(n_, tmp.n_); swap(d_, tmp.d_); }   // copy-and-swap
+        cout &lt;&lt; "asignacion\n"; return *this;
+    }
+    ~Buffer() { delete[] d_; cout &lt;&lt; "dtor(" &lt;&lt; n_ &lt;&lt; ")\n"; }
+    int&amp; operator[](size_t i) { return d_[i]; }
+private:
+    size_t n_;
+    int* d_;
+};
+
+int main() {
+    Buffer a{3};
+    a[0] = 7;
+    Buffer b = a;      // copia
+    b[0] = 9;
+    cout &lt;&lt; a[0] &lt;&lt; ' ' &lt;&lt; b[0] &lt;&lt; '\n';   // 7 9: cada uno tiene su memoria
+    Buffer c{1};
+    c = a;             // asignación
+}</code></pre><pre class="out"><span class="lbl">Salida</span><code>ctor(3)
+copia
+7 9
+ctor(1)
+copia
+dtor(1)
+asignacion
+dtor(3)
+dtor(3)
+dtor(3)</code></pre><p>La asignación usa el truco <b>copy-and-swap</b>: copia a un temporal y intercambia. Así es segura aunque falle la copia y aunque hagas <code>a = a</code>.</p><aside class="box trap warn"><h4>Qué suele fallar</h4><ul><li><code>Buffer b = a;</code> con puntero crudo y sin constructor de copia: doble <code>delete</code>.</li><li>Escribir la asignación sin proteger contra la autoasignación y borrar antes de copiar.</li><li>Declarar el destructor <code>private</code> o olvidarlo <code>virtual</code> en una clase base (T3).</li><li>Usar una variable no inicializada: los atributos <code>int</code>, <code>double</code> o punteros no tienen valor por defecto.</li></ul></aside><figure class="fig"><svg viewBox="0 0 700 255" role="img" aria-label="Ciclo de vida de un objeto" class="svgfig" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--fg)"/></marker></defs><text x="10" y="18" font-size="13" text-anchor="start" fill="var(--fg)" font-weight="bold" font-family="inherit">Ciclo de vida de un objeto y qué función especial se ejecuta en cada momento</text><rect x="20" y="40" width="150" height="120" rx="8" fill="var(--bg2)" stroke="#2fa36b" stroke-width="2.5" /><text x="95" y="62" font-size="14" text-anchor="middle" fill="#2fa36b" font-weight="bold" font-family="inherit">nace</text><text x="95" y="88" font-size="12" text-anchor="middle" fill="var(--fg)" font-weight="normal" font-family="inherit">constructor</text><text x="95" y="140" font-size="11" text-anchor="middle" fill="var(--muted)" font-weight="normal" font-family="ui-monospace,Menlo,Consolas,monospace">Fraccion f{1,2};</text><line x1="170" y1="100" x2="190" y2="100" stroke="var(--fg)" stroke-width="1.5"  marker-end="url(#ah)"/><rect x="190" y="40" width="150" height="120" rx="8" fill="var(--bg2)" stroke="#2f7dd1" stroke-width="2.5" /><text x="265" y="62" font-size="14" text-anchor="middle" fill="#2f7dd1" font-weight="bold" font-family="inherit">se copia</text><text x="265" y="88" font-size="12" text-anchor="middle" fill="var(--fg)" font-weight="normal" font-family="inherit">constructor de copia</text><text x="265" y="104" font-size="12" text-anchor="middle" fill="var(--fg)" font-weight="normal" font-family="inherit">(o de movimiento)</text><text x="265" y="140" font-size="11" text-anchor="middle" fill="var(--muted)" font-weight="normal" font-family="ui-monospace,Menlo,Consolas,monospace">Fraccion g = f;</text><line x1="340" y1="100" x2="360" y2="100" stroke="var(--fg)" stroke-width="1.5"  marker-end="url(#ah)"/><rect x="360" y="40" width="150" height="120" rx="8" fill="var(--bg2)" stroke="#9a4fc7" stroke-width="2.5" /><text x="435" y="62" font-size="14" text-anchor="middle" fill="#9a4fc7" font-weight="bold" font-family="inherit">se reasigna</text><text x="435" y="88" font-size="12" text-anchor="middle" fill="var(--fg)" font-weight="normal" font-family="inherit">operator=</text><text x="435" y="104" font-size="12" text-anchor="middle" fill="var(--fg)" font-weight="normal" font-family="inherit">(copia o movimiento)</text><text x="435" y="140" font-size="11" text-anchor="middle" fill="var(--muted)" font-weight="normal" font-family="ui-monospace,Menlo,Consolas,monospace">g = h;</text><line x1="510" y1="100" x2="530" y2="100" stroke="var(--fg)" stroke-width="1.5"  marker-end="url(#ah)"/><rect x="530" y="40" width="150" height="120" rx="8" fill="var(--bg2)" stroke="#d1642f" stroke-width="2.5" /><text x="605" y="62" font-size="14" text-anchor="middle" fill="#d1642f" font-weight="bold" font-family="inherit">muere</text><text x="605" y="88" font-size="12" text-anchor="middle" fill="var(--fg)" font-weight="normal" font-family="inherit">destructor</text><text x="605" y="140" font-size="11" text-anchor="middle" fill="var(--muted)" font-weight="normal" font-family="ui-monospace,Menlo,Consolas,monospace">} // fin del ámbito</text><rect x="20" y="180" width="660" height="62" rx="6" fill="none" stroke="var(--fg)" stroke-width="1" /><text x="350" y="202" font-size="12" text-anchor="middle" fill="var(--fg)" font-weight="bold" font-family="inherit">Regla de los cinco: si escribes UNO de estos cinco, escribe (o prohíbe con =delete) los demás.</text><text x="350" y="221" font-size="11" text-anchor="middle" fill="var(--fg)" font-weight="normal" font-family="ui-monospace,Menlo,Consolas,monospace">destructor · constr. de copia · = de copia · constr. de movimiento · = de movimiento</text><text x="350" y="238" font-size="11" text-anchor="middle" fill="var(--muted)" font-weight="normal" font-family="inherit">Si la clase solo usa vector/string/unique_ptr: regla del cero (no escribas ninguno).</text></svg></figure><p><b>Vídeo recomendado</b> (en inglés, 5 min): regla de tres y de cinco, es decir, cuándo escribir destructor, copia y asignación.</p><div class="yt" data-id="RspbK8tfU0Y"><button class="ytbtn" type="button" aria-label="Reproducir: Rule Of Three And Rule Of Five In C++ Programming"><span class="ytplay">▶</span></button><div class="ytmeta"><b>Rule Of Three And Rule Of Five In C++ Programming</b><small>CppNuts · 4:57</small><a href="https://www.youtube.com/watch?v=RspbK8tfU0Y" target="_blank" rel="noopener">Abrir en YouTube ↗</a></div></div><h3 id="t2-operadores" data-s="1">Sobrecarga de operadores</h3><p>Un operador es una función con un nombre especial. <code>a + b</code> es <code>operator+(a, b)</code>. Las reglas útiles:</p><div class="tw"><table><thead><tr><th>Operador</th><th>Forma habitual</th></tr></thead><tbody><tr><td><code>&lt;&lt;</code> (salida)</td><td>Función libre o <code>friend</code>: <code>ostream&amp; operator&lt;&lt;(ostream&amp;, const T&amp;)</code></td></tr><tr><td><code>&gt;&gt;</code> (entrada)</td><td><code>istream&amp; operator&gt;&gt;(istream&amp;, T&amp;)</code> (construye un temporal y haz <code>swap</code>)</td></tr><tr><td><code>+</code>, <code>-</code></td><td>Función libre: <code>T operator+(const T&amp;, const T&amp;)</code>. Devuelve un objeto nuevo</td></tr><tr><td><code>==</code>, <code>&lt;</code></td><td>Función libre o método <code>const</code>. Necesarios para <code>set</code>, <code>map</code>, <code>sort</code></td></tr><tr><td><code>=</code>, <code>[]</code>, <code>()</code></td><td>Siempre métodos</td></tr></tbody></table></div><aside class="box  note"><h4>Un <code>friend</code></h4><p>Un <code>friend</code> es una función <b>fuera</b> de la clase con permiso para ver sus atributos privados. Si la clase ya tiene métodos <code>get</code>, no necesitas <code>friend</code>: el operador puede usar los <code>get</code>.</p></aside><h3 id="t2-static" data-s="1">Miembros estáticos y composición</h3><p>Un atributo <code>static</code> es <b>uno solo para toda la clase</b> (por ejemplo, un contador de objetos creados). Se declara en la clase y se define fuera (o con <code>inline static</code> en C++17).</p><p>La <b>composición</b> significa que una clase contiene objetos de otras clases: un <code>Plataforma</code> tiene un <code>vector&lt;Suscripcion&gt;</code>. Es la herramienta más usada; la herencia (T3) se reserva para relaciones «es un».</p><details class="box deep"><summary>Más a fondo</summary><div class="inner"><p><b>Acoplamiento y cohesión.</b> Una clase con <b>alta cohesión</b> hace una sola cosa bien; dos clases con <b>bajo acoplamiento</b> dependen poco una de otra. Declarar <code>private</code> para los atributos y exponer solo operaciones con sentido es la manera práctica de conseguir ambas. Los principios SOLID (en particular, «una clase, una responsabilidad») desarrollan esta idea; el libro de referencia es R. C. Martin, <i>Clean Architecture</i>.</p></div></details><aside class="box key formula"><h4>Plantilla de clase para el examen</h4><pre class="lang-cpp"><span class="lbl">CPP</span><code>class C_X {
+public:
+    C_X(tipo a, tipo b) : a_{a}, b_{b} {}          // constructor
+    tipo a() const { return a_; }                   // getters const
+    friend ostream&amp; operator&lt;&lt;(ostream&amp; os, const C_X&amp; x) { return os &lt;&lt; x.a_; }
+private:
+    tipo a_, b_;
+};   // &lt;- el ; final</code></pre></aside><h3 id="t2-plantilla" data-s="1">Ejemplo completo y plantilla de clase</h3><p>Una clase <code>Fraccion</code> que usa casi todo lo que se pide en un examen: constructor con valores por defecto, <code>const</code>, operadores aritméticos, comparaciones, <code>++</code> prefijo y sufijo, <code>operator&lt;&lt;</code> y una excepción. Está comentada con números <code>(1)</code>, <code>(2)</code>…</p><pre class="lang-cpp"><span class="lbl">CPP</span><code>#include &lt;iostream&gt;
+#include &lt;numeric&gt;
+#include &lt;set&gt;
+#include &lt;stdexcept&gt;
+using namespace std;
+
+class Fraccion {
+public:
+    Fraccion(int num = 0, int den = 1) : n_{num}, d_{den} {      // (1) valores por defecto: sirve de constructor vacío
+        if (d_ == 0) throw invalid_argument{"denominador 0"};
+        simplificar();
+    }
+    int num() const { return n_; }
+    int den() const { return d_; }
+    // (2) operadores aritméticos: devuelven un objeto NUEVO y no modifican a los operandos (const)
+    Fraccion operator+(const Fraccion&amp; o) const { return {n_ * o.d_ + o.n_ * d_, d_ * o.d_}; }
+    Fraccion operator-(const Fraccion&amp; o) const { return {n_ * o.d_ - o.n_ * d_, d_ * o.d_}; }
+    Fraccion operator*(const Fraccion&amp; o) const { return {n_ * o.n_, d_ * o.d_}; }
+    Fraccion operator/(const Fraccion&amp; o) const { return {n_ * o.d_, d_ * o.n_}; }
+    // (3) comparaciones: con == y &lt; ya puedes usar la clase en set, map y sort
+    bool operator==(const Fraccion&amp; o) const { return n_ == o.n_ &amp;&amp; d_ == o.d_; }   // están simplificadas: basta comparar campos
+    bool operator&lt;(const Fraccion&amp; o) const { return n_ * o.d_ &lt; o.n_ * d_; }        // den &gt; 0 siempre
+    // (4) ++ prefijo (devuelve referencia) y sufijo (parámetro int ficticio, devuelve copia del valor anterior)
+    Fraccion&amp; operator++() { n_ += d_; return *this; }
+    Fraccion operator++(int) { Fraccion antes = *this; ++*this; return antes; }
+    friend ostream&amp; operator&lt;&lt;(ostream&amp; os, const Fraccion&amp; f) { return f.d_ == 1 ? os &lt;&lt; f.n_ : os &lt;&lt; f.n_ &lt;&lt; '/' &lt;&lt; f.d_; }
+private:
+    void simplificar() {
+        if (d_ &lt; 0) { n_ = -n_; d_ = -d_; }        // el signo siempre en el numerador
+        int g = gcd(n_ &lt; 0 ? -n_ : n_, d_);
+        if (g &gt; 1) { n_ /= g; d_ /= g; }
+    }
+    int n_, d_;
+};
+
+int main() {
+    Fraccion a{1, 2}, b{3, -6}, c{2, 4};
+    cout &lt;&lt; "a=" &lt;&lt; a &lt;&lt; " b=" &lt;&lt; b &lt;&lt; " c=" &lt;&lt; c &lt;&lt; "   (b = 3/-6 se normaliza a -1/2)\n";
+    cout &lt;&lt; "a+c=" &lt;&lt; a + c &lt;&lt; "  a-c=" &lt;&lt; a - c &lt;&lt; "  a*b=" &lt;&lt; a * b &lt;&lt; "  a/b=" &lt;&lt; a / b &lt;&lt; '\n';
+    cout &lt;&lt; boolalpha &lt;&lt; "a==c: " &lt;&lt; (a == c) &lt;&lt; "  b&lt;a: " &lt;&lt; (b &lt; a) &lt;&lt; '\n';
+    set&lt;Fraccion&gt; s{{1, 2}, {2, 4}, {1, 3}, {-1, 2}};          // 1/2 y 2/4 son la misma: el set la guarda una vez
+    cout &lt;&lt; "set:";
+    for (const auto&amp; f : s) cout &lt;&lt; ' ' &lt;&lt; f;
+    cout &lt;&lt; '\n';
+    Fraccion x{1, 2};
+    Fraccion y = x++;                                            // y vale lo de antes; x ya incrementado
+    cout &lt;&lt; "x++ -&gt; y=" &lt;&lt; y &lt;&lt; ", x=" &lt;&lt; x &lt;&lt; "   ++x -&gt; " &lt;&lt; ++x &lt;&lt; '\n';
+    try { Fraccion malo{1, 0}; } catch (const invalid_argument&amp; e) { cout &lt;&lt; "error: " &lt;&lt; e.what() &lt;&lt; '\n'; }
+}</code></pre><pre class="out"><span class="lbl">Salida</span><code>a=1/2 b=-1/2 c=1/2   (b = 3/-6 se normaliza a -1/2)
+a+c=1  a-c=0  a*b=-1/4  a/b=-1
+a==c: true  b&lt;a: true
+set: -1/2 1/3 1/2
+x++ -&gt; y=1/2, x=3/2   ++x -&gt; 5/2
+error: denominador 0</code></pre><aside class="box key tip"><h4>Plantilla: qué escribir y en qué orden</h4><ol><li><b>Atributos privados</b> con sufijo <code>_</code>.</li><li><b>Constructor</b> con lista de inicialización (en el <b>orden en que declaraste los atributos</b>, no en el que los escribes).</li><li><b>Getters <code>const</code></b> (todo método que no modifica el objeto lleva <code>const</code>).</li><li><b>Operadores</b> como métodos <code>const</code> que devuelven un objeto nuevo.</li><li><b><code>operator&lt;&lt;</code> como <code>friend</code></b> dentro de la clase, devolviendo <code>os</code>.</li><li>Si usas memoria dinámica: <b>regla de los cinco</b> (destructor, copia, movimiento, asignación por valor con <code>swap</code>).</li></ol></aside><aside class="box key tip"><h4>Truco: qué operadores necesitas para cada contenedor</h4><ul><li><code>set</code>, <code>map</code> (como clave) y <code>sort</code>: solo <b><code>operator&lt;</code></b>.</li><li><code>find</code>, <code>count</code> en vector, <code>==</code> entre objetos: <b><code>operator==</code></b>.</li><li>Imprimir con <code>cout</code>: <b><code>operator&lt;&lt;</code></b>.</li><li><code>x++</code> y <code>++x</code>: el sufijo lleva un parámetro <code>int</code> que no se usa; devuelve una <b>copia del valor anterior</b>.</li></ul></aside><aside class="box trap warn"><h4>Qué suele fallar</h4><ul><li><b>Olvidar <code>const</code> en un getter</b> y que no compile al llamarlo desde una referencia <code>const&amp;</code>.</li><li><b><code>explicit</code> olvidado</b> en un constructor de un solo parámetro: permite conversiones silenciosas (<code>Fraccion f = 3;</code>). Es práctico aquí, pero en otras clases puede dar sorpresas.</li><li><b><code>operator+</code> que modifica <code>*this</code>:</b> debe devolver un objeto nuevo; modificar es trabajo de <code>+=</code>.</li><li><b>Orden de inicialización:</b> <code>Caja(int a) : area_{ancho_ * alto_}, ancho_{a}</code> usa <code>ancho_</code> antes de darle valor, porque se inicializa en el orden de <b>declaración</b>.</li><li><b>Normalizar al construir</b> (aquí en <code>simplificar</code>) evita repetir lógica en cada operador y hace que <code>==</code> solo compare campos.</li></ul></aside></section><nav class="pager" aria-label="Páginas"><a href="tema-1.html"><small>← Anterior</small>T1 · Repaso de C y C++</a><a class="nx" href="tema-3.html"><small>Siguiente →</small>T3 · Herencia y polimorfismo</a></nav><p class="inicio" style="margin:36px 0 8px;text-align:center;font-size:13px;color:var(--muted)">Guía no oficial de Programación de Sistemas en Tiempo Real (UPCT) · Proyecto iniciado el <time datetime="2026-11-08">8 de noviembre de 2026</time></p></main></div><script src="search-index.js?v=bca5da"></script><script src="app.js?v=bca5da"></script></body></html>

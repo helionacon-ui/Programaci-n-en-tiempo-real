@@ -22,6 +22,10 @@ Los tres son «tiempo real», pero fallar tiene consecuencias muy distintas. De 
 Pregúntate: «¿qué pasa si esta tarea acaba tarde?». Si la respuesta es «alguien puede morir o se rompe una máquina», es duro. Si es «el resultado ya no vale», es firme. Si es «vale menos», es blando.
 :::
 
+**Vídeo para entrar en materia** (4 min, en inglés): qué significa «tiempo real» y por qué no es «ir rápido».
+
+[[yt:ocHjg6bVZX0|What is a Real-Time System?|JLabs|4:45]]
+
 ## Plazos, periodos y jitter {#t0-plazos}
 
 Una **tarea** es una unidad de trabajo del sistema. Tres números la describen:

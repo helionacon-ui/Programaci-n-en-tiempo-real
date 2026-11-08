@@ -187,7 +187,7 @@ def search_index(pages, multi):
             t = html.unescape(re.sub(r'<.*?>', '', re.sub(r'<br\s*/?>|</p>|</li>|</tr>', ' ', t)))
             t = re.sub(r'\s+', ' ', t).strip()
             if len(t) < 30: continue
-            href = ('#' + hid if hid else '#sec-' + sid) if not multi else '%s.html%s' % (sid, '#' + hid if hid else '')
+            href = ('#' + hid if hid else '#sec-' + sid) if not multi else '%s%s' % (__import__('sitio').PG[sid][0], '#' + hid if hid else '')
             ix.append(dict(title=ttl, sec=title, href=href, snip=t[:140], n=nrm(t[:2500])))
     return ix
 
@@ -206,36 +206,19 @@ def main():
     R_.node = node2
     pages = build_pages(exams)
     dist = os.path.join(ROOT, 'dist'); os.makedirs(dist, exist_ok=True)
-    def sec_block(sid, title, color):
-        extra = '<h3 id="inicio-progreso" data-s="1">Tu progreso</h3>' + checklist_block(pages) if sid == 'inicio' else ''
-        return '<section class="sec" id="sec-%s" style="--c:%s"><h2 class="st">%s</h2>%s%s</section>' % (sid, color, esc(title), pages.get(sid, ''), extra)
-    body = ''.join(sec_block(s[0], s[1], s[2]) for s in SECS)
-    ix = search_index(pages, False)
-    sidx = '<script type="application/json" id="sidx">%s</script>' % json.dumps(ix, ensure_ascii=False).replace('</', '<\\/')
-    open(os.path.join(dist, 'guia.html'), 'w', encoding='utf-8').write(shell(body, TITLE + ' · Guía', side_nav(pages, None, False), False, sidx))
-    site = os.path.join(dist, 'site'); shutil.rmtree(site, ignore_errors=True); os.makedirs(site)
-    json.dump(search_index(pages, True), open(os.path.join(site, 'search.json'), 'w', encoding='utf-8'), ensure_ascii=False)
-    for i, (sid, title, color, f, g) in enumerate(SECS):
-        prv = SECS[i - 1] if i else None; nxt = SECS[i + 1] if i + 1 < len(SECS) else None
-        pager = '<div class="pager">%s%s</div>' % ('<a class="btn" href="%s.html">← %s</a>' % (prv[0], esc(prv[1])) if prv else '<span></span>', '<a class="btn" href="%s.html">%s →</a>' % (nxt[0], esc(nxt[1])) if nxt else '<span></span>')
-        open(os.path.join(site, sid + '.html'), 'w', encoding='utf-8').write(shell(sec_block(sid, title, color), '%s · %s' % (title, TITLE), side_nav(pages, sid, True), True, '', pager))
-    shutil.copy(os.path.join(site, 'inicio.html'), os.path.join(site, 'index.html'))
-    man = dict(name=TITLE, short_name='Tiempo real', start_url='./index.html', scope='./', display='standalone', background_color='#fbfbfa', theme_color='#2456d6', lang='es',
-               icons=[dict(src='icon-192.png', sizes='192x192', type='image/png'), dict(src='icon-512.png', sizes='512x512', type='image/png', purpose='any maskable')])
-    json.dump(man, open(os.path.join(site, 'manifest.webmanifest'), 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
-    files = ['./', 'index.html', 'search.json', 'manifest.webmanifest', 'icon-192.png'] + ['%s.html' % s[0] for s in SECS]
-    sw = ("const V='guia-%s';const F=%s;\nself.addEventListener('install',e=>{e.waitUntil(caches.open(V).then(c=>c.addAll(F)).then(()=>self.skipWaiting()))});\n"
-          "self.addEventListener('activate',e=>{e.waitUntil(caches.keys().then(ks=>Promise.all(ks.filter(k=>k!==V).map(k=>caches.delete(k)))).then(()=>self.clients.claim()))});\n"
-          "self.addEventListener('fetch',e=>{if(e.request.method!=='GET')return;e.respondWith(fetch(e.request).then(r=>{const c=r.clone();caches.open(V).then(x=>x.put(e.request,c));return r}).catch(()=>caches.match(e.request)))});\n") % (DATE, json.dumps(files))
-    open(os.path.join(site, 'sw.js'), 'w').write(sw)
-    try:
-        from PIL import Image, ImageDraw
-        for sz in (192, 512):
-            im = Image.new('RGB', (sz, sz), '#2456d6'); d = ImageDraw.Draw(im)
-            d.rectangle([sz * .18, sz * .18, sz * .82, sz * .82], outline='white', width=max(3, sz // 32))
-            d.line([sz * .3, sz * .55, sz * .45, sz * .55, sz * .52, sz * .35, sz * .6, sz * .72, sz * .67, sz * .55, sz * .72, sz * .55], fill='white', width=max(3, sz // 32))
-            im.save(os.path.join(site, 'icon-%d.png' % sz))
-    except Exception as e: print('sin iconos:', e)
-    open(os.path.join(site, '.nojekyll'), 'w').write('')
-    print('OK', len(ix), 'entradas;', os.path.getsize(os.path.join(dist, 'guia.html')) // 1024, 'KB maestro')
+    import sitio as S
+    extras = {'examen': '<h3 id="examen-progreso" data-s="1">Tu progreso</h3>' + checklist_block(pages)}
+    all_html = ''.join(pages.get(s[0], '') for s in SECS)
+    n_ex = all_html.count('class="ex prob"') + sum(1 for e in exams for _ in e['items']) * 0
+    stats = [('8', 'temas, de T0 a T7'), (str(all_html.count('class="ex prob"')), 'ejercicios resueltos paso a paso'),
+             (str(len(set(re.findall(r'data-sim="([^"]+)"', all_html)))), 'simuladores interactivos'), (str(all_html.count('class="yt"')), 'vídeos recomendados')]
+    from figs import FIGS
+    art = FIGS['portada_art']()
+    ix_site = search_index(pages, True)
+    ix_master = search_index(pages, False)
+    js = asset('sims_core.js') + '\n' + asset('sims.js') + '\n' + asset('app.js')
+    site = os.path.join(dist, 'site')
+    m = S.write_site(site, SECS, pages, extras, stats, art, DATE, asset('cxc_base.css'), asset('ours.css'), js, TITLE, ix_site, ix_master)
+    open(os.path.join(dist, 'guia.html'), 'w', encoding='utf-8').write(m)
+    print('OK', len(ix_site), 'entradas;', os.path.getsize(os.path.join(dist, 'guia.html')) // 1024, 'KB maestro;', len(os.listdir(site)), 'archivos en site/')
 if __name__ == '__main__': main()

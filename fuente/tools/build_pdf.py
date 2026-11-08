@@ -169,13 +169,14 @@ def derived(rt, only=None):
 
 TITLEPAGE = r'''\begin{titlepage}
 \thispagestyle{empty}
-\vspace*{3cm}
+\vspace*{1cm}
 {\color{stepnum}\rule{\linewidth}{2pt}}\par\vspace{6mm}
 {\fontsize{30}{34}\selectfont\bfseries Programación de Sistemas\\[2mm] en Tiempo Real\par}\vspace{6mm}
 {\Large Guía de estudio completa\par}\vspace{3mm}
 {\large Teoría desde cero, prácticas, exámenes resueltos, demostraciones, autoevaluación y simulacros\par}\vspace{8mm}
 {\color{stepnum}\rule{\linewidth}{2pt}}\par\vspace{1.2cm}
-%(variant)s\par\vspace{1cm}
+%(variant)s\par\vspace{6mm}
+%(cover)s\par\vspace{6mm}
 {\small Los simuladores interactivos están en la versión web de la guía; aquí aparecen como capturas.\par}
 \vfill
 {\small Última actualización: %(date)s\par}
@@ -184,7 +185,7 @@ TITLEPAGE = r'''\begin{titlepage}
 
 def doc(body, acrobat=False, variant='', title=B.TITLE, toc=True):
     d = preamble(acrobat, title) + '\\begin{document}\n'
-    d += TITLEPAGE % dict(date=DATE, variant=variant)
+    d += TITLEPAGE % dict(date=DATE, variant=variant, cover='\\centering\\includegraphics[width=\\linewidth,height=7.5cm,keepaspectratio]{%s}' % T.fig_pdf('portada'))
     if toc: d += '\\tableofcontents\\clearpage\n'
     return d + body + '\\end{document}\n'
 

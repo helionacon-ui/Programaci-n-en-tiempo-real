@@ -1,0 +1,15 @@
+suma de 0,1 diez millones de veces (exacto: 1000000)
+  float : 1087937
+  double: 999999.9998
+  Kahan : 1000000
+
+Un bucle con paso 0,1 y == nunca para exactamente en 1:
+  con tolerancia: 10 vueltas
+  tras 10 sumas, x == 1.0 ? false ; x = 0.99999999999999989
+
+Comparar con tolerancia absoluta frente a relativa:
+  fabs(a-b) < 1e-9 : false (falla: a y b son casi iguales)
+  casi_igual(a,b)  : true
+
+Orden de suma: sumar de menor a mayor pierde menos
+  1e8 + cien unos, mayor primero: 100000000 ; menor primero: 100000096 (exacto 100000100)
