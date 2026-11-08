@@ -191,6 +191,115 @@
     return { trace, reads, ok: reads.every((l) => l.length === nVal && l.every((v, k) => v === k)) };
   };
   P.mulberry = (a) => () => { a |= 0; a = (a + 0x6d2b79f5) | 0; let t = Math.imul(a ^ (a >>> 15), 1 | a); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
+
+  // ---------- modo examen: nota estimada ----------
+  // Rúbrica orientativa (la real la marca cada convocatoria): POO 70 %, concurrencia 30 %.
+  P.RUBRICA = {
+    poo: { peso: 70, items: [['Clases, atributos y constructores (incluido el delegado o el de valores por defecto)', 15], ['Métodos con const y tipos de retorno correctos', 15], ['operator<< (friend) y reutilización del código de la base', 10], ['Herencia, virtual y abstracta, o contenedores STL bien usados', 15], ['Funciones auxiliares pedidas', 10], ['main que prueba exactamente lo que pide el enunciado', 5]] },
+    conc: { peso: 30, items: [['Monitor: un mutex y TODOS los accesos al estado protegidos', 10], ['Esperas bien hechas (predicado, sleep_until/sleep_for, sin espera activa)', 6], ['Hilos: creación, ref(), join y cierre limpio', 6], ['Consola protegida con su propio mutex', 4], ['Sin carreras ni interbloqueos', 4]] }
+  };
+  P.examGrade = (marks, compila) => {
+    // marks = { poo: [bool...], conc: [bool...] }; compila = { poo: bool, conc: bool }
+    const res = {}; let total = 0;
+    for (const k of ['poo', 'conc']) {
+      const r = P.RUBRICA[k]; let pts = 0;
+      r.items.forEach((it, i) => { if (marks[k] && marks[k][i]) pts += it[1]; });
+      const ok = !compila || compila[k] !== false;
+      const fin = ok ? pts : pts / 2;
+      res[k] = { bruto: pts, final: fin, max: r.peso, compila: ok };
+      total += fin;
+    }
+    res.total = total; res.sobre10 = Math.round(total) / 10;
+    return res;
+  };
+  P.examTimer = (startMs, nowMs, totalMs) => {
+    const rest = Math.max(0, startMs + totalMs - nowMs);
+    return { rest, over: rest === 0, text: [Math.floor(rest / 3600000), Math.floor(rest / 60000) % 60, Math.floor(rest / 1000) % 60].map((x) => String(x).padStart(2, '0')).join(':') };
+  };
+
+  // ---------- revisor de código: heurísticas sobre errores típicos ----------
+  // Devuelve [{line, level: 'error'|'warn'|'info', id, msg}]. No sustituye al compilador.
+  P.review = (code) => {
+    const out = [], L = code.split('\n');
+    const add = (i, level, id, msg) => out.push({ line: i + 1, level, id, msg });
+    const noStr = (l) => l.replace(/"(?:\\.|[^"\\])*"/g, '""').replace(/\/\/.*$/, '');
+    const clean = L.map(noStr);
+    const all = clean.join('\n');
+    // bloques de clase con llaves
+    const classes = [];
+    const re = /\b(class|struct)\s+(\w+)(?:\s*:\s*(?:public|private|protected)?\s*(\w+))?[^;{]*\{/g; let m;
+    while ((m = re.exec(all))) {
+      let d = 1, j = re.lastIndex; while (j < all.length && d) { if (all[j] === '{') d++; else if (all[j] === '}') d--; j++; }
+      const body = all.slice(re.lastIndex, j - 1);
+      const startLine = all.slice(0, m.index).split('\n').length - 1;
+      const endLine = all.slice(0, j - 1).split('\n').length - 1;
+      let k = j; while (k < all.length && /\s/.test(all[k])) k++;
+      classes.push({ kind: m[1], name: m[2], base: m[3] || null, body, startLine, endLine, semi: all[k] === ';' || /^\w+\s*[;,=]/.test(all.slice(k, k + 40)) });
+    }
+    // 1. falta ; tras la clase
+    classes.forEach((c) => { if (!c.semi) add(c.endLine, 'error', 'punto-coma-clase', `Falta «;» después de la llave de cierre de «${c.name}». Es error de compilación (en el examen reciente, un código que no compila divide la nota por 2).`); });
+    // 2. virtuales y override
+    const virt = new Set(); const rv = /\bvirtual\s+[\w:<>,\s*&]+?\b(\w+)\s*\(/g; while ((m = rv.exec(all))) virt.add(m[1]);
+    classes.filter((c) => c.base).forEach((c) => {
+      clean.slice(c.startLine, c.endLine + 1).forEach((l, i) => {
+        const mm = l.match(/(?:^|[\s*&>])(\w+)\s*\([^)]*\)\s*(const)?\s*(noexcept)?\s*(\{|;|$)/);
+        if (!mm || !virt.has(mm[1]) || /\b(override|final)\b/.test(l) || /\bvirtual\b/.test(l) || /\b(return|new|delete|else|if|for|while)\b/.test(l.split(mm[1])[0])) return;
+        if (/^\s*(\w+)\s*\(/.test(l) && mm[1] === c.name) return;
+        add(c.startLine + i, 'warn', 'falta-override', `«${mm[1]}» es virtual en la base: en «${c.name}» escribe «override». Si te equivocas en la firma (p. ej. olvidas const), con override el compilador te avisa; sin él creas un método nuevo y no hay polimorfismo.`);
+      });
+    });
+    // 3. destructor no virtual en base polimórfica
+    classes.filter((c) => !c.base && /\bvirtual\b/.test(c.body)).forEach((c) => {
+      if (!/virtual\s*~/.test(c.body)) add(c.startLine, 'warn', 'destructor-no-virtual', `«${c.name}» tiene métodos virtuales pero su destructor no es virtual: borrar una derivada a través de un puntero a «${c.name}» es comportamiento indefinido. Añade «virtual ~${c.name}() = default;».`);
+    });
+    // 4. operator<< dentro de la clase sin friend
+    classes.forEach((c) => clean.slice(c.startLine, c.endLine + 1).forEach((l, i) => {
+      if (/operator\s*<<\s*\(/.test(l) && !/\bfriend\b/.test(l)) add(c.startLine + i, 'error', 'operator-miembro', 'operator<< dentro de la clase sin «friend» sería un método con el objeto a la izquierda (obj << cout): no compila con cout << obj. Decláralo «friend» o sácalo fuera de la clase.');
+    }));
+    // 5. consultas sin const
+    classes.forEach((c) => clean.slice(c.startLine, c.endLine + 1).forEach((l, i) => {
+      const mm = l.match(/(?:^|[\s>*&])(?!return\b)[\w:<>,*&]+\s+(get_\w+|tam_\w+|num_\w+|n_\w+|size|sueldo|total_\w+|es_\w+|horas_\w+)\s*\(\s*\)\s*(\{|;)/);
+      if (mm && !/\bconst\b/.test(l.slice(0, l.indexOf(mm[0]) + mm[0].length)) && !/=\s*0\s*;/.test(l) && !/\bvirtual\b/.test(l.split(mm[1])[0] + '') ) add(c.startLine + i, 'warn', 'falta-const', `«${mm[1]}()» parece una consulta: márcala «const» para poder llamarla sobre objetos constantes y desde otras funciones const.`);
+    }));
+    // 6. wait sin predicado / if en vez de while
+    clean.forEach((l, i) => {
+      if (/\.wait\(\s*\w+\s*\)/.test(l)) add(i, 'warn', 'wait-sin-predicado', 'wait(lk) sin predicado: un despertar espurio (o un notify que llegó antes) te deja continuar sin que se cumpla la condición. Usa «cv.wait(lk, [&]{ return condicion; });» o un while.');
+      if (/\bif\s*\(.*\)\s*\{?\s*(\w+\.)?wait\s*\(/.test(l) || (/\bif\s*\(/.test(l) && /\.wait\s*\(\s*\w+\s*\)/.test(clean[i + 1] || '') ) || (/\bif\s*\([^{]*\)\s*$/.test(l) && /\.wait\(/.test(clean[i + 1] || ''))) add(i, 'warn', 'if-wait', 'La condición de espera se comprueba con «if»: tras despertar hay que volver a comprobarla. Cámbialo por «while» (o usa el wait con predicado).');
+    });
+    // 7. wait con lock_guard (se mira la declaración más cercana por encima de cada wait)
+    const decl = {};
+    clean.forEach((l, i) => {
+      const d = l.match(/\b(lock_guard|unique_lock|scoped_lock)\s*(?:<[^>]*>)?\s*(\w+)\s*[{(]/); if (d) decl[d[2]] = d[1];
+      const mm = l.match(/\.wait(?:_for|_until)?\(\s*(\w+)/);
+      if (mm && decl[mm[1]] && decl[mm[1]] !== 'unique_lock') add(i, 'error', 'wait-lock_guard', `La variable condicional necesita «unique_lock», no «${decl[mm[1]]}» (wait debe poder desbloquear y volver a bloquear). Cambia «${mm[1]}».`);
+    });
+    // 8. lock()/unlock() manual
+    clean.forEach((l, i) => { const mm = l.match(/\b(\w+)\.lock\(\)/); if (mm && !/^(lk|lock|ul|lg|guard)\w*$/.test(mm[1]) && !/unique_lock|scoped|lg|lk/.test(mm[1])) add(i, 'info', 'lock-manual', `«${mm[1]}.lock()» manual: si hay un return o una excepción antes del unlock(), el mutex se queda bloqueado para siempre. Usa lock_guard o scoped_lock (RAII).`); });
+    // 9. thread con referencias sin ref()
+    const refFns = new Set(); const rf = /\b(\w+)\s*\(([^)]*&[^)]*)\)\s*\{/g; while ((m = rf.exec(all))) if (!/\b(if|for|while|switch)\b/.test(m[1])) refFns.add(m[1]);
+    clean.forEach((l, i) => {
+      const mm = l.match(/\bthread\s*(?:\w+\s*)?[({]\s*(\w+)\s*,([^;]*)/) || l.match(/emplace_back\(\s*(\w+)\s*,([^;]*)/);
+      if (mm && refFns.has(mm[1]) && !/\bref\(/.test(mm[2]) && /\w/.test(mm[2])) add(i, 'error', 'falta-ref', `«${mm[1]}» recibe parámetros por referencia: al crear el hilo hay que pasarlos con «ref(obj)». Sin ref() se copian y no compila (el mutex no es copiable) o trabajas sobre una copia.`);
+    });
+    // 10. hilos sin join
+    if (/\bthread\b/.test(all) && !/\bjthread\b/.test(all) && !/\.join\(\)|\.detach\(\)/.test(all)) { const i = clean.findIndex((l) => /\bthread\b/.test(l) && !/#include/.test(l)); add(Math.max(i, 0), 'error', 'sin-join', 'Hay hilos pero ningún join()/detach(): si un thread se destruye sin join, el programa termina con std::terminate. Haz join de todos antes de salir de main.'); }
+    // 11. cout compartido sin mutex
+    if (/\bthread\b/.test(all) && /\bcout\b/.test(all) && !/(lock_guard|scoped_lock|unique_lock)/.test(all)) { const i = clean.findIndex((l) => /\bcout\b/.test(l)); add(i, 'warn', 'cout-sin-mutex', 'Varios hilos escriben en cout sin ningún mutex: las líneas se mezclan. La consola es un recurso compartido: protégela con su propio mutex.'); }
+    // 12. new sin delete
+    if (/\bnew\s+\w+/.test(all) && !/\bdelete\b/.test(all) && !/(unique_ptr|shared_ptr|make_unique|make_shared)/.test(all)) { const i = clean.findIndex((l) => /\bnew\s+\w+/.test(l)); add(i, 'warn', 'new-sin-delete', 'Reservas con «new» pero no hay «delete» (ni punteros inteligentes): fuga de memoria. Si guardas punteros en un vector, libéralos en el destructor.'); }
+    // 13. includes que faltan
+    const need = [['mutex', /\b(mutex|lock_guard|unique_lock|scoped_lock)\b/], ['thread', /\b(thread|this_thread)\b/], ['condition_variable', /\bcondition_variable\b/], ['vector', /\bvector\s*</], ['map', /\bmap\s*</], ['set', /\bset\s*</], ['string', /\bstring\b/], ['optional', /\boptional\s*</], ['chrono', /\bchrono\b/], ['iostream', /\b(cout|cin|cerr)\b/], ['numeric', /\baccumulate\b/], ['algorithm', /\b(sort|max_element|min_element|find_if|count_if|for_each)\b/], ['memory', /\b(unique_ptr|shared_ptr|make_unique|make_shared)\b/], ['utility', /\bpair\s*</]];
+    need.forEach(([h, rx]) => { if (rx.test(all) && !new RegExp('#include\\s*<' + h + '>').test(code)) { const i = clean.findIndex((l) => rx.test(l)); add(i, 'warn', 'falta-include', `Usas algo de <${h}> pero no hay «#include <${h}>». Puede compilar por casualidad en tu máquina y fallar en la del examen.`); } });
+    // 14. paso por valor de contenedores grandes
+    clean.forEach((l, i) => {
+      if (/^\s*#/.test(l) || !/\(.*\)/.test(l)) return;
+      const mm = l.match(/\(\s*(?:[^()]*,\s*)?(?:std::)?(string|vector\s*<[^()]*?>|map\s*<[^()]*?>|set\s*<[^()]*?>)\s+(\w+)\s*[,)]/);
+      if (mm && !/\bmove\s*\(/.test(all) ) add(i, 'info', 'paso-por-valor', `«${mm[2]}» se pasa por valor (${mm[1].replace(/\s+/g, '')}): copia el contenido entero. Si solo lo lees, usa «const ${mm[1].replace(/\s+/g, '')}&».`);
+    });
+    out.sort((a, b) => a.line - b.line);
+    return out;
+  };
+  P.reviewVerdict = (f) => { const e = f.filter((x) => x.level === 'error').length, w = f.filter((x) => x.level === 'warn').length; return { errores: e, avisos: w, compilaria: e === 0 }; };
   root.PSTR = P;
 })(typeof window !== 'undefined' ? window : module.exports);
 
@@ -289,7 +398,107 @@ function almacen(root){box(root,'Práctica 3.4: almacén con un generador y vari
   const rows=r.trace.map((t,k)=>`<tr><td>${k+1}</td><td>${t.who==='G'?'<b>Generador</b>':'Lector '+t.who}</td><td>${t.who==='G'?'escribe':'lee'} ${t.v}</td></tr>`).join('');
   out.innerHTML=`<p>${r.ok?'✔ Cada lector leyó los 7 valores <b>una vez y en orden</b>; el generador nunca escribió antes de que todos leyeran.':'✘ Algo falló'}</p><p>Suma que ve cada lector: <b>${r.reads.map(l=>l.reduce((a,b)=>a+b,0)).join(', ')}</b> (esperado 21).</p><div class="tw" style="max-height:260px;overflow:auto"><table><tr><th>Paso</th><th>Hilo</th><th>Acción</th></tr>${rows}</table></div><p><small>El orden de los lectores cambia con la semilla; el resultado, no.</small></p>`}
  root.append(h('div',{className:'row'},h('label',null,'Lectores: ',nl),lab,h('label',null,' semilla: ',sd)),out);nl.oninput=run;sd.oninput=run;run();reg(root,()=>{})}
-const R={rta,frames,race,vec,patriot,inv,philo,'lab-words':labWords,'lab-rows':labRows,bind,complejo,almacen};
+
+// ---------- modo examen ----------
+const EXAMS=[['mayo26','Mayo 2026',['ex-mayo26-1','ex-mayo26-2']],['junio26','Junio 2026',['ex-junio26-1','ex-junio26-2']],['mayo25','Mayo 2025',['ex-mayo25-1','ex-mayo25-2']],['junio25','Junio 2025',['ex-junio25-1','ex-junio25-2']],['mayo24','Mayo 2024',['ex-mayo24-1','ex-mayo24-2']],['junio23','Junio 2023',['ex-junio23-1','ex-junio23-2']],['abril24','Abril 2024 (solo el ejercicio 2 está resuelto)',['ex-abril24-2']]];
+function lsGet(k,d){try{const v=localStorage.getItem(k);return v==null?d:JSON.parse(v)}catch(e){return d}}
+function lsSet(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
+function href(id){return document.getElementById(id)?'#'+id:'examenes.html#'+id}
+function examen(root){box(root,'Modo examen: 2 h 30 min, enunciado primero y solución al entregar');
+ const KEY='pstr:examen',HIS='pstr:examen:hist';let st=lsGet(KEY,null),tick=null;
+ const body=h('div');root.append(body);
+ function save(){lsSet(KEY,st)}
+ function setup(){clearInterval(tick);body.innerHTML='';
+  const sel=h('select',null,...EXAMS.map(e=>h('option',{value:e[0]},e[1]))),dur=h('select',null,h('option',{value:150},'Examen completo (2 h 30 min)'),h('option',{value:75},'Un ejercicio (1 h 15 min)'),h('option',{value:10},'Prueba rápida (10 min)'));
+  const his=lsGet(HIS,[]);
+  body.append(h('p',null,'Reparto habitual: ',h('b',null,'70 % programación orientada a objetos'),' y ',h('b',null,'30 % concurrencia'),'. Las soluciones quedan ocultas hasta que entregues. Si tu código no compila, la nota de ese ejercicio se divide por 2.'),
+   h('div',{className:'row'},h('label',null,'Examen: ',sel),h('label',null,'Duración: ',dur),h('button',{on:{click:()=>{st={key:sel.value,start:Date.now(),total:+dur.value*60000,phase:'run',marks:{poo:[],conc:[]},compila:{poo:true,conc:true}};save();run()}}},'Empezar')),
+   his.length?h('div',null,h('p',null,h('b',null,'Tus últimos intentos')),h('ul',null,...his.slice(-5).reverse().map(x=>h('li',null,`${x.label} · ${x.fecha} · nota estimada ${fmt(x.nota,1)} / 10`)))):h('small',null,'Aún no has guardado ningún intento.'))}
+ function run(){clearInterval(tick);body.innerHTML='';const ex=EXAMS.find(e=>e[0]===st.key);
+  if(st.phase==='grade')return grade();
+  const t=h('div',{className:'examtimer',style:'font-size:2.4rem;font-weight:800;font-variant-numeric:tabular-nums'}),warn=h('small',null,'');
+  body.append(h('p',null,'Estás haciendo: ',h('b',null,ex[1])),t,warn,
+   h('p',null,h('a',{className:'btn',href:href('exam-'+st.key),target:'_blank',rel:'noopener'},'Abrir enunciado'),' ',h('small',null,'(se abre en otra pestaña; en el examen real no tendrás la solución delante)')),
+   h('div',{className:'row'},h('button',{on:{click:()=>{if(confirm('¿Entregar ahora?')){st.phase='grade';save();run()}}}},'Entregar'),h('button',{on:{click:()=>{if(confirm('¿Abandonar este intento?')){st=null;lsSet(KEY,null);setup()}}}},'Abandonar')),
+   h('p',null,h('small',null,'Consejo: compila con ',h('code',null,'g++ -std=c++17 -Wall -Wextra -pthread'),' antes de entregar y pasa tu código por el ',h('a',{href:'#sim-revisor'},'revisor de código'),'.')));
+  function upd(){const r=P.examTimer(st.start,Date.now(),st.total);t.textContent=r.text;if(r.rest<600000)t.style.color='#c92a2a';warn.textContent=r.rest<600000&&!r.over?'Quedan menos de 10 minutos: revisa que compile.':'';if(r.over){clearInterval(tick);st.phase='grade';save();run()}}
+  upd();tick=setInterval(upd,1000)}
+ function grade(){body.innerHTML='';const ex=EXAMS.find(e=>e[0]===st.key);
+  const out=h('div',{className:'examout'});
+  function calc(){const g=P.examGrade(st.marks,st.compila);out.innerHTML=`<p>POO: <b>${fmt(g.poo.final,1)}</b> / 70${g.poo.compila?'':' (no compila: ÷ 2)'} · Concurrencia: <b>${fmt(g.conc.final,1)}</b> / 30${g.conc.compila?'':' (no compila: ÷ 2)'}</p><p style="font-size:1.4rem">Nota estimada: <b>${fmt(g.sobre10,1)}</b> / 10 ${g.sobre10>=5?'✔ aprobado':'✘ por debajo del 5'}</p>`;return g}
+  body.append(h('p',null,'Tiempo agotado o entrega hecha. Autoevalúate con honestidad: marca solo lo que de verdad tendrías en el papel. ',h('small',null,'(Rúbrica orientativa propia; cada convocatoria reparte los puntos a su manera.)')));
+  [['poo','Programación orientada a objetos (70 puntos)'],['conc','Concurrencia (30 puntos)']].forEach(([k,tt])=>{
+   const c=h('input',{type:'checkbox',checked:st.compila[k],on:{change:e=>{st.compila[k]=e.target.checked;save();calc()}}});
+   body.append(h('h4',null,tt),h('label',null,c,' Mi código de este ejercicio compila sin errores'),h('ul',{style:'list-style:none;padding-left:0'},...P.RUBRICA[k].items.map((it,i)=>h('li',null,h('label',null,h('input',{type:'checkbox',checked:!!st.marks[k][i],on:{change:e=>{st.marks[k][i]=e.target.checked;save();calc()}}}),` ${it[0]} `,h('small',null,`(${it[1]})`))))))});
+  body.append(out,h('h4',null,'Soluciones de referencia'),h('p',null,...ex[2].map(id=>h('a',{className:'btn',href:href(id),style:'margin-right:8px'},id.replace('ex-','').replace(/-/g,' · ejercicio ')))),
+   h('div',{className:'row'},h('button',{on:{click:()=>{const g=calc(),his=lsGet(HIS,[]);his.push({label:ex[1],nota:g.sobre10,fecha:new Date().toLocaleDateString('es-ES')});lsSet(HIS,his.slice(-20));st=null;lsSet(KEY,null);setup()}}},'Guardar resultado y empezar de nuevo'),h('button',{on:{click:()=>{st=null;lsSet(KEY,null);setup()}}},'Descartar')));
+  calc()}
+ st?run():setup();reg(root,()=>{})}
+// ---------- revisor de código ----------
+const EJ_REV={herencia:`#include <iostream>
+#include <vector>
+using namespace std;
+
+class Figura {
+public:
+    virtual double area() const = 0;
+    double get_lado() { return lado_; }
+protected:
+    double lado_ = 1;
+};
+
+class Cuadrado : public Figura {
+public:
+    double area() const { return lado_ * lado_; }
+    ostream& operator<<(ostream& os) { return os << "cuadrado"; }
+};
+
+int main() {
+    vector<Figura*> v;
+    v.push_back(new Cuadrado);
+    cout << v[0]->area() << endl;
+}`,monitor:`#include <iostream>
+#include <thread>
+#include <vector>
+using namespace std;
+
+class Cola {
+public:
+    void poner(int x) { lock_guard<mutex> lk{m_}; datos_.push_back(x); cv_.notify_one(); }
+    int sacar(void) {
+        unique_lock<mutex> lk{m_};
+        if (datos_.empty()) cv_.wait(lk);
+        int v = datos_.front(); datos_.erase(datos_.begin());
+        return v;
+    }
+    int esperar_dos() {
+        lock_guard<mutex> g{m_};
+        cv_.wait(g, [this]{ return datos_.size() >= 2; });
+        return datos_.size();
+    }
+private:
+    mutex m_; condition_variable cv_; vector<int> datos_;
+};
+
+void consumidor(Cola& c, int n) { for (int i = 0; i < n; ++i) cout << c.sacar() << endl; }
+
+int main() {
+    Cola c;
+    thread t{consumidor, c, 3};
+    c.poner(1); c.poner(2); c.poner(3);
+}`};
+function revisor(root,arg){box(root,'Revisor de código: busca los fallos típicos antes de entregar');
+ const ta=h('textarea',{rows:16,spellcheck:false,style:'width:100%;font-family:ui-monospace,Consolas,monospace;font-size:.85rem;padding:8px;border:1px solid var(--bd);border-radius:8px;background:var(--bg);color:var(--fg);tab-size:4'}),out=h('div');
+ const sel=h('select',{on:{change:()=>{if(sel.value&&EJ_REV[sel.value])ta.value=EJ_REV[sel.value];run()}}},h('option',{value:''},'(pega tu código o elige un ejemplo con fallos)'),h('option',{value:'herencia'},'Ejemplo con fallos de herencia'),h('option',{value:'monitor'},'Ejemplo con fallos de monitor'));
+ const COLR={error:'#c92a2a',warn:'#e67700',info:'#1971c2'},ETQ={error:'Error',warn:'Aviso',info:'Sugerencia'};
+ function run(){const c=ta.value;if(!c.trim()){out.innerHTML='<p><small>Pega aquí tu solución. La revisión es heurística: detecta patrones típicos, <b>no sustituye al compilador</b>.</small></p>';return}
+  const f=P.review(c),v=P.reviewVerdict(f);
+  let html=`<p>${v.compilaria?'<b style="color:#2b8a3e">No veo errores de compilación evidentes</b>':'<b style="color:#c92a2a">Veo '+v.errores+' error'+(v.errores>1?'es':'')+' que impedirían compilar</b>'} · ${v.avisos} aviso${v.avisos===1?'':'s'}. Compila siempre con <code>g++ -std=c++17 -Wall -Wextra -pthread</code>.</p>`;
+  html+=f.length?'<ol style="padding-left:1.2em">'+f.map(x=>`<li style="margin:6px 0"><span style="color:${COLR[x.level]};font-weight:700">${ETQ[x.level]}</span> · línea <b>${x.line}</b> <small>(${x.id})</small><br>${x.msg}</li>`).join('')+'</ol>':'<p>✔ Ningún patrón problemático detectado.</p>';
+  out.innerHTML=html}
+ root.append(h('div',{className:'row'},sel),ta,out);ta.addEventListener('input',run);run();
+ reg(root,a=>{if(EJ_REV[a]){ta.value=EJ_REV[a];sel.value=a;run()}});if(arg&&EJ_REV[arg]){ta.value=EJ_REV[arg];sel.value=arg;run()}}
+const R={rta,frames,race,vec,patriot,inv,philo,'lab-words':labWords,'lab-rows':labRows,bind,complejo,almacen,examen,revisor};
 function init(){document.querySelectorAll('.sim[data-sim]').forEach(el=>{const[name,arg]=el.dataset.sim.split(':');try{R[name](el,arg)}catch(e){el.textContent='Error en el simulador: '+e.message;console.error(e)}})}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
 })();
@@ -323,14 +532,37 @@ function filt(){const act=fchips.filter(c=>c.classList.contains('on')).map(c=>c.
  $$('details.exam').forEach(d=>{const ok=(!act.length||act.some(a=>d.dataset.f.split(' ').includes(a)))&&(!q||norm(d.dataset.txt).includes(q));d.style.display=ok?'':'none';if(ok)shown++;if(q&&ok)d.open=true});
  $$('details.cur').forEach(c=>{const any=$$('details.exam',c).some(d=>d.style.display!=='none');c.style.display=any?'':'none'});const s=$('#exn');if(s)s.textContent=shown+' exámenes'}
 fchips.forEach(c=>c.onclick=()=>{c.classList.toggle('on');filt()});if(fq)fq.addEventListener('input',filt);
-// test
-$$('.q').forEach(q=>{const ok=+q.dataset.ok;$$('.o',q).forEach((o,i)=>o.onclick=()=>{if(q.dataset.done)return;q.dataset.done=1;o.classList.add(i+1===ok?'ok':'bad');$$('.o',q)[ok-1].classList.add('ok');$('.ex',q).style.display='block';upd()})});
-function upd(){const all=$$('.q'),d=all.filter(q=>q.dataset.done),g=d.filter(q=>$('.o.bad',q)==null).length;const s=$('#qscore');if(s)s.textContent=g+' aciertos de '+d.length+' respondidas ('+all.length+' preguntas)'}
-const rq=$('#qreset');if(rq)rq.onclick=()=>{$$('.q').forEach(q=>{delete q.dataset.done;$$('.o',q).forEach(o=>o.className='o');$('.ex',q).style.display='none'});upd()};
-// tarjetas
-const cards=window.CARDS||[];let ci=0,flip=false;const cd=$('#card');
-function showCard(){if(!cd||!cards.length)return;const c=cards[ci];cd.textContent=flip?c[1]:c[0];cd.style.fontWeight=flip?'400':'700';$('#cn').textContent=(ci+1)+' / '+cards.length}
-if(cd&&cards.length){cd.onclick=()=>{flip=!flip;showCard()};$('#cnext').onclick=()=>{ci=(ci+1)%cards.length;flip=false;showCard()};$('#cprev').onclick=()=>{ci=(ci+cards.length-1)%cards.length;flip=false;showCard()};$('#cshuf').onclick=()=>{for(let i=cards.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[cards[i],cards[j]]=[cards[j],cards[i]]}ci=0;flip=false;showCard()};showCard()}
+// test (con repaso de falladas: se guardan en este navegador)
+const site=document.body.dataset.site||'x',QK='sr:quiz:'+site;let failed=new Set(ls.get(QK,[]));
+const qkey=q=>($('b',q)||q).textContent.replace(/^\d+\.\s*/,'').slice(0,60);
+$$('.q').forEach(q=>{const ok=+q.dataset.ok;$$('.o',q).forEach((o,i)=>o.onclick=()=>{if(q.dataset.done)return;q.dataset.done=1;o.classList.add(i+1===ok?'ok':'bad');$$('.o',q)[ok-1].classList.add('ok');$('.ex',q).style.display='block';
+ if(i+1===ok)failed.delete(qkey(q));else failed.add(qkey(q));ls.set(QK,[...failed]);upd()})});
+function upd(){const all=$$('.q'),d=all.filter(q=>q.dataset.done),g=d.filter(q=>$('.o.bad',q)==null).length;const s=$('#qscore');if(s)s.textContent=g+' aciertos de '+d.length+' respondidas ('+all.filter(q=>q.style.display!=='none').length+' preguntas)';const rb=$('#qfail');if(rb)rb.textContent='Repasar falladas ('+all.filter(q=>failed.has(qkey(q))).length+')'}
+function resetQ(){$$('.q').forEach(q=>{delete q.dataset.done;$$('.o',q).forEach(o=>o.className='o');$('.ex',q).style.display='none'})}
+const rq=$('#qreset');if(rq){rq.onclick=()=>{resetQ();$$('.q').forEach(q=>q.style.display='');upd()};
+ const fb=document.createElement('button');fb.id='qfail';fb.type='button';fb.style.marginLeft='6px';rq.after(fb);
+ fb.onclick=()=>{resetQ();const n=$$('.q').filter(q=>failed.has(qkey(q)));$$('.q').forEach(q=>q.style.display=failed.has(qkey(q))?'':'none');if(!n.length)alert('No tienes preguntas falladas guardadas. ¡Bien!');else n[0].scrollIntoView({block:'center'});upd()};
+ upd()}
+// tarjetas con repetición espaciada (cajas de Leitner: 1 → 5; los intervalos crecen si aciertas)
+const all=window.CARDS||[],CK='sr:cards:'+site,DAY=864e5,INT=[0,10*60e3,DAY,3*DAY,7*DAY,21*DAY];
+let sr=ls.get(CK,{}),onlyDue=ls.get('sr:mode:'+site,false),ci=0,flip=false;const cd=$('#card');
+const isDue=c=>!sr[c[0]]||sr[c[0]][1]<=Date.now();
+const deck=()=>onlyDue?all.filter(isDue):all;
+function srStats(){const m=all.filter(c=>sr[c[0]]&&sr[c[0]][0]>=4).length,d=all.filter(isDue).length;return d+' pendientes · '+m+' dominadas de '+all.length}
+function showCard(){if(!cd||!all.length)return;const dk=deck(),st=$('#srstat');if(st)st.textContent=srStats();const ctl=$('#srctl');
+ if(!dk.length){cd.textContent='¡Todo al día! No hay tarjetas pendientes ahora mismo.';cd.style.fontWeight='700';$('#cn').textContent='0 / 0';if(ctl)ctl.style.visibility='hidden';return}
+ if(ci>=dk.length)ci=0;const c=dk[ci];cd.textContent=flip?c[1]:c[0];cd.style.fontWeight=flip?'400':'700';$('#cn').textContent=(ci+1)+' / '+dk.length;if(ctl)ctl.style.visibility=flip?'visible':'hidden'}
+if(cd&&all.length){
+ const bar=document.createElement('div');bar.style.cssText='margin-top:8px;display:flex;gap:8px;align-items:center;flex-wrap:wrap';
+ bar.innerHTML='<span id="srctl" style="visibility:hidden"><button id="srok" type="button">✔ La sabía</button> <button id="srko" type="button">✘ Fallé</button></span><label><input type="checkbox" id="srdue"> Solo pendientes</label><small id="srstat"></small><button id="srreset" type="button" title="Borra el progreso de repaso guardado en este navegador">Reiniciar progreso</button>';
+ cd.parentNode.insertBefore(bar,$('#cprev').parentNode.nextSibling);$('#srdue').checked=onlyDue;
+ cd.onclick=()=>{flip=!flip;showCard()};$('#cnext').onclick=()=>{ci++;flip=false;showCard()};$('#cprev').onclick=()=>{ci=Math.max(0,ci-1);flip=false;showCard()};
+ $('#cshuf').onclick=()=>{for(let i=all.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[all[i],all[j]]=[all[j],all[i]]}ci=0;flip=false;showCard()};
+ const grade=ok=>{const dk=deck();if(!dk.length)return;const c=dk[ci],b=ok?Math.min(Math.max(2,((sr[c[0]]||[0])[0]||0)+1),5):1;sr[c[0]]=[b,Date.now()+INT[b]];ls.set(CK,sr);flip=false;if(!onlyDue)ci++;showCard()};
+ $('#srok').onclick=()=>grade(true);$('#srko').onclick=()=>grade(false);
+ $('#srdue').onchange=e=>{onlyDue=e.target.checked;ls.set('sr:mode:'+site,onlyDue);ci=0;flip=false;showCard()};
+ $('#srreset').onclick=()=>{if(confirm('¿Borrar el progreso de repaso de las tarjetas y las preguntas falladas?')){sr={};ls.set(CK,sr);failed=new Set();ls.set(QK,[]);ci=0;flip=false;showCard();upd()}};
+ showCard()}
 // botones "abrir en el simulador"
 $$('.open-sim').forEach(b=>b.onclick=()=>{const s=document.getElementById('sim-'+b.dataset.sim);if(!s)return;let p=s;while(p){if(p.tagName==='DETAILS')p.open=true;p=p.parentElement}s.scrollIntoView({behavior:'smooth',block:'center'});const S=(window.PSTR_SIMS||{})[b.dataset.sim];if(S&&S.load)S.load(b.dataset.arg)});
 // vídeos de YouTube: se cargan al pulsar (no se descarga nada antes)

@@ -8,6 +8,8 @@ Guía de estudio interactiva de Programación de Sistemas en Tiempo Real (UPCT, 
 
 Está dividida en varias páginas: portada con buscador, una página por tema (`tema-0.html` … `tema-7.html`), prácticas, exámenes resueltos paso a paso, hojas de problemas, demostraciones, autoevaluación, simulacros, formulario, glosario y plan de estudio. Todas comparten `style.css` y `app.js`, y el buscador busca en toda la guía. `guia-completa.html` es la misma guía en una sola página.
 
+La página de simulacros incluye un **modo examen** con reloj de 2 h 30 min (la solución solo se ve al entregar y se calcula una nota estimada) y un **revisor de código** que detecta los fallos típicos antes de entregar. Las tarjetas y el test usan **repetición espaciada** y recuerdan en tu navegador lo que has fallado.
+
 Cada tema lleva figuras (pulsa una para ampliarla), simuladores interactivos, ejemplos de código compilados y comprobados, cuadros de trucos y errores típicos, y vídeos recomendados de YouTube que se cargan al pulsar.
 
 Se puede instalar como aplicación (pantalla de inicio en el móvil, «Instalar» en el ordenador) y funciona sin conexión después de abrirla una vez con internet.
