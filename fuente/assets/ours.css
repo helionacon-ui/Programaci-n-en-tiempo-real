@@ -57,3 +57,9 @@ article.prob .chip{margin-left:6px}
 .hero-art svg{width:100%;height:auto;max-width:300px}
 .hub-bar a{white-space:nowrap}
 @media print{.toc,.totop,.sim,.btn,.hub-bar,.gs{display:none}.wrap{display:block}details>*{display:block!important}}
+
+/* ===== Paleta original de la guía (azul + un color por tema) ===== */
+:root{--bg:#fbfbfa;--surface:#ffffff;--fg:#1d2330;--muted:#5b6474;--line:#dfe3ea;--accent:#2456d6;--accent-soft:#e6f0ff;--warn:#b3261e;--warn-soft:#fde7e7;--shadow:0 1px 3px rgba(0,0,0,.08);
+ --c0:#2456d6;--c0s:#e6f0ff;--c1:#0b7285;--c1s:#e3f4f7;--c2:#2b8a3e;--c2s:#e6f4e9;--c3:#e8590c;--c3s:#fdeadf;--c4:#862e9c;--c4s:#f3e6f7;--c5:#1864ab;--c5s:#e3eefa;--c6:#087f5b;--c6s:#e0f5ee;--c7:#a61e4d;--c7s:#fae3ec;--c8:#5f3dc4;--c8s:#ebe5fa}
+:root[data-theme="dark"]{--bg:#12151c;--surface:#1a1f29;--fg:#e6e9ef;--muted:#9aa3b2;--line:#2c3340;--accent:#7aa2ff;--accent-soft:#16253f;--warn:#ff8b84;--warn-soft:#3d1b1b;--c0:#7aa2ff;--c0s:#16253f;--c1:#4cc9de;--c1s:#10303a;--c2:#69d283;--c2s:#15301c;--c3:#ff9a5c;--c3s:#3a2415;--c4:#cf8be0;--c4s:#2f1c36;--c5:#6fb2f0;--c5s:#14283d;--c6:#4fd1a5;--c6s:#12332a;--c7:#f27aa3;--c7s:#3b1a28;--c8:#a894f2;--c8s:#25203f}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#12151c;--surface:#1a1f29;--fg:#e6e9ef;--muted:#9aa3b2;--line:#2c3340;--accent:#7aa2ff;--accent-soft:#16253f;--warn:#ff8b84;--warn-soft:#3d1b1b;--c0:#7aa2ff;--c0s:#16253f;--c1:#4cc9de;--c1s:#10303a;--c2:#69d283;--c2s:#15301c;--c3:#ff9a5c;--c3s:#3a2415;--c4:#cf8be0;--c4s:#2f1c36;--c5:#6fb2f0;--c5s:#14283d;--c6:#4fd1a5;--c6s:#12332a;--c7:#f27aa3;--c7s:#3b1a28;--c8:#a894f2;--c8s:#25203f}}

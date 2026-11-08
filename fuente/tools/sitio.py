@@ -23,6 +23,9 @@ PG = {
     'plan': ('plan.html', 'Repasar', 0, '✓', None),
 }
 MASTER = 'guia-completa.html'
+COL = {}   # sid -> color original de la guía (se rellena en write_site)
+BLUE = '#2456d6'
+tcs = lambda c: 'color-mix(in srgb,%s 12%%,var(--surface))' % c
 esc = lambda s: html.escape(s, quote=False)
 
 def fecha(iso):
@@ -40,14 +43,14 @@ def href(sid, multi, frag=''):
     return PG[sid][0] + frag if multi else '#sec-' + sid if not frag else frag
 
 def toc(secs, active, multi):
-    out = '<a href="%s"%s style="--tc:var(--c0)">Portada</a>' % ('index.html' if multi else '#top', ' aria-current="page" class="cur"' if active == 'inicio' and multi else '')
+    out = '<a href="%s"%s style="--tc:%s">Portada</a>' % ('index.html' if multi else '#top', ' aria-current="page" class="cur"' if active == 'inicio' and multi else '', BLUE)
     g = None
     for sid, title, color, f, grp in secs:
         gname = PG[sid][1]
         if gname != g: out += '<div class="grp">%s</div>' % gname; g = gname
         cur = ' aria-current="page" class="cur"' if (multi and sid == active) else ''
-        out += '<a%s href="%s" style="--tc:var(--c%d)">%s</a>' % (cur, href(sid, multi), PG[sid][2], esc(short(sid, title)))
-    if multi: out += '<div class="grp">Todo junto</div><a href="%s" style="--tc:var(--c7)">Guía completa en una sola página</a><a href="guia_tiempo_real.pdf" style="--tc:var(--c7)">Guía en PDF (navegable)</a>' % MASTER
+        out += '<a%s href="%s" style="--tc:%s">%s</a>' % (cur, href(sid, multi), color, esc(short(sid, title)))
+    if multi: out += '<div class="grp">Todo junto</div><a href="%s" style="--tc:#495057">Guía completa en una sola página</a><a href="guia_tiempo_real.pdf" style="--tc:#495057">Guía en PDF (navegable)</a>' % MASTER
     return '<nav aria-label="Índice" class="toc">%s</nav>' % out
 
 def section(sid, title, content, extra='', multi=True):
@@ -60,8 +63,8 @@ def section(sid, title, content, extra='', multi=True):
     otp = ''
     if len(subs) > 1:
         otp = '<div class="onthispage"><span>En esta página</span>%s</div>' % ''.join('<a href="#%s">%s</a>' % (i, re.sub('<.*?>', '', t)) for i, t in subs)
-    return ('<section class="sec%s" id="sec-%s" style="--tc:var(--c%d);--tcs:var(--c%ds)"><div class="sh"><span aria-hidden="true" class="badge">%s</span><div class="shx"><p class="kick">%s</p><h2 id="%s">%s</h2><div class="tags"><span class="tag">%s</span></div></div></div>%s%s%s</section>'
-            % (' tema' if is_t else '', sid, ci, ci, badge, kick, sid, esc(name), grp, otp, content, extra))
+    return ('<section class="sec%s" id="sec-%s" style="--tc:%s;--tcs:%s"><div class="sh"><span aria-hidden="true" class="badge">%s</span><div class="shx"><p class="kick">%s</p><h2 id="%s">%s</h2><div class="tags"><span class="tag">%s</span></div></div></div>%s%s%s</section>'
+            % (' tema' if is_t else '', sid, COL[sid], tcs(COL[sid]), badge, kick, sid, esc(name), grp, otp, content, extra))
 
 def search_card():
     return '<div class="srch-card gs"><label class="srch-lab" for="gsrch">Buscar en toda la guía</label><input type="search" id="gsrch" placeholder="Por ejemplo: monitor, vtable, RM, Kahan, regla de cinco…" autocomplete="off" spellcheck="false"><div id="gsrch-out" class="gs-out" hidden></div></div>'
@@ -87,10 +90,10 @@ def pages_map(secs, multi):
     out = ''
     for sid, title, color, f, grp in secs:
         if sid == 'inicio': continue
-        out += '<a href="%s" style="--tc:var(--c%d)"><small>%s</small>%s</a>' % (href(sid, multi), PG[sid][2], PG[sid][1], esc(title if not (sid.startswith('t') and sid[1:].isdigit()) else title))
+        out += '<a href="%s" style="--tc:%s"><small>%s</small>%s</a>' % (href(sid, multi), color, PG[sid][1], esc(title if not (sid.startswith('t') and sid[1:].isdigit()) else title))
     if multi:
-        out += ''.join('<a href="%s" style="--tc:var(--c7)"><small>%s</small>%s</a>' % x for x in [(MASTER, 'Todo junto', 'Guía completa en una sola página'), ('guia_tiempo_real.pdf', 'PDF', 'Guía en PDF (navegable)'), ('examenes_resueltos.pdf', 'PDF', 'Exámenes resueltos en PDF'), ('hojas_resueltas.pdf', 'PDF', 'Hojas de problemas en PDF'), ('formulario_1_pagina.pdf', 'PDF', 'Formulario en una página')])
-    return ('<section class="sec" style="--tc:var(--c0);--tcs:var(--c0s)"><div class="sh"><span class="badge" aria-hidden="true">≡</span><div class="shx"><p class="kick">Contenido</p><h2 id="paginas">Páginas de la guía</h2></div></div><div class="pages">%s</div></section>' % out)
+        out += ''.join('<a href="%s" style="--tc:#495057"><small>%s</small>%s</a>' % x for x in [(MASTER, 'Todo junto', 'Guía completa en una sola página'), ('guia_tiempo_real.pdf', 'PDF', 'Guía en PDF (navegable)'), ('examenes_resueltos.pdf', 'PDF', 'Exámenes resueltos en PDF'), ('hojas_resueltas.pdf', 'PDF', 'Hojas de problemas en PDF'), ('formulario_1_pagina.pdf', 'PDF', 'Formulario en una página')])
+    return ('<section class="sec" style="--tc:#2456d6;--tcs:%s"><div class="sh"><span class="badge" aria-hidden="true">≡</span><div class="shx"><p class="kick">Contenido</p><h2 id="paginas">Páginas de la guía</h2></div></div><div class="pages">%s</div></section>' % (tcs(BLUE), out))
 
 def head(title, desc, multi, css, ver, mj):
     man = ('<link rel="manifest" href="manifest.webmanifest"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png"><link rel="apple-touch-icon" href="apple-touch-icon.png">' if multi else '')
@@ -98,7 +101,7 @@ def head(title, desc, multi, css, ver, mj):
              '<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&amp;family=IBM+Plex+Sans:ital,wght@0,400;0,600;1,400&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>')
     css_tag = '<link rel="stylesheet" href="style.css?v=%s">' % ver if multi else '<style>%s</style>' % css
     return ('<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>%s</title><meta name="description" content="%s">'
-            '<meta name="theme-color" content="#0d6e5a">%s<meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Tiempo real">%s%s%s'
+            '<meta name="theme-color" content="#2456d6">%s<meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Tiempo real">%s%s%s'
             '<style>html{-webkit-text-size-adjust:100%%}body{margin:0}img{max-width:100%%}[hidden]{display:none!important}</style></head>' % (html.escape(title), html.escape(desc), man, fonts, mj, css_tag))
 
 MJ = ('<script>window.MathJax={tex:{inlineMath:[["\\\\(","\\\\)"]],displayMath:[["\\\\[","\\\\]"]]},svg:{fontCache:"global"},options:{skipHtmlTags:["script","noscript","style","textarea","pre","code"]}};</script>'
@@ -137,7 +140,7 @@ def icons(dst):
     except Exception as e:
         print('sin iconos:', e); return
     def draw(sz, pad):
-        im = Image.new('RGB', (sz, sz), '#0d6e5a'); d = ImageDraw.Draw(im)
+        im = Image.new('RGB', (sz, sz), '#2456d6'); d = ImageDraw.Draw(im)
         a, b = sz * pad, sz * (1 - pad)
         d.rounded_rectangle([a, a, b, b], radius=sz * .08, outline='white', width=max(3, sz // 28))
         w = b - a
@@ -150,6 +153,7 @@ def icons(dst):
     draw(512, .30).save(os.path.join(dst, 'icon-maskable-512.png')); draw(180, .22).save(os.path.join(dst, 'apple-touch-icon.png'))
 
 def write_site(site, secs, pages, extras, stats, art, date, base_css, ours_css, js, TITLE, ix_site, ix_master, master_html_out=None):
+    COL.update({x[0]: x[2] for x in secs})
     shutil.rmtree(site, ignore_errors=True); os.makedirs(site)
     css = base_css + ours_css
     ver = hashlib.md5((css + js).encode()).hexdigest()[:6]
@@ -165,7 +169,7 @@ def write_site(site, secs, pages, extras, stats, art, date, base_css, ours_css, 
     open(os.path.join(site, MASTER), 'w', encoding='utf-8').write(m)
     open(os.path.join(site, '.nojekyll'), 'w').write('')
     man = dict(name=TITLE + ' · Guía para aprobar', short_name='Tiempo real', description='Guía de estudio de %s (UPCT): teoría, vídeos, simuladores, exámenes y ejercicios resueltos.' % TITLE, lang='es',
-               start_url='./', scope='./', display='standalone', background_color='#f4f6f5', theme_color='#0d6e5a',
+               start_url='./', scope='./', display='standalone', background_color='#f4f6f5', theme_color='#2456d6',
                icons=[dict(src='icon-192.png', sizes='192x192', type='image/png'), dict(src='icon-512.png', sizes='512x512', type='image/png'), dict(src='icon-maskable-512.png', sizes='512x512', type='image/png', purpose='maskable')])
     json.dump(man, open(os.path.join(site, 'manifest.webmanifest'), 'w', encoding='utf-8'), ensure_ascii=False, indent=2)
     core = ['./'] + ['./' + PG[s[0]][0] for s in secs] + ['./style.css?v=' + ver, './app.js?v=' + ver, './search-index.js?v=' + ver, './manifest.webmanifest', './formulario_1_pagina.pdf', './icon-192.png', './icon-512.png', './icon-maskable-512.png', './apple-touch-icon.png',

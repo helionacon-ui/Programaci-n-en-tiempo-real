@@ -1,6 +1,6 @@
 // Service worker: guarda la guía para usarla sin conexión.
-const CACHE = 'tr-bca5da';
-const CORE = ["./", "./index.html", "./empezar.html", "./tema-0.html", "./tema-1.html", "./tema-2.html", "./tema-3.html", "./tema-4.html", "./tema-5.html", "./tema-6.html", "./tema-7.html", "./practicas.html", "./examenes.html", "./hojas.html", "./demostraciones.html", "./autoevaluacion.html", "./simulacro.html", "./formulario.html", "./glosario.html", "./plan.html", "./style.css?v=bca5da", "./app.js?v=bca5da", "./search-index.js?v=bca5da", "./manifest.webmanifest", "./formulario_1_pagina.pdf", "./icon-192.png", "./icon-512.png", "./icon-maskable-512.png", "./apple-touch-icon.png", "https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-svg.js"];
+const CACHE = 'tr-23387b';
+const CORE = ["./", "./index.html", "./empezar.html", "./tema-0.html", "./tema-1.html", "./tema-2.html", "./tema-3.html", "./tema-4.html", "./tema-5.html", "./tema-6.html", "./tema-7.html", "./practicas.html", "./examenes.html", "./hojas.html", "./demostraciones.html", "./autoevaluacion.html", "./simulacro.html", "./formulario.html", "./glosario.html", "./plan.html", "./style.css?v=23387b", "./app.js?v=23387b", "./search-index.js?v=23387b", "./manifest.webmanifest", "./formulario_1_pagina.pdf", "./icon-192.png", "./icon-512.png", "./icon-maskable-512.png", "./apple-touch-icon.png", "https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-svg.js"];
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(CACHE).then(c => Promise.all(CORE.map(u => c.add(new Request(u, {mode: u.startsWith('http') ? 'no-cors' : 'same-origin'})).catch(() => {})))).then(() => self.skipWaiting()));
 });
