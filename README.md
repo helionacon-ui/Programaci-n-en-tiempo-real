@@ -25,7 +25,7 @@ Se puede instalar como aplicación (pantalla de inicio en el móvil, «Instalar�
 ## Código
 
 - `scripts_practicas/`: programas de las prácticas.
-- `ejemplos/`: siete programas de trucos y ejemplos explicados (STL, clase completa, trampas del polimorfismo, hilos, plantilla de monitor, RM frente a EDF, coma flotante). Compilan con `g++ -std=c++17 -Wall -Wextra -pthread`.
+- `ejemplos/`: programas de trucos y ejemplos explicados (STL, clase completa, trampas del polimorfismo, hilos, plantilla de monitor, RM frente a EDF, coma flotante) y las soluciones de referencia de varios exámenes (`junio23_*`, `mayo24_*`, `abril24_*`). Compilan con `g++ -std=c++17 -Wall -Wextra -pthread`.
 - `fuente/`: contenido en mini-DSL, código verificado y generador en Python.
 
 ## Regenerar
