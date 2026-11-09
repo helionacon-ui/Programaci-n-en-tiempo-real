@@ -2,6 +2,8 @@
 const $=(s,r=document)=>r.querySelector(s),$$=(s,r=document)=>[...r.querySelectorAll(s)];
 const ls={get(k,d){try{const v=localStorage.getItem(k);return v==null?d:JSON.parse(v)}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
 // tema claro/oscuro: sigue al sistema (prefers-color-scheme)
+{const root=document.documentElement,b=$('#theme'),sv=ls.get('tr-theme',null);if(sv)root.setAttribute('data-theme',sv);
+ if(b)b.onclick=()=>{const cur=root.getAttribute('data-theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'),nx=cur==='dark'?'light':'dark';root.setAttribute('data-theme',nx);ls.set('tr-theme',nx)}}
 // volver arriba
 const tt=$('#totop');if(tt){const f=()=>tt.classList.toggle('show',scrollY>700);addEventListener('scroll',f,{passive:true});f()}
 // abrir <details> si el hash apunta dentro

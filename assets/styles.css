@@ -527,6 +527,55 @@ article.prob .chip{margin-left:6px}
 .hub-bar a{white-space:nowrap}
 @media print{.toc,.totop,.sim,.btn,.hub-bar,.gs{display:none}.wrap{display:block}details>*{display:block!important}}
 
+
+/* ===== Estructura de varias páginas (igual que Tecnología Medioambiental) ===== */
+/* ===== Varias páginas ===== */
+.crumb{display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px;max-width:1120px;margin:0 auto;padding:22px 0 8px;font-size:14px;color:var(--muted)}
+.crumb a{color:var(--accent);text-decoration:none;font-weight:600}
+.crumb a:hover{text-decoration:underline}
+.crumb b{font-family:var(--mono);font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:500}
+.crumb .sep{opacity:.4}
+.crumb .np{margin-left:auto;font-family:var(--mono);font-size:12px}
+.pn{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px;margin:8px 0 0}
+.pn a{display:flex;flex-direction:column;gap:6px;padding:22px 26px;border-radius:20px;background:var(--surface);border:1px solid var(--line);border-top:6px solid var(--tc);text-decoration:none;color:var(--fg);box-shadow:var(--shadow);transition:transform .18s,box-shadow .18s;min-width:0}
+.pn a:hover,.pn a:focus-visible{transform:translateY(-3px);outline:none;border-color:var(--tc)}
+.pn small{font-family:var(--mono);font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--tc)}
+.pn strong{font-family:var(--display);font-size:20px;line-height:1.25;text-wrap:balance}
+.pn .nx{text-align:right;align-items:flex-end}
+.pn .ph{visibility:hidden}
+@media(max-width:560px){.pn{grid-template-columns:minmax(0,1fr)}.pn .ph{display:none}.pn .nx{text-align:left;align-items:flex-start}}
+.sitefoot{max-width:1120px;margin:28px auto 0;padding:18px 0 0;border-top:1px solid var(--line);font-size:13.5px;color:var(--muted)}
+/* portada */
+.home-main{max-width:1120px;margin:0 auto;display:flex;flex-direction:column;gap:56px;padding-bottom:24px}
+.hgrp h2{font-size:clamp(22px,3vw,28px);margin:0 0 6px}
+.hgrp .kick{margin:0 0 4px}
+.hgrp>p{margin:0 0 24px;color:var(--muted)}
+.pcards{display:grid;grid-template-columns:repeat(auto-fill,minmax(235px,1fr));gap:24px}
+.pcard{text-align:left;position:relative;display:flex;flex-direction:column;gap:12px;padding:26px 26px 22px;border-radius:22px;background:linear-gradient(to bottom,color-mix(in srgb,var(--tcs) 80%,var(--surface)),var(--surface) 150px),var(--surface);border:1px solid var(--line);box-shadow:var(--shadow);text-decoration:none;color:var(--fg);overflow:hidden;min-width:0;transition:transform .18s,box-shadow .18s,border-color .18s}
+.pcard::before{content:"";position:absolute;inset:0 0 auto 0;height:8px;background:linear-gradient(90deg,var(--tc),color-mix(in srgb,var(--tc) 30%,transparent))}
+.pcard:hover,.pcard:focus-visible{transform:translateY(-4px);border-color:var(--tc);outline:none}
+.pcard .badge{min-width:56px;height:56px;border-radius:17px;font-size:21px;margin-top:6px;align-self:flex-start;box-shadow:0 8px 18px -8px var(--tc)}
+.pcard h3{margin:2px 0 0;padding:0;border:0;background:none;font-size:20px;line-height:1.25;text-wrap:balance}
+.pcard p{margin:0;color:var(--muted);font-size:15px;line-height:1.55;max-width:none}
+.pcard .go{margin-top:auto;padding-top:8px;font-family:var(--mono);font-size:12.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--tc);font-weight:500}
+@media(prefers-reduced-motion:reduce){.pcard,.pn a{transition:none}.pcard:hover,.pn a:hover{transform:none}}
+body.home header.hero{margin-bottom:56px}
+@media(min-width:861px){.crumb{padding-right:110px}}
+body.home .hero-in{padding-block:64px 56px}
+
+
+body.home .hero-txt .hello{font-size:clamp(17px,1.9vw,19px);line-height:1.65;max-width:56ch;color:var(--fg)}
+body.home .hero-txt .hint{margin:20px 0 0;font-size:15px;color:var(--muted);max-width:54ch}
+body.home .hero-txt .hint a{color:var(--accent);font-weight:600}
+body.home .hero-art{display:block}
+body.home .hero-art svg{display:block;width:100%;height:auto;max-width:340px;margin-inline:auto;filter:drop-shadow(0 12px 28px rgba(0,0,0,.08))}
+body.home .hero-art .art-cap{text-align:center;margin:14px auto 0;max-width:30ch;font-size:14px;color:var(--muted)}
+body.home .hgrp h2{font-size:clamp(26px,3.4vw,34px)}
+body.home .hgrp{margin-bottom:56px}
+@media(max-width:760px){body.home .hero-art{display:block;margin-top:28px}body.home .hero-art svg{max-width:260px}}
+
+.theme{position:fixed;top:10px;right:10px;z-index:40;font:inherit;font-size:13px;padding:7px 12px;border-radius:999px;border:1px solid var(--line);background:var(--surface);color:var(--fg);cursor:pointer}
+
 /* ===== Paleta original de la guía (azul + un color por tema) ===== */
 :root{--bg:#fbfbfa;--surface:#ffffff;--fg:#1d2330;--muted:#5b6474;--line:#dfe3ea;--accent:#2456d6;--accent-soft:#e6f0ff;--warn:#b3261e;--warn-soft:#fde7e7;--shadow:0 1px 3px rgba(0,0,0,.08);
  --c0:#2456d6;--c0s:#e6f0ff;--c1:#0b7285;--c1s:#e3f4f7;--c2:#2b8a3e;--c2s:#e6f4e9;--c3:#e8590c;--c3s:#fdeadf;--c4:#862e9c;--c4s:#f3e6f7;--c5:#1864ab;--c5s:#e3eefa;--c6:#087f5b;--c6s:#e0f5ee;--c7:#a61e4d;--c7s:#fae3ec;--c8:#5f3dc4;--c8s:#ebe5fa}

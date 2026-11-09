@@ -6,9 +6,17 @@ Guía de estudio interactiva de Programación de Sistemas en Tiempo Real (UPCT, 
 
 Ábrela en: https://helionacon-ui.github.io/Programaci-n-en-tiempo-real/
 
-Está dividida en varias páginas: portada con buscador, una página por tema (`tema-0.html` … `tema-7.html`), prácticas, exámenes resueltos paso a paso, hojas de problemas, demostraciones, autoevaluación, simulacros, formulario, glosario y plan de estudio. Todas comparten `style.css` y `app.js`, y el buscador busca en toda la guía. `guia-completa.html` es la misma guía en una sola página.
+Está dividida en varias páginas:
 
-La página de simulacros incluye un **modo examen** con reloj de 2 h 30 min (la solución solo se ve al entregar y se calcula una nota estimada) y un **revisor de código** que detecta los fallos típicos antes de entregar. Las tarjetas y el test usan **repetición espaciada** y recuerdan en tu navegador lo que has fallado.
+- `index.html`: portada con acceso a todas las secciones y buscador
+- `empezar.html`, `t0.html` … `t7.html`: temario por temas
+- `practicas.html`, `examenes.html`, `hojas.html`, `demostraciones.html`, `autoevaluacion.html`, `simulador.html`: práctica
+- `formulario.html`, `glosario.html`, `plan.html`: consulta rápida
+- `guia-completa.html`: la misma guía en una sola página
+
+Los estilos, los scripts, el índice del buscador y las fórmulas están en `assets/`. `fuente/` contiene el contenido y los generadores.
+
+La página del simulador incluye un **modo examen** con reloj de 2 h 30 min (la solución solo se ve al entregar y se calcula una nota estimada) y un **revisor de código** que detecta los fallos típicos antes de entregar. Las tarjetas y el test usan **repetición espaciada** y recuerdan en tu navegador lo que has fallado.
 
 Cada tema lleva figuras (pulsa una para ampliarla), simuladores interactivos, ejemplos de código compilados y comprobados, cuadros de trucos y errores típicos, y vídeos recomendados de YouTube que se cargan al pulsar.
 

@@ -222,8 +222,8 @@ def main():
     # fórmulas: se convierten ya en el HTML (KaTeX), así se ven sin conexión y sin JavaScript
     import subprocess, shutil
     kd = os.path.join(ROOT, 'assets', 'katex')
-    shutil.copy(os.path.join(kd, 'katex.css'), os.path.join(site, 'katex.css'))
-    shutil.rmtree(os.path.join(site, 'fonts'), ignore_errors=True); shutil.copytree(os.path.join(kd, 'fonts'), os.path.join(site, 'fonts'))
+    shutil.copy(os.path.join(kd, 'katex.css'), os.path.join(site, 'assets', 'katex.css'))
+    shutil.copytree(os.path.join(kd, 'fonts'), os.path.join(site, 'assets', 'fonts'))
     files = [os.path.join(site, f) for f in os.listdir(site) if f.endswith('.html')] + [os.path.join(dist, 'guia.html')]
     r = subprocess.run(['node', os.path.join(ROOT, 'tools', 'prerender_math.js')] + files, capture_output=True, text=True)
     print(r.stdout.strip(), r.stderr.strip()[:500])
