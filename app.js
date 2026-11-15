@@ -28,7 +28,8 @@
   +'.gs-pg{font:600 11.5px/1.2 var(--mono,monospace);letter-spacing:.05em;text-transform:uppercase;color:var(--accent,#0d6e5a)}'
   +'.gs-h{font-weight:600;font-size:15px;margin:2px 0}.gs-sn{font-size:13.5px;color:var(--muted,#555);line-height:1.45}'
   +'mark.gs-m,.gs-res mark{background:color-mix(in srgb,#f5c518 55%,transparent);color:inherit;border-radius:3px;padding:0 1px}'
-  +'.gs-hint{padding:14px;font-size:14px;color:var(--muted,#666)}';
+  +'.gs-hint{padding:14px;font-size:14px;color:var(--muted,#666)}'
+  +'/*fixnav1*/@media(max-width:860px){.toc{align-items:center}.toc .gs-side{flex:none;width:auto;margin:0;white-space:nowrap;align-self:center}.toc .gs-side span{white-space:nowrap}}';
   var st=document.createElement('style');st.textContent=css;document.head.appendChild(st);
   var ov,inp,res,stat,idx=null,loading=false,items=[],sel=-1,tm;
   var SVG='<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>';
