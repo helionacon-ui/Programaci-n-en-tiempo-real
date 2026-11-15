@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T4 Programación orientada a objetos: herencia y polimorfismo · Programación de Sistemas en Tiempo Real · Guía para aprobar</title>
+<meta name="description" content="Programación de Sistemas en Tiempo Real (UPCT, GIEyA): tema 4, Programación orientada a objetos: herencia y polimorfismo">
+<meta name="theme-color" content="#a8570a">
+<link href="https://fonts.googleapis.com" rel="preconnect"><link crossorigin href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=IBM+Plex+Sans:ital,wght@0,400;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script>window.MathJax={tex:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']]},svg:{fontCache:'global'}};</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+<link rel="stylesheet" href="style.css">
+<style>html{-webkit-text-size-adjust:100%}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+</head>
+<body>
+<div class="hub-bar" style="max-width:1180px;margin:0 auto;padding:10px 16px 0"><a href="https://helionacon-ui.github.io/GIEIA-UPCT/" style="display:inline-flex;align-items:center;gap:6px;font:600 13.5px/1 system-ui,sans-serif;padding:8px 12px;border-radius:999px;border:1px solid var(--line);background:var(--surface);color:var(--fg);text-decoration:none">← Todas las guías GIEyA</a><p class="fecha" style="margin:6px 0 0;max-width:none;font:13px/1.45 system-ui,sans-serif;color:var(--muted)">Datos tomados del curso <time datetime="2020-09">2020/21</time> (apuntes y programas de teoría, boletines de ejercicios, prácticas, referencia de C++ del examen y exámenes de 2016 a 2018) · página creada en noviembre de 2026</p></div>
+<div class="crumb"><a href="index.html">Programación de Sistemas en Tiempo Real</a><span class="sep">›</span><span>C++ moderno: de los objetos a la concurrencia</span><span class="sep">›</span><span>T4 · Programación orientada a objetos: herencia y polimorfismo</span></div><a href="#top" class="totop" id="totop" aria-label="Volver arriba">↑</a>
+<div class="wrap" id="top">
+<nav aria-label="Índice" class="toc"><a href="index.html" style="--tc:var(--c0)">Portada</a><div class="grp">Empezar</div><a href="index.html#cero" style="--tc:var(--c0)">Empieza aquí desde cero</a><a href="plan.html" style="--tc:var(--c0)">Cómo es la evaluación</a><a href="index.html#progreso" style="--tc:var(--c0)">Tu progreso</a><div class="grp">C++ moderno: de los objetos a la concurrencia</div><a href="tema-01.html" style="--tc:var(--c2)">T1 Del problema al programa</a><a href="tema-02.html" style="--tc:var(--c3)">T2 La biblioteca estándar: string, vector y map</a><a href="tema-03.html" style="--tc:var(--c4)">T3 Programación basada en objetos</a><a href="tema-04.html" style="--tc:var(--c5)" class="on" aria-current="page">T4 Programación orientada a objetos: herencia y polimorfismo</a><a href="tema-05.html" style="--tc:var(--c6)">T5 Concurrencia: hilos en C++11</a><a href="tema-06.html" style="--tc:var(--c7)">T6 Sincronización: mutex, variables de condición y monitores</a><div class="grp">Tiempo real: planificación y algoritmos</div><a href="tema-07.html" style="--tc:var(--c8)">T7 El planificador del sistema operativo</a><a href="tema-08.html" style="--tc:var(--c1)">T8 Planificación en tiempo real: RM, DM, EDF y ejecutivo cíclico</a><a href="tema-09.html" style="--tc:var(--c2)">T9 Tiempos de respuesta, bloqueo y techo de prioridad</a><a href="tema-10.html" style="--tc:var(--c3)">T10 Lógica difusa y kNN</a><div class="grp">Practicar</div><a href="cuestiones.html" style="--tc:var(--c8)">Cuestiones de teoría respondidas</a><a href="examenes.html" style="--tc:var(--c8)">Problemas de examen resueltos</a><a href="problemas.html" style="--tc:var(--c8)">Qué cae en el examen</a><a href="laboratorio.html" style="--tc:var(--c7)">Prácticas</a><a href="formulario.html" style="--tc:var(--c8)">Formulario</a></nav>
+<main>
+<section class="sec tema" style="--tc:var(--c5);--tcs:var(--c5s)">
+<div class="sh"><span aria-hidden="true" class="badge">4</span><div class="shx"><p class="kick">C++ moderno: de los objetos a la concurrencia · Tema 4</p><h2 id="t4">Programación orientada a objetos: herencia y polimorfismo</h2><div class="tags"><span class="tag">C++ moderno: de los objetos a la concurrencia</span><span class="tag">Programación</span></div></div></div>
+<div class="zero"><p class="ft">Desde cero</p><p><b>Objetivo:</b> usar herencia, métodos virtuales y clases abstractas, y entender qué decide el compilador y qué se decide en ejecución.</p><ul>
+<li>La <b>herencia</b> expresa una relación «<b>es un</b>»: un <code>Coche</code> <i>es un</i> <code>Vehiculo</code>. La clase derivada hereda atributos y métodos de la base y puede añadir los suyos o redefinir los que necesite.</li>
+<li>Si la relación es «<b>tiene un</b>» (un coche <i>tiene un</i> motor), lo correcto no es heredar sino <b>componer</b>: poner un atributo. Confundir las dos es el error de diseño más frecuente.</li>
+<li>El acceso <code>protected</code> aparece aquí: es como <code>private</code> pero visible para las clases derivadas. La herencia pública (<code>class Coche : public Vehiculo</code>) es la que corresponde a «es un»; es la que se usa prácticamente siempre.</li>
+<li>Al construir un objeto derivado se llama <b>primero</b> al constructor de la base y luego al de la derivada; al destruirlo, al revés. Si la base no tiene constructor por defecto, hay que llamarla explícitamente en la lista de inicialización.</li>
+<li>El <b>polimorfismo</b> es poder tratar objetos de clases distintas a través de un puntero o una referencia a la base, y que cada uno responda <b>a su manera</b>. Para que funcione, el método de la base debe declararse <code>virtual</code>.</li>
+<li>La diferencia clave: sin <code>virtual</code>, la llamada se resuelve en <b>tiempo de compilación</b> según el tipo <b>declarado</b> (ligadura estática); con <code>virtual</code>, se resuelve en <b>tiempo de ejecución</b> según el tipo <b>real</b> del objeto (ligadura dinámica), consultando la <b>tabla de funciones virtuales</b> (<i>vtable</i>) que el compilador añade a la clase.</li>
+<li>Una función <b>virtual pura</b> (<code>= 0</code>) no tiene implementación y convierte la clase en <b>abstracta</b>: no se pueden crear objetos de ella, sólo de sus derivadas, y sirve para definir una interfaz que todas deben cumplir.</li>
+<li>El <b>destructor de una clase base polimórfica debe ser <code>virtual</code></b>. Si no, al hacer <code>delete</code> sobre un puntero a la base sólo se ejecuta el destructor de la base y el de la derivada no se llama: fuga de memoria silenciosa.</li>
+<li>El <b>polimorfismo sólo funciona con punteros y referencias</b>. Si guardas un objeto derivado en una variable del tipo base, se copia únicamente la parte de la base: es el <i>object slicing</i>, y se pierde todo lo demás sin ningún aviso.</li>
+<li><code>friend</code> da acceso a los miembros privados de una clase a una función o clase concreta. Rompe el encapsulamiento a propósito y en un punto controlado; su uso normal es <code>operator&lt;&lt;</code>.</li>
+</ul></div>
+<details class="nom"><summary><span aria-hidden="true" class="nom-ic">Aa</span>Nomenclatura del tema 4 <span class="src">8 entradas</span></summary><div class="inner">
+<div class="tw"><table><tr><th>Símbolo</th><th>Significado</th><th>Unidad · nota</th></tr><tr><td class="sym">public</td><td>herencia «es un»</td><td class="u"></td></tr><tr><td class="sym">protected</td><td>visible en derivadas</td><td class="u"></td></tr><tr><td class="sym">virtual</td><td>ligadura dinámica</td><td class="u">vtable</td></tr><tr><td class="sym">= 0</td><td>virtual pura</td><td class="u">clase abstracta</td></tr><tr><td class="sym">override</td><td>comprueba la redefinición</td><td class="u"></td></tr><tr><td class="sym">~Base() virtual</td><td>obligatorio si es polimórfica</td><td class="u"></td></tr><tr><td class="sym">slicing</td><td>pérdida de la parte derivada</td><td class="u">vector<Base></td></tr><tr><td class="sym">dynamic_cast</td><td>conversión comprobada</td><td class="u">nullptr si falla</td></tr></table></div></div></details>
+<figure class="fig"><p class="ft">Figura interactiva - ligadura estatica frente a dinamica y la vtable</p><div data-sim="polimorfismo"></div><figcaption>Mueve los controles y observa cómo cambia el resultado: es el mismo cálculo que hay que saber hacer a mano en el examen.</figcaption></figure>
+<h3 id="t4-formulas">Fórmulas y conceptos que hay que saber</h3>
+<div class="box key"><ul><li><b>Herencia y polimorfismo:</b></li></ul>
+<div class="code">class Figura {                           // clase abstracta
+protected:
+    string nombre_;
+public:
+    Figura(const string &amp;n) : nombre_(n) {}
+    virtual ~Figura() {}                 // destructor VIRTUAL
+
+    virtual double area() const = 0;     // virtual pura
+    virtual void describir() const       // virtual con implementación
+    { cout &lt;&lt; nombre_ &lt;&lt; " de área " &lt;&lt; area() &lt;&lt; endl; }
+};
+
+class Circulo : public Figura {
+    double r_;
+public:
+    Circulo(double r) : Figura("Círculo"), r_(r) {}
+    double area() const override { return 3.14159265 * r_ * r_; }
+};
+
+class Rectangulo : public Figura {
+    double a_, b_;
+public:
+    Rectangulo(double a, double b) : Figura("Rectángulo"), a_(a), b_(b) {}
+    double area() const override { return a_ * b_; }
+};
+
+int main() {
+    vector&lt;Figura*&gt; v;
+    v.push_back(new Circulo(1.0));
+    v.push_back(new Rectangulo(2.0, 3.0));
+
+    for (Figura *f : v) f-&gt;describir();  // cada uno responde a su manera
+    for (Figura *f : v) delete f;        // gracias al destructor virtual
+}</div>
+<ul>
+<li><b><code>override</code></b>: marca que el método redefine uno virtual de la base. Si te equivocas en la firma, el compilador lo detecta. Úsalo siempre.</li>
+<li><b>Orden de construcción:</b> base → derivada. <b>De destrucción:</b> derivada → base.</li>
+<li><b>Coste:</b> una llamada virtual añade una indirección por la <i>vtable</i>; cada objeto polimórfico guarda un puntero a su tabla.</li>
+<li><b>Clase abstracta:</b> tiene al menos un método virtual puro; no se pueden instanciar objetos de ella.</li>
+<li><b><code>dynamic_cast&lt;Derivada*&gt;(p)</code></b> convierte de base a derivada comprobando en ejecución; devuelve <code>nullptr</code> si el objeto no es de ese tipo.</li>
+</ul></div>
+<h3 id="t4-metodo">Método paso a paso</h3>
+<ol class="steps">
+<li><b>Decide si hay herencia:</b> pregúntate si es «es un» o «tiene un». Si es «tiene un», compón.</li>
+<li><b>Pon en la base</b> lo común y declara <code>virtual</code> todo lo que cada derivada vaya a hacer de forma distinta.</li>
+<li><b>Destructor virtual</b> en la base, siempre que vaya a usarse polimórficamente.</li>
+<li><b>En cada derivada</b>, llama al constructor de la base en la lista de inicialización y marca los métodos redefinidos con <code>override</code>.</li>
+<li><b>Guarda los objetos</b> en un <code>vector&lt;Base*&gt;</code> (o de punteros inteligentes) y recórrelos: ahí se ve el polimorfismo.</li>
+<li><b>Libera</b> con <code>delete</code> lo que reservaste con <code>new</code>.</li>
+</ol>
+<div class="box trap"><h4>Trampas típicas</h4><ul>
+<li>Olvidar <code>virtual</code> en el método de la base. El código compila y se ejecuta, pero siempre llama a la versión de la base: es el fallo más difícil de ver.</li>
+<li>Olvidar el <b>destructor virtual</b>. No da ningún error visible: simplemente no se libera la parte derivada.</li>
+<li>Guardar objetos derivados en un <code>vector&lt;Base&gt;</code> en vez de <code>vector&lt;Base*&gt;</code>: <b><i>object slicing</i></b>, se pierde la parte derivada.</li>
+<li>Usar herencia para reutilizar código cuando no hay relación «es un». Produce jerarquías absurdas (una <code>Pila</code> no <i>es un</i> <code>vector</code>).</li>
+<li>Intentar crear un objeto de una clase abstracta: no compila, y es la señal de que falta implementar algún método virtual puro.</li>
+<li>Acceder a atributos <code>private</code> de la base desde la derivada. Hay que declararlos <code>protected</code> o pasar por los métodos.</li>
+</ul></div>
+<h3 id="t4-problema">Problema resuelto</h3>
+<div class="prob"><div class="enun"><p class="et">Enunciado</p><p>Diseña una jerarquía de <b>sensores</b> para un sistema de adquisición: todos tienen identificador y devuelven una lectura, pero un sensor de temperatura y uno de presión la calculan de forma distinta y tienen unidades distintas. Escribe la clase base, dos derivadas y un <code>main</code> que las recorra polimórficamente. Explica qué pasaría sin <code>virtual</code>.</p></div>
+<details class="paso"><summary><span class="pn">✓</span>Ver solución paso a paso</summary><div class="inner"><div class="code">#include &lt;iostream&gt;
+#include &lt;vector&gt;
+#include &lt;string&gt;
+using namespace std;
+
+class Sensor {                                   // clase abstracta
+protected:
+    int id_;
+    double bruto_;                               // valor del conversor A/D
+public:
+    Sensor(int id) : id_(id), bruto_(0.0) {}
+    virtual ~Sensor() {}                         // IMPRESCINDIBLE
+
+    void set_bruto(double v) { bruto_ = v; }
+    int  get_id() const { return id_; }
+
+    virtual double lectura()  const = 0;         // cada sensor la calcula
+    virtual string unidad()   const = 0;
+
+    void mostrar() const                         // común a todos
+    { cout &lt;&lt; "Sensor " &lt;&lt; id_ &lt;&lt; ": " &lt;&lt; lectura() &lt;&lt; " " &lt;&lt; unidad() &lt;&lt; endl; }
+};
+
+class Temperatura : public Sensor {
+    double offset_, ganancia_;
+public:
+    Temperatura(int id, double off, double gan)
+        : Sensor(id), offset_(off), ganancia_(gan) {}
+
+    double lectura() const override { return bruto_ * ganancia_ + offset_; }
+    string unidad()  const override { return "ºC"; }
+};
+
+class Presion : public Sensor {
+    double escala_;
+public:
+    Presion(int id, double esc) : Sensor(id), escala_(esc) {}
+
+    double lectura() const override { return bruto_ * escala_; }
+    string unidad()  const override { return "bar"; }
+};
+
+int main()
+{
+    vector&lt;Sensor*&gt; sensores;
+    sensores.push_back(new Temperatura(1, -40.0, 0.125));
+    sensores.push_back(new Presion(2, 0.004));
+
+    sensores[0]-&gt;set_bruto(800);
+    sensores[1]-&gt;set_bruto(2500);
+
+    for (const Sensor *s : sensores) s-&gt;mostrar();
+
+    for (Sensor *s : sensores) delete s;
+    return 0;
+}</div>
+<p><b>Salida:</b></p>
+<div class="code">Sensor 1: 60 ºC
+Sensor 2: 10 bar</div>
+<p>Comprobación: \(800\cdot0{,}125-40=100-40=60\) ºC y \(2500\cdot0{,}004=10\) bar.</p>
+<p><b>Qué pasa sin <code>virtual</code>.</b> Si <code>lectura()</code> no fuera virtual, no podría ser pura y habría que darle una implementación en la base. Entonces <code>mostrar()</code>, que es un método de <code>Sensor</code>, llamaría <b>siempre</b> a <code>Sensor::lectura()</code> aunque el objeto real fuese un <code>Temperatura</code>: el compilador resolvería la llamada mirando el tipo declarado. El programa compilaría, se ejecutaría y daría resultados <b>mal</b> sin ningún aviso. Con <code>virtual</code>, la llamada pasa por la <i>vtable</i> del objeto real y cada sensor devuelve lo suyo.</p>
+<p><b>Y sin destructor virtual.</b> El <code>delete s</code> sobre un <code>Sensor*</code> ejecutaría sólo <code>~Sensor()</code>. Aquí las derivadas no reservan memoria, así que no se notaría; en cuanto una derivada tenga un <code>new</code> propio, hay fuga. Por eso la regla es: destructor virtual en toda clase base polimórfica, siempre, sin pensarlo.</p>
+<div class="box key"><p>Lo que de verdad aporta esta jerarquía: el <code>main</code> y la función <code>mostrar()</code> <b>no saben</b> qué sensores existen. Añadir un sensor de caudal mañana no obliga a tocar ni una línea de código existente, sólo a escribir la clase nueva. Eso es lo que hay que decir si el examen pregunta «qué ventaja aporta el polimorfismo».</p></div></div></details></div>
+<h3 id="t4-auto">Autoevaluación</h3>
+<p class="muted">Responde antes de desplegar.</p><details class="paso"><summary><span class="pn">1</span>¿Cuándo hay que usar herencia y cuándo composición?</summary><div class="inner"><p>Herencia para «<b>es un</b>»; composición (un atributo) para «<b>tiene un</b>».</p></div></details><details class="paso"><summary><span class="pn">2</span>¿Qué diferencia hay entre ligadura estática y dinámica?</summary><div class="inner"><p>La <b>estática</b> se resuelve en compilación según el tipo declarado; la <b>dinámica</b>, en ejecución según el tipo real, usando la <i>vtable</i>. La segunda requiere <code>virtual</code>.</p></div></details><details class="paso"><summary><span class="pn">3</span>¿Por qué el destructor de una base polimórfica debe ser virtual?</summary><div class="inner"><p>Porque si no, al hacer <code>delete</code> sobre un puntero a la base no se ejecuta el destructor de la derivada y se produce una fuga de memoria.</p></div></details><details class="paso"><summary><span class="pn">4</span>¿Qué es el <i>object slicing</i>?</summary><div class="inner"><p>Guardar un objeto derivado en una variable del tipo base: se copia sólo la parte de la base y se pierde el resto, sin aviso del compilador.</p></div></details><details class="paso"><summary><span class="pn">5</span>¿Qué hace que una clase sea abstracta?</summary><div class="inner"><p>Tener al menos un método <b>virtual puro</b> (<code>= 0</code>). No se pueden crear objetos de ella.</p></div></details><details class="paso"><summary><span class="pn">6</span>¿Para qué sirve <code>override</code>?</summary><div class="inner"><p>Para decirle al compilador que el método redefine uno virtual de la base; si la firma no coincide, da error en vez de crear un método nuevo por error.</p></div></details>
+</section>
+<nav class="pager" aria-label="Páginas"><a href="tema-03.html"><small>← Anterior</small>T3 · Programación basada en objetos</a><a class="nx" href="tema-05.html"><small>Siguiente →</small>T5 · Concurrencia: hilos en C++11</a></nav>
+<p class="inicio" style="margin:36px 0 8px;text-align:center;font-size:13px;color:var(--muted)">Guía no oficial de Programación de Sistemas en Tiempo Real (UPCT, GIEyA) · Datos tomados del curso <time datetime="2020-09">2020/21</time> (apuntes y programas de teoría, boletines de ejercicios, prácticas, referencia de C++ del examen y exámenes de 2016 a 2018) · página creada en noviembre de 2026</p>
+</main>
+</div>
+<script src="app.js"></script>
+<script src="sims.js"></script>
+</body>
+</html>

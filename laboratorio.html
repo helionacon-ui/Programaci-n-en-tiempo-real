@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Prácticas · Programación de Sistemas en Tiempo Real · Guía para aprobar</title>
+<meta name="description" content="Prácticas de C++ y concurrencia de Programación de Sistemas en Tiempo Real (UPCT)">
+<meta name="theme-color" content="#a8570a">
+<link href="https://fonts.googleapis.com" rel="preconnect"><link crossorigin href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=IBM+Plex+Sans:ital,wght@0,400;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script>window.MathJax={tex:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']]},svg:{fontCache:'global'}};</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+<link rel="stylesheet" href="style.css">
+<style>html{-webkit-text-size-adjust:100%}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+</head>
+<body>
+<div class="hub-bar" style="max-width:1180px;margin:0 auto;padding:10px 16px 0"><a href="https://helionacon-ui.github.io/GIEIA-UPCT/" style="display:inline-flex;align-items:center;gap:6px;font:600 13.5px/1 system-ui,sans-serif;padding:8px 12px;border-radius:999px;border:1px solid var(--line);background:var(--surface);color:var(--fg);text-decoration:none">← Todas las guías GIEyA</a><p class="fecha" style="margin:6px 0 0;max-width:none;font:13px/1.45 system-ui,sans-serif;color:var(--muted)">Datos tomados del curso <time datetime="2020-09">2020/21</time> (apuntes y programas de teoría, boletines de ejercicios, prácticas, referencia de C++ del examen y exámenes de 2016 a 2018) · página creada en noviembre de 2026</p></div>
+<div class="crumb"><a href="index.html">Programación de Sistemas en Tiempo Real</a><span class="sep">›</span><span>Practicar</span><span class="sep">›</span><span>Prácticas</span></div><a href="#top" class="totop" id="totop" aria-label="Volver arriba">↑</a>
+<div class="wrap" id="top">
+<nav aria-label="Índice" class="toc"><a href="index.html" style="--tc:var(--c0)">Portada</a><div class="grp">Empezar</div><a href="index.html#cero" style="--tc:var(--c0)">Empieza aquí desde cero</a><a href="plan.html" style="--tc:var(--c0)">Cómo es la evaluación</a><a href="index.html#progreso" style="--tc:var(--c0)">Tu progreso</a><div class="grp">C++ moderno: de los objetos a la concurrencia</div><a href="tema-01.html" style="--tc:var(--c2)">T1 Del problema al programa</a><a href="tema-02.html" style="--tc:var(--c3)">T2 La biblioteca estándar: string, vector y map</a><a href="tema-03.html" style="--tc:var(--c4)">T3 Programación basada en objetos</a><a href="tema-04.html" style="--tc:var(--c5)">T4 Programación orientada a objetos: herencia y polimorfismo</a><a href="tema-05.html" style="--tc:var(--c6)">T5 Concurrencia: hilos en C++11</a><a href="tema-06.html" style="--tc:var(--c7)">T6 Sincronización: mutex, variables de condición y monitores</a><div class="grp">Tiempo real: planificación y algoritmos</div><a href="tema-07.html" style="--tc:var(--c8)">T7 El planificador del sistema operativo</a><a href="tema-08.html" style="--tc:var(--c1)">T8 Planificación en tiempo real: RM, DM, EDF y ejecutivo cíclico</a><a href="tema-09.html" style="--tc:var(--c2)">T9 Tiempos de respuesta, bloqueo y techo de prioridad</a><a href="tema-10.html" style="--tc:var(--c3)">T10 Lógica difusa y kNN</a><div class="grp">Practicar</div><a href="cuestiones.html" style="--tc:var(--c8)">Cuestiones de teoría respondidas</a><a href="examenes.html" style="--tc:var(--c8)">Problemas de examen resueltos</a><a href="problemas.html" style="--tc:var(--c8)">Qué cae en el examen</a><a href="laboratorio.html" style="--tc:var(--c7)" class="on" aria-current="page">Prácticas</a><a href="formulario.html" style="--tc:var(--c8)">Formulario</a></nav>
+<main>
+<section class="sec" style="--tc:var(--c7);--tcs:var(--c7s)">
+<div class="sh"><span aria-hidden="true" class="badge">L</span><div class="shx"><p class="kick">Practicar</p><h2 id="lab">Las prácticas</h2><div class="tags"><span class="tag">3 prácticas</span><span class="tag w">C++ y concurrencia</span></div></div></div>
+<h3>Las prácticas de la asignatura</h3><div class="tw"><table><tr><th>Práctica</th><th>Contenido</th><th>Qué se practica</th></tr>
+<tr><td><b>1. Programación basada en objetos</b></td><td>Clases, constructores, ficheros de entrada y salida, <code>string</code> y <code>vector</code>.</td><td>Leer el Quijote, contar palabras, ordenar, escribir resultados.</td></tr>
+<tr><td><b>2. Programación orientada a objetos</b></td><td>Herencia, polimorfismo, clases abstractas y sobrecarga de operadores.</td><td>Jerarquías de clases y vectores de punteros a la base.</td></tr>
+<tr><td><b>3. Programación concurrente</b> (2 sesiones)</td><td>Hilos de C++11, <code>atomic</code>, <code>mutex</code>, <code>random</code> y <code>chrono</code>.</td><td>Criba de Eratóstenes paralela, suma de matrices y carrera de caballos.</td></tr>
+</table></div>
+<p>Las tres prácticas van en orden ascendente de dificultad y la tercera es la que de verdad prepara el ejercicio de concurrencia del examen. Si sólo tienes tiempo para repasar una, repasa esa.</p><h3>Los tres ejercicios de la práctica 3</h3><div class="tw"><table><tr><th>Ejercicio</th><th>Qué enseña</th><th>Detalle que importa</th></tr>
+<tr><td><b>Criba de Eratóstenes paralela</b></td><td>Que a veces no hace falta sincronizar.</td><td>Las escrituras son idempotentes: marcar dos veces un compuesto da igual. Basta <code>atomic_char</code> para que la escritura no se parta. Los ocho últimos primos por debajo de un millón son 999907, 999917, 999931, 999953, 999959, 999961, 999979 y 999983.</td></tr>
+<tr><td><b>Suma de matrices 1000×1000</b></td><td>Cómo repartir trabajo por bloques y medir.</td><td>Cada hilo escribe en filas distintas, así que no hay ningún dato compartido. La aceleración es menor que el número de hilos porque el cuello de botella es la <b>memoria</b>.</td></tr>
+<tr><td><b>Carrera de caballos</b></td><td>Monitor completo con estado compartido.</td><td>La clase <code>Hipodromo</code> guarda la distancia de cada caballo y el orden de llegada; <code>avanzar</code> devuelve <code>true</code> al cruzar la meta. Hace falta <code>&lt;random&gt;</code> (uniforme para dormir, normal para avanzar) y <code>sleep_for</code>.</td></tr>
+</table></div>
+<p>El patrón de medida de tiempos es siempre el mismo y conviene tenerlo escrito:</p>
+<div class="code">#include &lt;chrono&gt;
+auto t0 = std::chrono::steady_clock::now();
+// ... el trozo que quieres medir ...
+auto t1 = std::chrono::steady_clock::now();
+std::cout &lt;&lt; std::chrono::duration_cast&lt;std::chrono::microseconds&gt;(t1-t0).count()
+          &lt;&lt; " us\n";</div><h3>La hoja de referencia del examen</h3><p>En el examen se entrega una <b>referencia de clases de utilidad de C++</b> con las operaciones de <code>string</code>, <code>vector</code>, <code>map</code>, <code>list</code>, los iteradores y los flujos. No hay que memorizar firmas, pero sí saber qué buscar.</p>
+<div class="tw"><table><tr><th>Si necesitas…</th><th>Busca en la hoja</th></tr>
+<tr><td>Partir un texto</td><td><code>find</code>, <code>substr</code>, <code>getline</code> con delimitador</td></tr>
+<tr><td>Convertir texto y números</td><td><code>stoi</code>, <code>stod</code>, <code>to_string</code></td></tr>
+<tr><td>Recorrer un contenedor</td><td><code>begin</code>, <code>end</code>, bucle de rango</td></tr>
+<tr><td>Buscar por clave</td><td><code>map::find</code>, <code>map::count</code>, <code>operator[]</code></td></tr>
+<tr><td>Ordenar</td><td><code>sort</code> con una <i>lambda</i> de comparación</td></tr>
+<tr><td>Leer o escribir ficheros</td><td><code>ifstream</code>, <code>ofstream</code>, <code>getline</code></td></tr>
+</table></div>
+<p>Lo que <b>no</b> está en la hoja y hay que llevar aprendido: la sintaxis de las clases, la herencia, <code>thread</code>, <code>mutex</code>, <code>condition_variable</code> y las fórmulas de planificación. Es decir, justo lo que puntúa.</p>
+<figure class="fig"><p class="ft">Figura interactiva · productor-consumidor</p><div data-sim="productor"></div><figcaption>El esqueleto de todos los ejercicios de concurrencia: dos hilos a velocidades distintas y un buffer que los desacopla.</figcaption></figure>
+<figure class="fig"><p class="ft">Figura interactiva · clasificador kNN</p><div data-sim="knn"></div><figcaption>El algoritmo del boletín 5, con la lección que más veces se olvida: sin normalizar, la distancia la decide un solo atributo.</figcaption></figure>
+</section>
+<nav class="pager" aria-label="Páginas"><a href="problemas.html"><small>← Anterior</small>Qué cae</a><a class="nx" href="formulario.html"><small>Siguiente →</small>Formulario</a></nav><p class="inicio" style="margin:36px 0 8px;text-align:center;font-size:13px;color:var(--muted)">Guía no oficial de Programación de Sistemas en Tiempo Real (UPCT, GIEyA) · Datos tomados del curso <time datetime="2020-09">2020/21</time> (apuntes y programas de teoría, boletines de ejercicios, prácticas, referencia de C++ del examen y exámenes de 2016 a 2018) · página creada en noviembre de 2026</p>
+</main>
+</div>
+<script src="app.js"></script>
+<script src="sims.js"></script>
+</body>
+</html>

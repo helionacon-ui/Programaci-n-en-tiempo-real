@@ -1,0 +1,241 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T6 Sincronización: mutex, variables de condición y monitores · Programación de Sistemas en Tiempo Real · Guía para aprobar</title>
+<meta name="description" content="Programación de Sistemas en Tiempo Real (UPCT, GIEyA): tema 6, Sincronización: mutex, variables de condición y monitores">
+<meta name="theme-color" content="#a8570a">
+<link href="https://fonts.googleapis.com" rel="preconnect"><link crossorigin href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=IBM+Plex+Sans:ital,wght@0,400;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script>window.MathJax={tex:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']]},svg:{fontCache:'global'}};</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+<link rel="stylesheet" href="style.css">
+<style>html{-webkit-text-size-adjust:100%}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+</head>
+<body>
+<div class="hub-bar" style="max-width:1180px;margin:0 auto;padding:10px 16px 0"><a href="https://helionacon-ui.github.io/GIEIA-UPCT/" style="display:inline-flex;align-items:center;gap:6px;font:600 13.5px/1 system-ui,sans-serif;padding:8px 12px;border-radius:999px;border:1px solid var(--line);background:var(--surface);color:var(--fg);text-decoration:none">← Todas las guías GIEyA</a><p class="fecha" style="margin:6px 0 0;max-width:none;font:13px/1.45 system-ui,sans-serif;color:var(--muted)">Datos tomados del curso <time datetime="2020-09">2020/21</time> (apuntes y programas de teoría, boletines de ejercicios, prácticas, referencia de C++ del examen y exámenes de 2016 a 2018) · página creada en noviembre de 2026</p></div>
+<div class="crumb"><a href="index.html">Programación de Sistemas en Tiempo Real</a><span class="sep">›</span><span>C++ moderno: de los objetos a la concurrencia</span><span class="sep">›</span><span>T6 · Sincronización: mutex, variables de condición y monitores</span></div><a href="#top" class="totop" id="totop" aria-label="Volver arriba">↑</a>
+<div class="wrap" id="top">
+<nav aria-label="Índice" class="toc"><a href="index.html" style="--tc:var(--c0)">Portada</a><div class="grp">Empezar</div><a href="index.html#cero" style="--tc:var(--c0)">Empieza aquí desde cero</a><a href="plan.html" style="--tc:var(--c0)">Cómo es la evaluación</a><a href="index.html#progreso" style="--tc:var(--c0)">Tu progreso</a><div class="grp">C++ moderno: de los objetos a la concurrencia</div><a href="tema-01.html" style="--tc:var(--c2)">T1 Del problema al programa</a><a href="tema-02.html" style="--tc:var(--c3)">T2 La biblioteca estándar: string, vector y map</a><a href="tema-03.html" style="--tc:var(--c4)">T3 Programación basada en objetos</a><a href="tema-04.html" style="--tc:var(--c5)">T4 Programación orientada a objetos: herencia y polimorfismo</a><a href="tema-05.html" style="--tc:var(--c6)">T5 Concurrencia: hilos en C++11</a><a href="tema-06.html" style="--tc:var(--c7)" class="on" aria-current="page">T6 Sincronización: mutex, variables de condición y monitores</a><div class="grp">Tiempo real: planificación y algoritmos</div><a href="tema-07.html" style="--tc:var(--c8)">T7 El planificador del sistema operativo</a><a href="tema-08.html" style="--tc:var(--c1)">T8 Planificación en tiempo real: RM, DM, EDF y ejecutivo cíclico</a><a href="tema-09.html" style="--tc:var(--c2)">T9 Tiempos de respuesta, bloqueo y techo de prioridad</a><a href="tema-10.html" style="--tc:var(--c3)">T10 Lógica difusa y kNN</a><div class="grp">Practicar</div><a href="cuestiones.html" style="--tc:var(--c8)">Cuestiones de teoría respondidas</a><a href="examenes.html" style="--tc:var(--c8)">Problemas de examen resueltos</a><a href="problemas.html" style="--tc:var(--c8)">Qué cae en el examen</a><a href="laboratorio.html" style="--tc:var(--c7)">Prácticas</a><a href="formulario.html" style="--tc:var(--c8)">Formulario</a></nav>
+<main>
+<section class="sec tema" style="--tc:var(--c7);--tcs:var(--c7s)">
+<div class="sh"><span aria-hidden="true" class="badge">6</span><div class="shx"><p class="kick">C++ moderno: de los objetos a la concurrencia · Tema 6</p><h2 id="t6">Sincronización: mutex, variables de condición y monitores</h2><div class="tags"><span class="tag">C++ moderno: de los objetos a la concurrencia</span><span class="tag">Concurrencia</span></div></div></div>
+<div class="zero"><p class="ft">Desde cero</p><p><b>Objetivo:</b> proteger los datos compartidos, hacer que un hilo espere a otro y diseñar clases seguras entre hilos (monitores).</p><ul>
+<li>La <b>exclusión mutua</b> es la solución a la condición de carrera: garantizar que, mientras un hilo está en la <b>sección crítica</b>, ningún otro entra. El mecanismo básico es el <b>mutex</b> (<i>mutual exclusion</i>), con dos operaciones: <code>lock</code> y <code>unlock</code>.</li>
+<li>En C++ moderno <b>no se llama a <code>lock</code> y <code>unlock</code> a mano</b>: se usa <b><code>lock_guard</code></b>, que bloquea en su constructor y desbloquea en su destructor (RAII). Así el mutex se libera aunque se salga de la función por un <code>return</code> o por una excepción.</li>
+<li><b><code>unique_lock</code></b> es un <code>lock_guard</code> más flexible: se puede desbloquear y volver a bloquear, y es el que exigen las <b>variables de condición</b>.</li>
+<li>Un mutex resuelve «no entréis a la vez», pero no «espera a que haya datos». Para eso está la <b>variable de condición</b> (<code>condition_variable</code>): un hilo hace <code>wait</code> y queda <b>dormido sin consumir CPU</b> hasta que otro hilo hace <code>notify_one</code> o <code>notify_all</code>.</li>
+<li>El <code>wait</code> siempre se escribe <b>con predicado</b>: <code>cv.wait(lk, [&amp;]{ return hay_datos; });</code>. El motivo es que existen los <b>despertares espurios</b>: un hilo puede despertar sin que nadie lo haya notificado, y el predicado lo devuelve a dormir. La forma con bucle <code>while (!cond) cv.wait(lk);</code> es equivalente.</li>
+<li>Al hacer <code>wait</code>, la variable de condición <b>libera el mutex</b> mientras duerme y lo vuelve a tomar al despertar. Si no fuese así, nadie podría cambiar la condición y el sistema se quedaría parado.</li>
+<li>Un <b>monitor</b> es un objeto que encapsula los datos compartidos junto con el mutex y las variables de condición que los protegen, de modo que quien lo usa no tiene que acordarse de bloquear nada. Es la forma correcta de diseñar: el <code>main</code> no debería ver nunca un mutex suelto.</li>
+<li>El <b>productor-consumidor</b> con buffer limitado es el problema canónico, y cae en examen con mil disfraces (ladrones y claves, servidor y futuros, carrera de caballos). Siempre son: un mutex, una o dos variables de condición y un predicado por cada espera.</li>
+<li>Un <b>interbloqueo</b> (<i>deadlock</i>) es que dos hilos se esperen mutuamente para siempre. Se evita <b>tomando siempre los mutex en el mismo orden</b>, o con <code>std::lock(m1, m2)</code>, que los toma a la vez sin riesgo.</li>
+<li><b><code>atomic</code></b> ofrece operaciones indivisibles sobre tipos simples sin usar mutex: <code>atomic&lt;int&gt;</code>, <code>atomic_char</code>. Es mucho más rápido que un mutex, pero sólo sirve para operaciones de una sola variable.</li>
+</ul></div>
+<details class="nom"><summary><span aria-hidden="true" class="nom-ic">Aa</span>Nomenclatura del tema 6 <span class="src">9 entradas</span></summary><div class="inner">
+<div class="tw"><table><tr><th>Símbolo</th><th>Significado</th><th>Unidad · nota</th></tr><tr><td class="sym">mutex</td><td>exclusión mutua</td><td class="u">lock / unlock</td></tr><tr><td class="sym">lock_guard</td><td>RAII sobre el mutex</td><td class="u"></td></tr><tr><td class="sym">unique_lock</td><td>bloqueo flexible</td><td class="u">lo exige wait</td></tr><tr><td class="sym">condition_variable</td><td>espera por condición</td><td class="u"></td></tr><tr><td class="sym">wait(lk, pred)</td><td>duerme si pred es falso</td><td class="u">libera el mutex</td></tr><tr><td class="sym">notify_one/all</td><td>despertar</td><td class="u"></td></tr><tr><td class="sym">atomic<T></td><td>operación indivisible</td><td class="u"></td></tr><tr><td class="sym">monitor</td><td>datos + mutex encapsulados</td><td class="u"></td></tr><tr><td class="sym">Coffman</td><td>4 condiciones de interbloqueo</td><td class="u"></td></tr></table></div></div></details>
+<figure class="fig"><p class="ft">Figura interactiva - productor-consumidor con buffer limitado</p><div data-sim="productor"></div><figcaption>Mueve los controles y observa cómo cambia el resultado: es el mismo cálculo que hay que saber hacer a mano en el examen.</figcaption></figure>
+<h3 id="t6-formulas">Fórmulas y conceptos que hay que saber</h3>
+<div class="box key"><ul><li><b>Exclusión mutua:</b></li></ul>
+<div class="code">#include &lt;mutex&gt;
+mutex m;
+int compartido = 0;
+
+void f() {
+    lock_guard&lt;mutex&gt; lk(m);      // bloquea aquí
+    ++compartido;                 // sección crítica
+}                                 // desbloquea al salir del ámbito</div>
+<ul><li><b>Variable de condición (el patrón completo):</b></li></ul>
+<div class="code">#include &lt;condition_variable&gt;
+mutex m;
+condition_variable cv;
+queue&lt;int&gt; buffer;
+const size_t MAX = 10;
+
+void productor(int n) {
+    for (int i = 0; i &lt; n; ++i) {
+        unique_lock&lt;mutex&gt; lk(m);
+        cv.wait(lk, []{ return buffer.size() &lt; MAX; });   // espera si lleno
+        buffer.push(i);
+        lk.unlock();                                      // desbloquear antes
+        cv.notify_all();                                  // de notificar
+    }
+}
+
+void consumidor() {
+    while (true) {
+        unique_lock&lt;mutex&gt; lk(m);
+        cv.wait(lk, []{ return !buffer.empty(); });       // espera si vacío
+        int x = buffer.front(); buffer.pop();
+        lk.unlock();
+        cv.notify_all();
+        procesar(x);
+    }
+}</div>
+<ul><li><b>Monitor</b> (la misma idea, bien encapsulada):</li></ul>
+<div class="code">class Buffer {
+    queue&lt;int&gt; q_;
+    size_t max_;
+    mutable mutex m_;
+    condition_variable no_lleno_, no_vacio_;
+public:
+    Buffer(size_t max) : max_(max) {}
+
+    void poner(int x) {
+        unique_lock&lt;mutex&gt; lk(m_);
+        no_lleno_.wait(lk, [this]{ return q_.size() &lt; max_; });
+        q_.push(x);
+        lk.unlock();
+        no_vacio_.notify_one();
+    }
+
+    int sacar() {
+        unique_lock&lt;mutex&gt; lk(m_);
+        no_vacio_.wait(lk, [this]{ return !q_.empty(); });
+        int x = q_.front(); q_.pop();
+        lk.unlock();
+        no_lleno_.notify_one();
+        return x;
+    }
+
+    size_t tam() const { lock_guard&lt;mutex&gt; lk(m_); return q_.size(); }
+};</div>
+<ul>
+<li><b>Atómicos:</b> <code>atomic&lt;int&gt; n{0}; ++n; n.fetch_add(1); n.load(); n.store(5);</code></li>
+<li><b>Evitar interbloqueo con dos mutex:</b> <code>lock(m1, m2); lock_guard&lt;mutex&gt; a(m1, adopt_lock), b(m2, adopt_lock);</code></li>
+<li><b>Condiciones de Coffman</b> (las cuatro que deben darse a la vez para que haya interbloqueo): exclusión mutua, retención y espera, no apropiación y espera circular. Romper una basta.</li>
+</ul></div>
+<h3 id="t6-metodo">Método paso a paso</h3>
+<ol class="steps">
+<li><b>Encuentra los datos compartidos.</b> Todo lo que más de un hilo toque y alguno escriba.</li>
+<li><b>Mételos en una clase</b> junto con su mutex: un monitor. Los métodos públicos bloquean; nadie de fuera ve el mutex.</li>
+<li><b>Escribe la sección crítica lo más corta posible.</b> Nunca hagas dentro trabajo pesado ni entrada/salida.</li>
+<li><b>Si hay que esperar a una condición</b>, usa <code>condition_variable</code> con <code>unique_lock</code> y <b>siempre con predicado</b>.</li>
+<li><b>Notifica después de desbloquear</b>: si notificas con el mutex tomado, el hilo despertado se vuelve a dormir inmediatamente al no poder tomarlo.</li>
+<li><b>Para terminar limpiamente</b>, usa una bandera (<code>bool terminar_</code>) comprobada en el predicado, y un <code>notify_all</code> al activarla.</li>
+<li><b>Comprueba que no hay interbloqueo</b>: si hay dos mutex, ¿se toman siempre en el mismo orden?</li>
+</ol>
+<div class="box trap"><h4>Trampas típicas</h4><ul>
+<li>Usar <code>lock</code> y <code>unlock</code> a mano. Un <code>return</code> o una excepción en medio deja el mutex tomado para siempre.</li>
+<li><code>wait</code> sin predicado. Los despertares espurios existen y el hilo seguirá como si la condición se cumpliera.</li>
+<li>Usar <code>lock_guard</code> con una variable de condición: <code>wait</code> necesita <code>unique_lock</code>.</li>
+<li>Olvidar notificar después de cambiar la condición: los hilos que esperan no despiertan nunca.</li>
+<li>Notificar <b>con el mutex tomado</b>: el hilo despierta, no puede coger el mutex y vuelve a dormir. Funciona, pero desperdicia un cambio de contexto por notificación.</li>
+<li>Proteger la lectura pero no la escritura, o al revés. Hay que proteger <b>todos</b> los accesos al dato compartido.</li>
+<li>Olvidar <code>mutable</code> en el mutex de una clase si hay métodos <code>const</code> que lo bloquean.</li>
+<li>Tomar dos mutex en órdenes distintos en dos funciones: <b>interbloqueo</b> garantizado antes o después.</li>
+</ul></div>
+<h3 id="t6-problema">Problema resuelto</h3>
+<div class="prob"><div class="enun"><p class="et">Enunciado</p><p>Diseña una clase <code>Futuro</code> que guarde un valor entero que estará disponible «en algún momento», y que <b>bloquee</b> a cualquier hilo que intente leerlo antes de que exista. Diseña también un <code>Servidor</code> que entregue futuros a los hilos cliente y vaya fijando sus valores. Escribe el <code>main</code> con un hilo servidor y cinco clientes.</p></div>
+<details class="paso"><summary><span class="pn">✓</span>Ver solución paso a paso</summary><div class="inner"><p>Es el ejercicio de concurrencia del examen de febrero de 2018, y es un <b>monitor</b> de manual.</p>
+<div class="code">#include &lt;iostream&gt;
+#include &lt;thread&gt;
+#include &lt;mutex&gt;
+#include &lt;condition_variable&gt;
+#include &lt;vector&gt;
+#include &lt;chrono&gt;
+using namespace std;
+
+class Futuro {
+    int  valor_;
+    bool disponible_;
+    mutable mutex m_;
+    condition_variable cv_;
+public:
+    Futuro() : valor_(0), disponible_(false) {}
+    Futuro(int v) : valor_(v), disponible_(true) {}
+
+    void set_valor(int v)
+    {
+        lock_guard&lt;mutex&gt; lk(m_);
+        if (disponible_) return;            // sólo se fija una vez
+        valor_ = v;
+        disponible_ = true;
+        cv_.notify_all();                   // despierta a todos los lectores
+    }
+
+    int get_valor()
+    {
+        unique_lock&lt;mutex&gt; lk(m_);
+        cv_.wait(lk, [this]{ return disponible_; });   // bloquea si no hay valor
+        return valor_;
+    }
+};</div>
+<p>La clave del <code>Futuro</code> está en las tres líneas de <code>get_valor</code>: el <code>unique_lock</code> toma el mutex, el <code>wait</code> con predicado <b>libera el mutex y duerme</b> mientras no haya valor, y al despertar vuelve a tomarlo para leerlo con seguridad.</p>
+<div class="code">class Servidor {
+    vector&lt;Futuro*&gt; futuros_;
+    size_t siguiente_;                      // próximo futuro a fijar
+    bool   terminar_;
+    mutex  m_;
+    condition_variable cv_;
+public:
+    Servidor() : siguiente_(0), terminar_(false) {}
+    ~Servidor() { for (Futuro *f : futuros_) delete f; }
+
+    Futuro&amp; servicio()                      // lo llama cada cliente
+    {
+        lock_guard&lt;mutex&gt; lk(m_);
+        futuros_.push_back(new Futuro());
+        cv_.notify_one();                   // hay trabajo para f_hilo
+        return *futuros_.back();
+    }
+
+    void f_hilo()                           // el hilo del servidor
+    {
+        int v = 10;
+        while (true) {
+            Futuro *f = nullptr;
+            {
+                unique_lock&lt;mutex&gt; lk(m_);
+                cv_.wait(lk, [this]{ return siguiente_ &lt; futuros_.size() || terminar_; });
+                if (terminar_ &amp;&amp; siguiente_ &gt;= futuros_.size()) return;
+                f = futuros_[siguiente_++];
+            }
+            f-&gt;set_valor(v++);              // fuera del mutex del servidor
+            this_thread::sleep_for(chrono::milliseconds(1000));
+        }
+    }
+
+    void terminar()
+    {
+        lock_guard&lt;mutex&gt; lk(m_);
+        terminar_ = true;
+        cv_.notify_all();
+    }
+};</div>
+<p>Dos detalles importantes. Los futuros se guardan como <b>punteros</b>: si fueran objetos en un <code>vector&lt;Futuro&gt;</code>, al crecer el vector se reubicarían y las referencias que ya tienen los clientes quedarían <b>colgando</b>. Y el <code>set_valor</code> se hace <b>fuera</b> del mutex del servidor, para no tener dos mutex tomados a la vez.</p>
+<div class="code">void cliente(Servidor &amp;s, int id)
+{
+    for (int i = 0; i &lt; 5; ++i) {
+        Futuro &amp;f = s.servicio();
+        cout &lt;&lt; "[Cliente " &lt;&lt; id &lt;&lt; "] valor = " &lt;&lt; f.get_valor() &lt;&lt; endl;
+    }
+}
+
+int main()
+{
+    Servidor s;
+    thread hs(&amp;Servidor::f_hilo, &amp;s);
+
+    vector&lt;thread&gt; clientes;
+    for (int i = 0; i &lt; 5; ++i) clientes.emplace_back(cliente, ref(s), i);
+    for (thread &amp;t : clientes) t.join();
+
+    s.terminar();
+    hs.join();
+    return 0;
+}</div>
+<p><b>Cómo se comporta.</b> Los cinco clientes piden futuros enseguida y se quedan <b>bloqueados</b> en <code>get_valor</code>, sin consumir CPU. El servidor va fijando valores 10, 11, 12… a razón de uno por segundo, y cada vez despierta al cliente que esperaba ese futuro. Al terminar todos los clientes, el <code>main</code> pone la bandera y el hilo del servidor sale del bucle limpiamente.</p>
+<div class="box key"><p>Todos los ejercicios de concurrencia del examen tienen la misma estructura: <b>una clase monitor</b> con sus atributos compartidos, su mutex, una variable de condición por cada espera distinta y un predicado por cada <code>wait</code>; más una bandera de terminación. Si identificas «¿qué espera cada hilo y a qué?», el código sale solo.</p></div></div></details></div>
+<h3 id="t6-auto">Autoevaluación</h3>
+<p class="muted">Responde antes de desplegar.</p><details class="paso"><summary><span class="pn">1</span>¿Por qué se usa <code>lock_guard</code> en vez de <code>lock</code> y <code>unlock</code>?</summary><div class="inner"><p>Porque libera el mutex en su destructor, también si se sale por <code>return</code> o por una excepción (RAII).</p></div></details><details class="paso"><summary><span class="pn">2</span>¿Qué hace <code>cv.wait(lk, pred)</code>?</summary><div class="inner"><p>Libera el mutex y duerme el hilo mientras el predicado sea falso; al despertar vuelve a tomar el mutex y comprueba el predicado otra vez.</p></div></details><details class="paso"><summary><span class="pn">3</span>¿Por qué hay que usar predicado en el <code>wait</code>?</summary><div class="inner"><p>Por los <b>despertares espurios</b>: un hilo puede despertar sin que nadie lo notifique, y el predicado lo devuelve a dormir.</p></div></details><details class="paso"><summary><span class="pn">4</span>¿Qué es un monitor?</summary><div class="inner"><p>Un objeto que encapsula los datos compartidos junto con el mutex y las variables de condición que los protegen.</p></div></details><details class="paso"><summary><span class="pn">5</span>¿Cuándo usar <code>atomic</code> en lugar de un mutex?</summary><div class="inner"><p>Cuando basta con hacer indivisible una operación sobre <b>una sola variable</b> simple. Es mucho más rápido, pero no sirve para invariantes entre varias variables.</p></div></details><details class="paso"><summary><span class="pn">6</span>¿Cómo se evita un interbloqueo con dos mutex?</summary><div class="inner"><p>Tomándolos <b>siempre en el mismo orden</b> en todo el programa, o con <code>std::lock(m1, m2)</code>.</p></div></details>
+</section>
+<nav class="pager" aria-label="Páginas"><a href="tema-05.html"><small>← Anterior</small>T5 · Concurrencia: hilos en C++11</a><a class="nx" href="tema-07.html"><small>Siguiente →</small>T7 · El planificador del sistema operativo</a></nav>
+<p class="inicio" style="margin:36px 0 8px;text-align:center;font-size:13px;color:var(--muted)">Guía no oficial de Programación de Sistemas en Tiempo Real (UPCT, GIEyA) · Datos tomados del curso <time datetime="2020-09">2020/21</time> (apuntes y programas de teoría, boletines de ejercicios, prácticas, referencia de C++ del examen y exámenes de 2016 a 2018) · página creada en noviembre de 2026</p>
+</main>
+</div>
+<script src="app.js"></script>
+<script src="sims.js"></script>
+</body>
+</html>

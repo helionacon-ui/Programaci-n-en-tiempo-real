@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T10 Lógica difusa y kNN · Programación de Sistemas en Tiempo Real · Guía para aprobar</title>
+<meta name="description" content="Programación de Sistemas en Tiempo Real (UPCT, GIEyA): tema 10, Lógica difusa y kNN">
+<meta name="theme-color" content="#a8570a">
+<link href="https://fonts.googleapis.com" rel="preconnect"><link crossorigin href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=IBM+Plex+Sans:ital,wght@0,400;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script>window.MathJax={tex:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']]},svg:{fontCache:'global'}};</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+<link rel="stylesheet" href="style.css">
+<style>html{-webkit-text-size-adjust:100%}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+</head>
+<body>
+<div class="hub-bar" style="max-width:1180px;margin:0 auto;padding:10px 16px 0"><a href="https://helionacon-ui.github.io/GIEIA-UPCT/" style="display:inline-flex;align-items:center;gap:6px;font:600 13.5px/1 system-ui,sans-serif;padding:8px 12px;border-radius:999px;border:1px solid var(--line);background:var(--surface);color:var(--fg);text-decoration:none">← Todas las guías GIEyA</a><p class="fecha" style="margin:6px 0 0;max-width:none;font:13px/1.45 system-ui,sans-serif;color:var(--muted)">Datos tomados del curso <time datetime="2020-09">2020/21</time> (apuntes y programas de teoría, boletines de ejercicios, prácticas, referencia de C++ del examen y exámenes de 2016 a 2018) · página creada en noviembre de 2026</p></div>
+<div class="crumb"><a href="index.html">Programación de Sistemas en Tiempo Real</a><span class="sep">›</span><span>Tiempo real: planificación y algoritmos</span><span class="sep">›</span><span>T10 · Lógica difusa y kNN</span></div><a href="#top" class="totop" id="totop" aria-label="Volver arriba">↑</a>
+<div class="wrap" id="top">
+<nav aria-label="Índice" class="toc"><a href="index.html" style="--tc:var(--c0)">Portada</a><div class="grp">Empezar</div><a href="index.html#cero" style="--tc:var(--c0)">Empieza aquí desde cero</a><a href="plan.html" style="--tc:var(--c0)">Cómo es la evaluación</a><a href="index.html#progreso" style="--tc:var(--c0)">Tu progreso</a><div class="grp">C++ moderno: de los objetos a la concurrencia</div><a href="tema-01.html" style="--tc:var(--c2)">T1 Del problema al programa</a><a href="tema-02.html" style="--tc:var(--c3)">T2 La biblioteca estándar: string, vector y map</a><a href="tema-03.html" style="--tc:var(--c4)">T3 Programación basada en objetos</a><a href="tema-04.html" style="--tc:var(--c5)">T4 Programación orientada a objetos: herencia y polimorfismo</a><a href="tema-05.html" style="--tc:var(--c6)">T5 Concurrencia: hilos en C++11</a><a href="tema-06.html" style="--tc:var(--c7)">T6 Sincronización: mutex, variables de condición y monitores</a><div class="grp">Tiempo real: planificación y algoritmos</div><a href="tema-07.html" style="--tc:var(--c8)">T7 El planificador del sistema operativo</a><a href="tema-08.html" style="--tc:var(--c1)">T8 Planificación en tiempo real: RM, DM, EDF y ejecutivo cíclico</a><a href="tema-09.html" style="--tc:var(--c2)">T9 Tiempos de respuesta, bloqueo y techo de prioridad</a><a href="tema-10.html" style="--tc:var(--c3)" class="on" aria-current="page">T10 Lógica difusa y kNN</a><div class="grp">Practicar</div><a href="cuestiones.html" style="--tc:var(--c8)">Cuestiones de teoría respondidas</a><a href="examenes.html" style="--tc:var(--c8)">Problemas de examen resueltos</a><a href="problemas.html" style="--tc:var(--c8)">Qué cae en el examen</a><a href="laboratorio.html" style="--tc:var(--c7)">Prácticas</a><a href="formulario.html" style="--tc:var(--c8)">Formulario</a></nav>
+<main>
+<section class="sec tema" style="--tc:var(--c3);--tcs:var(--c3s)">
+<div class="sh"><span aria-hidden="true" class="badge">10</span><div class="shx"><p class="kick">Tiempo real: planificación y algoritmos · Tema 10</p><h2 id="t10">Lógica difusa y kNN</h2><div class="tags"><span class="tag">Tiempo real: planificación y algoritmos</span><span class="tag">Tiempo real</span></div></div></div>
+<div class="zero"><p class="ft">Desde cero</p><p><b>Objetivo:</b> implementar un controlador difuso de Sugeno y un clasificador por vecinos más próximos, que son los dos algoritmos propios de la asignatura.</p><ul>
+<li>La <b>lógica difusa</b> (Zadeh, 1965) sustituye la pertenencia binaria por un <b>grado de pertenencia</b> entre 0 y 1. Una temperatura de 24 ºC puede ser «templada» con grado 0,7 y «caliente» con grado 0,3 a la vez. Sirve para expresar control en forma de reglas del lenguaje natural, sin necesitar un modelo matemático de la planta.</li>
+<li>Un sistema difuso tiene tres etapas: <b>fuzzificación</b> (convertir la entrada numérica en grados de pertenencia a los conjuntos), <b>inferencia</b> (evaluar las reglas) y <b>defuzzificación</b> (volver a un número, el valor <i>crisp</i>).</li>
+<li>Las <b>funciones de pertenencia</b> más usadas son <b>triangulares</b> y <b>trapezoidales</b>, porque se calculan con cuatro restas y una división. También se usan gaussianas y sigmoides.</li>
+<li>En el modelo de <b>Mamdani</b> la salida de cada regla es también un conjunto difuso, y hay que defuzzificar agregando conjuntos (por centro de gravedad). En el modelo de <b>Sugeno</b>, que es el que se usa en la asignatura, la salida de cada regla es una <b>función de las entradas</b>, normalmente una constante, y la defuzzificación es una simple <b>media ponderada</b>. Por eso Sugeno es mucho más barato y es el habitual en controladores empotrados.</li>
+<li>Las <b>reglas</b> tienen la forma «SI \(x\) es A Y \(y\) es B ENTONCES \(z=k\)». El Y se implementa con el <b>mínimo</b> (o el producto) de los grados de pertenencia, y el O con el <b>máximo</b>.</li>
+<li><b>kNN</b> (<i>k nearest neighbours</i>) es un clasificador que no entrena nada: guarda todos los ejemplos y, para clasificar uno nuevo, calcula su <b>distancia</b> a todos, se queda con los \(k\) más cercanos y asigna la clase <b>mayoritaria</b> entre ellos.</li>
+<li>Dos detalles decisivos en kNN: hay que <b>normalizar</b> los atributos, porque si uno va de 0 a 1000 y otro de 0 a 1, el primero domina completamente la distancia; y \(k\) conviene que sea <b>impar</b> en problemas de dos clases, para evitar empates.</li>
+<li>El coste de kNN es \(O(n\cdot d)\) por consulta, con \(n\) ejemplos y \(d\) atributos: es barato de «entrenar» (nada) y caro de consultar, justo al revés que la mayoría de los clasificadores.</li>
+<li>Los dos algoritmos aparecen en la asignatura como ejercicios de programación con la STL: leer un fichero de datos, rellenar un <code>vector</code> de estructuras, recorrerlo calculando distancias o grados de pertenencia y ordenar con <code>sort</code>. El algoritmo es la excusa; lo que se evalúa es el C++.</li>
+</ul></div>
+<details class="nom"><summary><span aria-hidden="true" class="nom-ic">Aa</span>Nomenclatura del tema 10 <span class="src">9 entradas</span></summary><div class="inner">
+<div class="tw"><table><tr><th>Símbolo</th><th>Significado</th><th>Unidad · nota</th></tr><tr><td class="sym">μ(x)</td><td>grado de pertenencia</td><td class="u">entre 0 y 1</td></tr><tr><td class="sym">fuzzificación</td><td>entrada → grados</td><td class="u"></td></tr><tr><td class="sym">inferencia</td><td>evaluar las reglas</td><td class="u"></td></tr><tr><td class="sym">defuzzificación</td><td>volver a un número</td><td class="u">valor crisp</td></tr><tr><td class="sym">Y / O</td><td>mínimo / máximo</td><td class="u"></td></tr><tr><td class="sym">Sugeno</td><td>salida constante o función</td><td class="u">media ponderada</td></tr><tr><td class="sym">Mamdani</td><td>salida difusa</td><td class="u">centro de gravedad</td></tr><tr><td class="sym">kNN</td><td>k vecinos más próximos</td><td class="u"></td></tr><tr><td class="sym">normalizar</td><td>(x−min)/(max−min)</td><td class="u">imprescindible</td></tr></table></div></div></details>
+<figure class="fig"><p class="ft">Calculadora interactiva - controlador difuso de Sugeno</p><div data-sim="fuzzy"></div><figcaption>Mueve los controles y observa cómo cambia el resultado: es el mismo cálculo que hay que saber hacer a mano en el examen.</figcaption></figure>
+<h3 id="t10-formulas">Fórmulas y conceptos que hay que saber</h3>
+<div class="box key"><ul><li><b>Funciones de pertenencia:</b></li></ul>
+\[\mu_{\triangle}(x;a,b,c)=\max\left(0,\ \min\left(\frac{x-a}{b-a},\ \frac{c-x}{c-b}\right)\right)\]
+\[\mu_{\square}(x;a,b,c,d)=\max\left(0,\ \min\left(\frac{x-a}{b-a},\ 1,\ \frac{d-x}{d-c}\right)\right)\]
+<ul>
+<li><b>Operadores:</b> Y → \(\min(\mu_1,\mu_2)\) (o \(\mu_1\cdot\mu_2\)) · O → \(\max(\mu_1,\mu_2)\) · NO → \(1-\mu\).</li>
+<li><b>Defuzzificación de Sugeno</b> (media ponderada):</li></ul>
+\[z^{*}=\frac{\displaystyle\sum_{i=1}^{R} w_i\,z_i}{\displaystyle\sum_{i=1}^{R} w_i}\]
+<ul><li>donde \(w_i\) es el grado de activación de la regla \(i\) y \(z_i\) su salida.</li>
+<li><b>Centro de gravedad</b> (Mamdani, para comparar): \(z^{*}=\dfrac{\int z\,\mu(z)\,dz}{\int \mu(z)\,dz}\).</li>
+<li><b>Distancias para kNN:</b></li></ul>
+\[d_{\text{euclídea}}=\sqrt{\sum_{j=1}^{d}(x_j-y_j)^2},\qquad
+d_{\text{Manhattan}}=\sum_{j=1}^{d}|x_j-y_j|\]
+<ul><li><b>Normalización</b> (imprescindible): \(x'_j=\dfrac{x_j-\min_j}{\max_j-\min_j}\in[0,1]\).</li>
+<li><b>Ordenar por distancia con la STL:</b></li></ul>
+<div class="code">sort(v.begin(), v.end(),
+     [](const Ejemplo &amp;a, const Ejemplo &amp;b) { return a.dist &lt; b.dist; });</div></div>
+<h3 id="t10-metodo">Método paso a paso</h3>
+<ol class="steps">
+<li><b>Para un controlador difuso:</b> define los conjuntos de cada entrada (normalmente 3 o 5: bajo, medio, alto), escribe la tabla de reglas, calcula los grados con las funciones de pertenencia, el peso de cada regla con el mínimo y la salida con la media ponderada.</li>
+<li><b>Comprueba la partición:</b> en una partición bien hecha, para cualquier entrada la suma de los grados de pertenencia vale 1 y hay como mucho dos conjuntos activos.</li>
+<li><b>Para kNN:</b> lee los datos, <b>normaliza</b> cada atributo, calcula la distancia del punto nuevo a todos, ordena, toma los \(k\) primeros y vota.</li>
+<li><b>Elige \(k\) impar</b> en dos clases y prueba varios valores: \(k\) pequeño se ajusta al ruido, \(k\) grande suaviza de más.</li>
+<li><b>En C++</b>, guarda cada ejemplo en una <code>struct</code> con sus atributos, su clase y un campo para la distancia; usa <code>sort</code> con una <i>lambda</i>, y un <code>map&lt;string,int&gt;</code> para contar los votos.</li>
+</ol>
+<div class="box trap"><h4>Trampas típicas</h4><ul>
+<li>No <b>normalizar</b> antes de calcular distancias en kNN. Es el error que más distorsiona el resultado.</li>
+<li>Elegir \(k\) par en un problema de dos clases y tener que inventar un criterio de desempate.</li>
+<li>En Sugeno, sumar las salidas sin dividir por la suma de los pesos: hay que hacer la <b>media ponderada</b>.</li>
+<li>Olvidar las reglas con peso 0. No estorban, pero si <b>todas</b> salen 0 la división es \(0/0\): hay que tratar ese caso.</li>
+<li>Diseñar conjuntos que dejan <b>huecos</b> (zonas donde ninguna regla se activa) o que se solapan demasiado.</li>
+<li>En las funciones triangulares, dividir por \(b-a\) cuando \(a=b\) (triángulo con un lado vertical). Hay que tratar ese caso aparte.</li>
+<li>Confundir Mamdani con Sugeno al defuzzificar: con Sugeno <b>no</b> hay centro de gravedad de conjuntos.</li>
+</ul></div>
+<h3 id="t10-problema">Problema resuelto</h3>
+<div class="prob"><div class="enun"><p class="et">Enunciado</p><p>Diseña un controlador difuso de Sugeno para un ventilador. La entrada es la temperatura, con tres conjuntos triangulares: <b>fría</b> (10, 15, 20), <b>templada</b> (18, 23, 28) y <b>caliente</b> (26, 32, 38) ºC. Las reglas dan una potencia de 0, 50 y 100 %. Calcula la salida para 19 ºC y para 27 ºC, y explica cómo lo programarías.</p></div>
+<details class="paso"><summary><span class="pn">✓</span>Ver solución paso a paso</summary><div class="inner"><p><b>Para 19 ºC.</b> Grados de pertenencia:</p>
+\[\mu_{\text{fría}}(19)=\frac{20-19}{20-15}=\frac{1}{5}=0{,}20\]
+\[\mu_{\text{templada}}(19)=\frac{19-18}{23-18}=\frac{1}{5}=0{,}20\]
+\[\mu_{\text{caliente}}(19)=0\quad(19<26)\]
+<p>Media ponderada de Sugeno:</p>
+\[z^{*}=\frac{0{,}20\cdot0+0{,}20\cdot50+0\cdot100}{0{,}20+0{,}20+0}=\frac{10}{0{,}40}=\boxed{25\ \%}\]
+<p><b>Para 27 ºC.</b></p>
+\[\mu_{\text{fría}}(27)=0,\qquad
+\mu_{\text{templada}}(27)=\frac{28-27}{28-23}=0{,}20,\qquad
+\mu_{\text{caliente}}(27)=\frac{27-26}{32-26}=\frac{1}{6}=0{,}1667\]
+\[z^{*}=\frac{0{,}20\cdot50+0{,}1667\cdot100}{0{,}20+0{,}1667}=\frac{10+16{,}67}{0{,}3667}=\frac{26{,}67}{0{,}3667}=\boxed{72{,}7\ \%}\]
+<p>Tiene sentido: a 19 ºC el ventilador va al mínimo y a 27 ºC a casi tres cuartos.</p>
+<p><b>Implementación.</b></p>
+<div class="code">#include &lt;iostream&gt;
+#include &lt;vector&gt;
+#include &lt;algorithm&gt;
+using namespace std;
+
+struct Triangular {
+    double a, b, c;
+    double grado(double x) const {
+        if (x &lt;= a || x &gt;= c) return 0.0;
+        if (x &lt;  b) return (x - a) / (b - a);
+        if (x &gt;  b) return (c - x) / (c - b);
+        return 1.0;                       // x == b
+    }
+};
+
+struct Regla { Triangular conjunto; double salida; };
+
+double sugeno(const vector&lt;Regla&gt; &amp;reglas, double x)
+{
+    double num = 0.0, den = 0.0;
+    for (const Regla &amp;r : reglas) {
+        double w = r.conjunto.grado(x);   // peso de la regla
+        num += w * r.salida;
+        den += w;
+    }
+    return (den &gt; 1e-9) ? num / den : 0.0;   // evitar 0/0
+}
+
+int main()
+{
+    vector&lt;Regla&gt; reglas = {
+        { {10, 15, 20},   0.0 },          // SI fría      -> 0 %
+        { {18, 23, 28},  50.0 },          // SI templada  -> 50 %
+        { {26, 32, 38}, 100.0 }           // SI caliente  -> 100 %
+    };
+
+    for (double t : {19.0, 23.0, 27.0, 35.0})
+        cout &lt;&lt; t &lt;&lt; " ºC -> " &lt;&lt; sugeno(reglas, t) &lt;&lt; " %" &lt;&lt; endl;
+}</div>
+<p>Salida: 19 ºC → 25 %, 23 ºC → 50 %, 27 ºC → 72,7 %, 35 ºC → 100 %.</p>
+<p><b>Lo que hace bueno a este código</b> no es el algoritmo, que son diez líneas, sino el diseño: la función <code>sugeno</code> no sabe cuántas reglas hay ni qué significan, y añadir un cuarto conjunto es añadir una línea al vector. Si el enunciado pidiera dos entradas (temperatura y humedad), bastaría con que cada regla tuviera dos conjuntos y el peso fuese el <b>mínimo</b> de los dos grados.</p>
+<p><b>El esqueleto de kNN</b> es igual de corto:</p>
+<div class="code">struct Ejemplo { vector&lt;double&gt; x; string clase; double dist; };
+
+string knn(vector&lt;Ejemplo&gt; datos, const vector&lt;double&gt; &amp;nuevo, int k)
+{
+    for (Ejemplo &amp;e : datos) {            // 1. distancias
+        double s = 0.0;
+        for (size_t j = 0; j &lt; nuevo.size(); ++j)
+            s += (e.x[j]-nuevo[j]) * (e.x[j]-nuevo[j]);
+        e.dist = sqrt(s);
+    }
+    sort(datos.begin(), datos.end(),      // 2. ordenar
+         [](const Ejemplo &amp;a, const Ejemplo &amp;b){ return a.dist &lt; b.dist; });
+
+    map&lt;string,int&gt; votos;                // 3. votar entre los k primeros
+    for (int i = 0; i &lt; k &amp;&amp; i &lt; (int)datos.size(); ++i) votos[datos[i].clase]++;
+
+    return max_element(votos.begin(), votos.end(),
+             [](const auto &amp;a, const auto &amp;b){ return a.second &lt; b.second; })-&gt;first;
+}</div>
+<div class="box key"><p>Fíjate en que <code>datos</code> se pasa <b>por valor</b>: necesitamos una copia porque vamos a ordenarla, y no queremos destrozar el orden del conjunto original. Es uno de los poquísimos casos en los que pasar por valor es la decisión correcta, y saber justificarlo vale puntos.</p></div></div></details></div>
+<h3 id="t10-auto">Autoevaluación</h3>
+<p class="muted">Responde antes de desplegar.</p><details class="paso"><summary><span class="pn">1</span>¿Qué tres etapas tiene un sistema difuso?</summary><div class="inner"><p><b>Fuzzificación</b> (grados de pertenencia), <b>inferencia</b> (evaluar reglas) y <b>defuzzificación</b> (volver a un número).</p></div></details><details class="paso"><summary><span class="pn">2</span>¿En qué se diferencian Mamdani y Sugeno?</summary><div class="inner"><p>En Mamdani la salida de cada regla es un <b>conjunto difuso</b> y hay que agregarlo; en Sugeno es una <b>función o constante</b> y la defuzzificación es una media ponderada. Sugeno es mucho más barato.</p></div></details><details class="paso"><summary><span class="pn">3</span>¿Cómo se implementan el Y y el O entre grados de pertenencia?</summary><div class="inner"><p>El Y con el <b>mínimo</b> (o el producto) y el O con el <b>máximo</b>.</p></div></details><details class="paso"><summary><span class="pn">4</span>¿Cuál es la fórmula de defuzzificación de Sugeno?</summary><div class="inner"><p>\(z^{*}=\dfrac{\sum w_i z_i}{\sum w_i}\): media de las salidas ponderada por el grado de activación de cada regla.</p></div></details><details class="paso"><summary><span class="pn">5</span>¿Por qué hay que normalizar los atributos en kNN?</summary><div class="inner"><p>Porque la distancia la domina el atributo de mayor rango: sin normalizar, uno que vaya de 0 a 1000 anula a otro que vaya de 0 a 1.</p></div></details><details class="paso"><summary><span class="pn">6</span>¿Qué coste tiene clasificar un ejemplo con kNN?</summary><div class="inner"><p>\(O(n\cdot d)\) por consulta: no hay entrenamiento, pero hay que recorrer todos los ejemplos cada vez.</p></div></details>
+</section>
+<nav class="pager" aria-label="Páginas"><a href="tema-09.html"><small>← Anterior</small>T9 · Tiempos de respuesta, bloqueo y techo de prioridad</a><a class="nx" href="cuestiones.html"><small>Siguiente →</small>Cuestiones de teoría</a></nav>
+<p class="inicio" style="margin:36px 0 8px;text-align:center;font-size:13px;color:var(--muted)">Guía no oficial de Programación de Sistemas en Tiempo Real (UPCT, GIEyA) · Datos tomados del curso <time datetime="2020-09">2020/21</time> (apuntes y programas de teoría, boletines de ejercicios, prácticas, referencia de C++ del examen y exámenes de 2016 a 2018) · página creada en noviembre de 2026</p>
+</main>
+</div>
+<script src="app.js"></script>
+<script src="sims.js"></script>
+</body>
+</html>

@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T9 Tiempos de respuesta, bloqueo y techo de prioridad · Programación de Sistemas en Tiempo Real · Guía para aprobar</title>
+<meta name="description" content="Programación de Sistemas en Tiempo Real (UPCT, GIEyA): tema 9, Tiempos de respuesta, bloqueo y techo de prioridad">
+<meta name="theme-color" content="#a8570a">
+<link href="https://fonts.googleapis.com" rel="preconnect"><link crossorigin href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=IBM+Plex+Sans:ital,wght@0,400;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script>window.MathJax={tex:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']]},svg:{fontCache:'global'}};</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+<link rel="stylesheet" href="style.css">
+<style>html{-webkit-text-size-adjust:100%}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+</head>
+<body>
+<div class="hub-bar" style="max-width:1180px;margin:0 auto;padding:10px 16px 0"><a href="https://helionacon-ui.github.io/GIEIA-UPCT/" style="display:inline-flex;align-items:center;gap:6px;font:600 13.5px/1 system-ui,sans-serif;padding:8px 12px;border-radius:999px;border:1px solid var(--line);background:var(--surface);color:var(--fg);text-decoration:none">← Todas las guías GIEyA</a><p class="fecha" style="margin:6px 0 0;max-width:none;font:13px/1.45 system-ui,sans-serif;color:var(--muted)">Datos tomados del curso <time datetime="2020-09">2020/21</time> (apuntes y programas de teoría, boletines de ejercicios, prácticas, referencia de C++ del examen y exámenes de 2016 a 2018) · página creada en noviembre de 2026</p></div>
+<div class="crumb"><a href="index.html">Programación de Sistemas en Tiempo Real</a><span class="sep">›</span><span>Tiempo real: planificación y algoritmos</span><span class="sep">›</span><span>T9 · Tiempos de respuesta, bloqueo y techo de prioridad</span></div><a href="#top" class="totop" id="totop" aria-label="Volver arriba">↑</a>
+<div class="wrap" id="top">
+<nav aria-label="Índice" class="toc"><a href="index.html" style="--tc:var(--c0)">Portada</a><div class="grp">Empezar</div><a href="index.html#cero" style="--tc:var(--c0)">Empieza aquí desde cero</a><a href="plan.html" style="--tc:var(--c0)">Cómo es la evaluación</a><a href="index.html#progreso" style="--tc:var(--c0)">Tu progreso</a><div class="grp">C++ moderno: de los objetos a la concurrencia</div><a href="tema-01.html" style="--tc:var(--c2)">T1 Del problema al programa</a><a href="tema-02.html" style="--tc:var(--c3)">T2 La biblioteca estándar: string, vector y map</a><a href="tema-03.html" style="--tc:var(--c4)">T3 Programación basada en objetos</a><a href="tema-04.html" style="--tc:var(--c5)">T4 Programación orientada a objetos: herencia y polimorfismo</a><a href="tema-05.html" style="--tc:var(--c6)">T5 Concurrencia: hilos en C++11</a><a href="tema-06.html" style="--tc:var(--c7)">T6 Sincronización: mutex, variables de condición y monitores</a><div class="grp">Tiempo real: planificación y algoritmos</div><a href="tema-07.html" style="--tc:var(--c8)">T7 El planificador del sistema operativo</a><a href="tema-08.html" style="--tc:var(--c1)">T8 Planificación en tiempo real: RM, DM, EDF y ejecutivo cíclico</a><a href="tema-09.html" style="--tc:var(--c2)" class="on" aria-current="page">T9 Tiempos de respuesta, bloqueo y techo de prioridad</a><a href="tema-10.html" style="--tc:var(--c3)">T10 Lógica difusa y kNN</a><div class="grp">Practicar</div><a href="cuestiones.html" style="--tc:var(--c8)">Cuestiones de teoría respondidas</a><a href="examenes.html" style="--tc:var(--c8)">Problemas de examen resueltos</a><a href="problemas.html" style="--tc:var(--c8)">Qué cae en el examen</a><a href="laboratorio.html" style="--tc:var(--c7)">Prácticas</a><a href="formulario.html" style="--tc:var(--c8)">Formulario</a></nav>
+<main>
+<section class="sec tema" style="--tc:var(--c2);--tcs:var(--c2s)">
+<div class="sh"><span aria-hidden="true" class="badge">9</span><div class="shx"><p class="kick">Tiempo real: planificación y algoritmos · Tema 9</p><h2 id="t9">Tiempos de respuesta, bloqueo y techo de prioridad</h2><div class="tags"><span class="tag">Tiempo real: planificación y algoritmos</span><span class="tag">Tiempo real</span></div></div></div>
+<div class="zero"><p class="ft">Desde cero</p><p><b>Objetivo:</b> calcular el tiempo de respuesta en el peor caso de cada tarea, incluir el bloqueo por recursos compartidos y aplicar el protocolo del techo de prioridad.</p><ul>
+<li>La cota de utilización dice sí o no, pero no cuánto margen hay. El <b>análisis de tiempos de respuesta</b> calcula, para cada tarea, cuánto tarda <b>en el peor caso</b> desde que se activa hasta que termina, y lo compara con su plazo. Es exacto y es lo que piden los exámenes.</li>
+<li>El tiempo de respuesta de una tarea tiene tres sumandos: su propio cómputo \(C_i\), la <b>interferencia</b> de todas las tareas más prioritarias que se activen mientras ella está pendiente, y el <b>bloqueo</b> \(B_i\) causado por tareas <b>menos</b> prioritarias que tienen tomado un recurso que ella necesita.</li>
+<li>El bloqueo es contraintuitivo: una tarea de alta prioridad puede quedarse esperando a una de baja prioridad porque ésta tiene cogido un mutex. A eso se le llama <b>inversión de prioridad</b>.</li>
+<li>Sin protocolo, la inversión puede ser <b>ilimitada</b>: mientras la tarea de baja prioridad tiene el recurso, tareas intermedias la expulsan y alargan indefinidamente la espera de la tarea alta. Es lo que le pasó al <i>Mars Pathfinder</i> en 1997, y se arregló activando el protocolo de herencia de prioridad.</li>
+<li>El <b>protocolo del techo de prioridad inmediato</b> (ICPP) lo resuelve: a cada recurso se le asigna un <b>techo</b>, que es la prioridad <b>más alta</b> de todas las tareas que lo usan; cuando una tarea toma el recurso, su prioridad sube <b>inmediatamente</b> al techo mientras lo tenga.</li>
+<li>Con ICPP se consiguen tres cosas: el bloqueo de una tarea es como mucho <b>una sola</b> sección crítica (no se acumulan), no puede haber <b>interbloqueo</b> y no hace falta cola de espera en los recursos, porque cuando una tarea empieza a ejecutarse todos los recursos que necesitará están libres.</li>
+<li>El cálculo del bloqueo con ICPP es mecánico: \(B_i\) es la <b>duración máxima</b> de una sección crítica de una tarea de prioridad <b>menor</b> que \(i\) sobre un recurso cuyo <b>techo sea mayor o igual</b> que la prioridad de \(i\).</li>
+<li>La ecuación del tiempo de respuesta es <b>recursiva</b> y se resuelve <b>iterando</b>: se empieza con \(R^{(0)}=C_i+B_i\) y se recalcula hasta que el valor no cambia. Si en algún paso \(R>D_i\), la tarea no cumple y se puede parar.</li>
+<li>Para tareas <b>esporádicas</b>, el periodo \(T\) actúa como separación mínima entre activaciones, así que la fórmula de interferencia es la misma.</li>
+</ul></div>
+<details class="nom"><summary><span aria-hidden="true" class="nom-ic">Aa</span>Nomenclatura del tema 9 <span class="src">8 entradas</span></summary><div class="inner">
+<div class="tw"><table><tr><th>Símbolo</th><th>Significado</th><th>Unidad · nota</th></tr><tr><td class="sym">Rᵢ</td><td>tiempo de respuesta</td><td class="u">peor caso</td></tr><tr><td class="sym">Bᵢ</td><td>bloqueo</td><td class="u">por tareas menos prioritarias</td></tr><tr><td class="sym">hp(i)</td><td>tareas más prioritarias</td><td class="u"></td></tr><tr><td class="sym">⌈ ⌉</td><td>techo</td><td class="u">redondeo hacia arriba</td></tr><tr><td class="sym">techo(O)</td><td>prioridad máxima de sus usuarios</td><td class="u"></td></tr><tr><td class="sym">ICPP</td><td>techo de prioridad inmediato</td><td class="u"></td></tr><tr><td class="sym">inversión de prioridad</td><td>la alta espera a la baja</td><td class="u"></td></tr><tr><td class="sym">jitter</td><td>variación de la activación</td><td class="u"></td></tr></table></div></div></details>
+<figure class="fig"><p class="ft">Calculadora interactiva - tiempos de respuesta con bloqueo</p><div data-sim="respuesta"></div><figcaption>Mueve los controles y observa cómo cambia el resultado: es el mismo cálculo que hay que saber hacer a mano en el examen.</figcaption></figure>
+<h3 id="t9-formulas">Fórmulas y conceptos que hay que saber</h3>
+<div class="box key"><ul><li><b>Tiempo de respuesta en el peor caso</b> (ecuación de Joseph y Pandya con bloqueo):</li></ul>
+\[R_i=C_i+B_i+\sum_{j\in hp(i)}\left\lceil\frac{R_i}{T_j}\right\rceil C_j\]
+<ul>
+<li>donde \(hp(i)\) es el conjunto de tareas de <b>mayor</b> prioridad que \(i\). Se resuelve iterando:</li></ul>
+\[R_i^{(0)}=C_i+B_i,\qquad R_i^{(k+1)}=C_i+B_i+\sum_{j\in hp(i)}\left\lceil\frac{R_i^{(k)}}{T_j}\right\rceil C_j\]
+<ul>
+<li>hasta que \(R^{(k+1)}=R^{(k)}\) (converge: el sistema cumple si además \(R_i\le D_i\)) o hasta que \(R^{(k+1)}>D_i\) (no cumple).</li>
+<li><b>Techo de un recurso</b> (ICPP): \(\text{techo}(O)=\max\{\text{prioridad}(\tau)\ :\ \tau \text{ usa } O\}\).</li>
+<li><b>Bloqueo máximo</b> de la tarea \(i\):</li></ul>
+\[B_i=\max\Big\{\,c_{j,O}\ :\ \text{prioridad}(j)<\text{prioridad}(i)\ \wedge\ \text{techo}(O)\ge\text{prioridad}(i)\,\Big\}\]
+<ul>
+<li>con \(c_{j,O}\) la duración de la sección crítica de la tarea \(j\) sobre el recurso \(O\). Si no hay ninguna, \(B_i=0\); en particular la tarea <b>menos prioritaria nunca se bloquea</b>.</li>
+<li><b>Jitter de activación</b> \(J_i\), si el enunciado lo da: \(R_i=C_i+B_i+\sum\left\lceil\frac{R_i+J_j}{T_j}\right\rceil C_j\) y se compara \(R_i+J_i\) con \(D_i\).</li>
+<li><b>Protocolos alternativos:</b> <b>herencia de prioridad</b> (la tarea que tiene el recurso hereda la prioridad de la que lo pide; más simple pero no evita el interbloqueo) y <b>techo original</b> (OCPP, el techo se comprueba al pedir el recurso).</li>
+</ul></div>
+<h3 id="t9-metodo">Método paso a paso</h3>
+<ol class="steps">
+<li><b>Ordena las tareas por prioridad</b> según el método del enunciado: DM es por plazo creciente.</li>
+<li><b>Calcula el techo de cada recurso:</b> la prioridad más alta de las tareas que lo usan.</li>
+<li><b>Calcula \(B_i\) de cada tarea:</b> mira las secciones críticas de las tareas <b>menos</b> prioritarias sobre recursos con <b>techo ≥</b> prioridad de \(i\), y quédate con la <b>mayor</b>. La última tarea siempre tiene \(B=0\).</li>
+<li><b>Itera la ecuación</b> tarea por tarea, de la más prioritaria a la menos. Para la primera no hay interferencia: \(R_1=C_1+B_1\).</li>
+<li><b>Compara cada \(R_i\) con \(D_i\).</b> El sistema está garantizado si <b>todas</b> cumplen.</li>
+<li><b>Si alguna falla,</b> dilo claramente y, si lo piden, propón qué cambiar: reducir \(C\), alargar \(T\) o \(D\), acortar las secciones críticas o reasignar prioridades.</li>
+</ol>
+<div class="box trap"><h4>Trampas típicas</h4><ul>
+<li>Incluir en la interferencia a tareas de <b>menor</b> prioridad. En la suma sólo entran las de <b>mayor</b> prioridad.</li>
+<li>Calcular el bloqueo mirando tareas de mayor prioridad. El bloqueo viene <b>siempre</b> de las de menor prioridad.</li>
+<li>Olvidar la condición del techo y contar cualquier sección crítica de cualquier tarea inferior.</li>
+<li><b>Sumar</b> todos los bloqueos posibles. Con ICPP sólo puede bloquearse <b>una vez</b>: se toma el <b>máximo</b>, no la suma.</li>
+<li>Redondear hacia abajo en \(\lceil R/T\rceil\). Es <b>techo</b>: una activación parcial cuenta como completa.</li>
+<li>Parar la iteración en el primer valor. Hay que iterar hasta que <b>no cambie</b>; es muy fácil que un paso más dispare el valor.</li>
+<li>Dar por bueno el sistema porque la mayoría de tareas cumple. Basta con que <b>una</b> falle para que el sistema no esté garantizado.</li>
+</ul></div>
+<h3 id="t9-problema">Problema resuelto</h3>
+<div class="prob"><div class="enun"><p class="et">Enunciado</p><p>Un sistema de tiempo real tiene tres tareas y dos objetos compartidos:</p>
+<div class="tw"><table><tr><th>Tarea</th><th>Tipo</th><th>T</th><th>C</th><th>D</th><th>O1</th><th>O2</th></tr>
+<tr><td>\(\tau_C\)</td><td>Periódica</td><td>120</td><td>12</td><td>120</td><td>2</td><td>3</td></tr>
+<tr><td>\(\tau_B\)</td><td>Esporádica</td><td>500</td><td>8</td><td>25</td><td>3</td><td>1</td></tr>
+<tr><td>\(\tau_A\)</td><td>Periódica</td><td>20</td><td>10</td><td>20</td><td>4</td><td>—</td></tr></table></div>
+<p>Con prioridades fijas monotónicas en plazo y techo de prioridad inmediato, se pide: a) prioridades y techos; b) bloqueos máximos; c) tiempos de respuesta en el peor caso. ¿Está el sistema garantizado?</p></div>
+<details class="paso"><summary><span class="pn">✓</span>Ver solución paso a paso</summary><div class="inner"><p><b>a) Prioridades y techos.</b> DM ordena por plazo creciente:</p>
+<div class="tw"><table><tr><th>Tarea</th><th>D</th><th>Prioridad</th></tr>
+<tr><td>\(\tau_A\)</td><td>20</td><td><b>1 (la más alta)</b></td></tr>
+<tr><td>\(\tau_B\)</td><td>25</td><td>2</td></tr>
+<tr><td>\(\tau_C\)</td><td>120</td><td>3 (la más baja)</td></tr></table></div>
+<p>El techo de cada objeto es la prioridad más alta entre las tareas que lo usan:</p>
+<ul>
+<li><b>O1</b>: lo usan \(\tau_A\), \(\tau_B\) y \(\tau_C\) → techo = prioridad de \(\tau_A\) (<b>1</b>).</li>
+<li><b>O2</b>: lo usan \(\tau_B\) y \(\tau_C\) → techo = prioridad de \(\tau_B\) (<b>2</b>).</li>
+</ul>
+<p><b>b) Bloqueos.</b> Para cada tarea, la sección crítica más larga de una tarea <b>menos</b> prioritaria sobre un recurso con techo <b>≥</b> su prioridad.</p>
+<ul>
+<li><b>\(B_A\)</b>: tareas menos prioritarias, \(\tau_B\) y \(\tau_C\). Recursos con techo ≥ 1: sólo <b>O1</b>. Secciones críticas sobre O1: \(\tau_B\) 3 ms y \(\tau_C\) 2 ms. \(B_A=\max(3,2)=\boxed{3\ \text{ms}}\)</li>
+<li><b>\(B_B\)</b>: sólo \(\tau_C\) es menos prioritaria. Recursos con techo ≥ 2: <b>O1</b> (techo 1) y <b>O2</b> (techo 2). Secciones de \(\tau_C\): O1 → 2 ms, O2 → 3 ms. \(B_B=\max(2,3)=\boxed{3\ \text{ms}}\)</li>
+<li><b>\(B_C\)</b>: no hay tareas menos prioritarias. \(B_C=\boxed{0}\)</li>
+</ul>
+<p><b>c) Tiempos de respuesta.</b> Utilización del conjunto:</p>
+\[U=\frac{10}{20}+\frac{8}{500}+\frac{12}{120}=0{,}50+0{,}016+0{,}10=0{,}616\]
+<p><b>Tarea \(\tau_A\)</b> (la más prioritaria, sin interferencia):</p>
+\[R_A=C_A+B_A=10+3=\boxed{13\ \text{ms}}\le D_A=20\ \checkmark\]
+<p><b>Tarea \(\tau_B\)</b>, con interferencia de \(\tau_A\):</p>
+\[R_B=8+3+\left\lceil\frac{R_B}{20}\right\rceil\cdot10\]
+<div class="tw"><table><tr><th>Iteración</th><th>\(R^{(k)}\)</th><th>\(\lceil R/20\rceil\)</th><th>\(R^{(k+1)}\)</th></tr>
+<tr><td>0</td><td>11</td><td>1</td><td>11 + 10 = 21</td></tr>
+<tr><td>1</td><td>21</td><td>2</td><td>11 + 20 = 31</td></tr>
+<tr><td>2</td><td>31</td><td>2</td><td>11 + 20 = <b>31</b></td></tr></table></div>
+<p>Converge en \(R_B=31\) ms, pero \(D_B=25\) ms:</p>
+\[R_B=31>25\ \Rightarrow\ \boxed{\tau_B\ \text{NO cumple su plazo}}\]
+<p><b>Tarea \(\tau_C\)</b>, con interferencia de \(\tau_A\) y \(\tau_B\):</p>
+\[R_C=12+0+\left\lceil\frac{R_C}{20}\right\rceil\cdot10+\left\lceil\frac{R_C}{500}\right\rceil\cdot8\]
+<div class="tw"><table><tr><th>Iteración</th><th>\(R^{(k)}\)</th><th>\(\lceil R/20\rceil\)</th><th>\(\lceil R/500\rceil\)</th><th>\(R^{(k+1)}\)</th></tr>
+<tr><td>0</td><td>12</td><td>1</td><td>1</td><td>12+10+8 = 30</td></tr>
+<tr><td>1</td><td>30</td><td>2</td><td>1</td><td>12+20+8 = 40</td></tr>
+<tr><td>2</td><td>40</td><td>2</td><td>1</td><td>12+20+8 = <b>40</b></td></tr></table></div>
+\[R_C=\boxed{40\ \text{ms}}\le D_C=120\ \checkmark\]
+<p><b>Conclusión.</b> El sistema <b>no está garantizado</b>: \(\tau_A\) y \(\tau_C\) cumplen con holgura, pero \(\tau_B\) tarda 31 ms en el peor caso frente a un plazo de 25 ms.</p>
+<div class="box key"><p>Fíjate en lo que no explica la utilización: \(U=0{,}616\) parece muy cómodo, y sin embargo el sistema falla. El problema de \(\tau_B\) no es la carga sino que \(\tau_A\) la interrumpe <b>dos veces</b> (porque \(R_B>T_A\)) y encima se come 3 ms de bloqueo. Si pudiéramos bajar \(C_A\) a 8 ms, saldría \(R_B=11+16=27\), todavía fuera; con \(C_A=7\), \(R_B=25\) y justo cumpliría. Otra salida es negociar un plazo \(D_B=35\) ms. Ese tipo de razonamiento es lo que distingue un análisis de un cálculo.</p></div></div></details></div>
+<h3 id="t9-auto">Autoevaluación</h3>
+<p class="muted">Responde antes de desplegar.</p><details class="paso"><summary><span class="pn">1</span>¿Qué tres sumandos tiene el tiempo de respuesta de una tarea?</summary><div class="inner"><p>Su cómputo \(C_i\), el <b>bloqueo</b> \(B_i\) de tareas menos prioritarias y la <b>interferencia</b> de las más prioritarias.</p></div></details><details class="paso"><summary><span class="pn">2</span>¿Qué es la inversión de prioridad?</summary><div class="inner"><p>Que una tarea de alta prioridad tenga que esperar a una de baja porque ésta tiene tomado un recurso que necesita.</p></div></details><details class="paso"><summary><span class="pn">3</span>¿Cómo se calcula el techo de un recurso?</summary><div class="inner"><p>Es la prioridad <b>más alta</b> de todas las tareas que lo usan.</p></div></details><details class="paso"><summary><span class="pn">4</span>¿Qué garantiza el protocolo del techo de prioridad inmediato?</summary><div class="inner"><p>Que una tarea se bloquea <b>como mucho una vez</b> y durante una sola sección crítica, y que <b>no puede haber interbloqueo</b>.</p></div></details><details class="paso"><summary><span class="pn">5</span>¿Por qué la ecuación del tiempo de respuesta se resuelve iterando?</summary><div class="inner"><p>Porque \(R_i\) aparece a los dos lados dentro de un techo: se parte de \(C_i+B_i\) y se recalcula hasta que el valor no cambie.</p></div></details><details class="paso"><summary><span class="pn">6</span>¿Cuánto vale el bloqueo de la tarea menos prioritaria?</summary><div class="inner"><p><b>Cero</b>: no hay ninguna tarea por debajo que pueda bloquearla.</p></div></details>
+</section>
+<nav class="pager" aria-label="Páginas"><a href="tema-08.html"><small>← Anterior</small>T8 · Planificación en tiempo real: RM, DM, EDF y ejecutivo cíclico</a><a class="nx" href="tema-10.html"><small>Siguiente →</small>T10 · Lógica difusa y kNN</a></nav>
+<p class="inicio" style="margin:36px 0 8px;text-align:center;font-size:13px;color:var(--muted)">Guía no oficial de Programación de Sistemas en Tiempo Real (UPCT, GIEyA) · Datos tomados del curso <time datetime="2020-09">2020/21</time> (apuntes y programas de teoría, boletines de ejercicios, prácticas, referencia de C++ del examen y exámenes de 2016 a 2018) · página creada en noviembre de 2026</p>
+</main>
+</div>
+<script src="app.js"></script>
+<script src="sims.js"></script>
+</body>
+</html>

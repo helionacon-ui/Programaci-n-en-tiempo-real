@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T3 Programación basada en objetos · Programación de Sistemas en Tiempo Real · Guía para aprobar</title>
+<meta name="description" content="Programación de Sistemas en Tiempo Real (UPCT, GIEyA): tema 3, Programación basada en objetos">
+<meta name="theme-color" content="#a8570a">
+<link href="https://fonts.googleapis.com" rel="preconnect"><link crossorigin href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=IBM+Plex+Sans:ital,wght@0,400;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script>window.MathJax={tex:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']]},svg:{fontCache:'global'}};</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+<link rel="stylesheet" href="style.css">
+<style>html{-webkit-text-size-adjust:100%}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+</head>
+<body>
+<div class="hub-bar" style="max-width:1180px;margin:0 auto;padding:10px 16px 0"><a href="https://helionacon-ui.github.io/GIEIA-UPCT/" style="display:inline-flex;align-items:center;gap:6px;font:600 13.5px/1 system-ui,sans-serif;padding:8px 12px;border-radius:999px;border:1px solid var(--line);background:var(--surface);color:var(--fg);text-decoration:none">← Todas las guías GIEyA</a><p class="fecha" style="margin:6px 0 0;max-width:none;font:13px/1.45 system-ui,sans-serif;color:var(--muted)">Datos tomados del curso <time datetime="2020-09">2020/21</time> (apuntes y programas de teoría, boletines de ejercicios, prácticas, referencia de C++ del examen y exámenes de 2016 a 2018) · página creada en noviembre de 2026</p></div>
+<div class="crumb"><a href="index.html">Programación de Sistemas en Tiempo Real</a><span class="sep">›</span><span>C++ moderno: de los objetos a la concurrencia</span><span class="sep">›</span><span>T3 · Programación basada en objetos</span></div><a href="#top" class="totop" id="totop" aria-label="Volver arriba">↑</a>
+<div class="wrap" id="top">
+<nav aria-label="Índice" class="toc"><a href="index.html" style="--tc:var(--c0)">Portada</a><div class="grp">Empezar</div><a href="index.html#cero" style="--tc:var(--c0)">Empieza aquí desde cero</a><a href="plan.html" style="--tc:var(--c0)">Cómo es la evaluación</a><a href="index.html#progreso" style="--tc:var(--c0)">Tu progreso</a><div class="grp">C++ moderno: de los objetos a la concurrencia</div><a href="tema-01.html" style="--tc:var(--c2)">T1 Del problema al programa</a><a href="tema-02.html" style="--tc:var(--c3)">T2 La biblioteca estándar: string, vector y map</a><a href="tema-03.html" style="--tc:var(--c4)" class="on" aria-current="page">T3 Programación basada en objetos</a><a href="tema-04.html" style="--tc:var(--c5)">T4 Programación orientada a objetos: herencia y polimorfismo</a><a href="tema-05.html" style="--tc:var(--c6)">T5 Concurrencia: hilos en C++11</a><a href="tema-06.html" style="--tc:var(--c7)">T6 Sincronización: mutex, variables de condición y monitores</a><div class="grp">Tiempo real: planificación y algoritmos</div><a href="tema-07.html" style="--tc:var(--c8)">T7 El planificador del sistema operativo</a><a href="tema-08.html" style="--tc:var(--c1)">T8 Planificación en tiempo real: RM, DM, EDF y ejecutivo cíclico</a><a href="tema-09.html" style="--tc:var(--c2)">T9 Tiempos de respuesta, bloqueo y techo de prioridad</a><a href="tema-10.html" style="--tc:var(--c3)">T10 Lógica difusa y kNN</a><div class="grp">Practicar</div><a href="cuestiones.html" style="--tc:var(--c8)">Cuestiones de teoría respondidas</a><a href="examenes.html" style="--tc:var(--c8)">Problemas de examen resueltos</a><a href="problemas.html" style="--tc:var(--c8)">Qué cae en el examen</a><a href="laboratorio.html" style="--tc:var(--c7)">Prácticas</a><a href="formulario.html" style="--tc:var(--c8)">Formulario</a></nav>
+<main>
+<section class="sec tema" style="--tc:var(--c4);--tcs:var(--c4s)">
+<div class="sh"><span aria-hidden="true" class="badge">3</span><div class="shx"><p class="kick">C++ moderno: de los objetos a la concurrencia · Tema 3</p><h2 id="t3">Programación basada en objetos</h2><div class="tags"><span class="tag">C++ moderno: de los objetos a la concurrencia</span><span class="tag">Programación</span></div></div></div>
+<div class="zero"><p class="ft">Desde cero</p><p><b>Objetivo:</b> escribir clases bien formadas: atributos privados, constructores, métodos const, sobrecarga de operadores y gestión de recursos.</p><ul>
+<li>La <b>programación basada en objetos</b> (PBO) es usar clases para agrupar datos y las operaciones que actúan sobre ellos, sin herencia todavía. La herencia y el polimorfismo son el tema siguiente, y juntos forman la POO.</li>
+<li>Una <b>clase</b> define un tipo nuevo: sus <b>atributos</b> (el estado) y sus <b>métodos</b> (el comportamiento). La regla de oro es el <b>encapsulamiento</b>: los atributos van <code>private</code> y el acceso pasa por métodos públicos. Así la clase puede garantizar que su estado es siempre válido.</li>
+<li>El <b>constructor</b> se llama al crear el objeto y su trabajo es dejarlo en un estado válido. Puede haber varios (sobrecarga): por defecto, con parámetros, de copia. Si no escribes ninguno, el compilador genera uno por defecto; si escribes cualquiera, deja de generarlo.</li>
+<li>La <b>lista de inicialización</b> (<code>: x_(x), y_(y)</code>) inicializa los atributos antes de entrar en el cuerpo del constructor. Es más eficiente que asignar dentro y es <b>obligatoria</b> para constantes y referencias.</li>
+<li>El <b>destructor</b> <code>~Clase()</code> se llama al destruirse el objeto y sirve para liberar lo que la clase haya reservado. De ahí sale el patrón <b>RAII</b>: adquirir el recurso en el constructor y liberarlo en el destructor, de modo que nunca se olvide. Es exactamente lo que hacen <code>lock_guard</code> y los flujos de fichero.</li>
+<li>Un método que no modifica el objeto se marca <code>const</code>: <code>int get_x() const;</code>. Sólo sobre un objeto constante se pueden llamar métodos <code>const</code>, así que marcarlos bien es lo que permite pasar objetos por <code>const&amp;</code>.</li>
+<li><code>this</code> es un puntero al objeto sobre el que se invoca el método. Se usa cuando hay que devolver <code>*this</code> o distinguir un parámetro de un atributo con el mismo nombre.</li>
+<li>Los <b>operadores</b> se pueden sobrecargar para que los objetos se comporten como tipos nativos: <code>+</code>, <code>==</code>, <code>&lt;</code>, y sobre todo <code>&lt;&lt;</code> y <code>&gt;&gt;</code> para imprimir y leer. <code>operator&lt;&lt;</code> no puede ser método de la clase porque su operando izquierdo es el flujo: se declara función libre, normalmente <code>friend</code>.</li>
+</ul></div>
+<details class="nom"><summary><span aria-hidden="true" class="nom-ic">Aa</span>Nomenclatura del tema 3 <span class="src">8 entradas</span></summary><div class="inner">
+<div class="tw"><table><tr><th>Símbolo</th><th>Significado</th><th>Unidad · nota</th></tr><tr><td class="sym">private</td><td>encapsulamiento</td><td class="u">por defecto en class</td></tr><tr><td class="sym">: x_(x)</td><td>lista de inicialización</td><td class="u">antes del cuerpo</td></tr><tr><td class="sym">~Clase()</td><td>destructor</td><td class="u"></td></tr><tr><td class="sym">RAII</td><td>recurso en constructor</td><td class="u">liberado en destructor</td></tr><tr><td class="sym">const</td><td>método que no modifica</td><td class="u">al final de la firma</td></tr><tr><td class="sym">this</td><td>puntero al objeto</td><td class="u"></td></tr><tr><td class="sym">friend</td><td>acceso a lo privado</td><td class="u"></td></tr><tr><td class="sym">operator<<</td><td>función libre</td><td class="u">devuelve el flujo</td></tr></table></div></div></details>
+<figure class="fig"><p class="ft">Figura interactiva - ciclo de vida de un objeto</p><div data-sim="objeto"></div><figcaption>Mueve los controles y observa cómo cambia el resultado: es el mismo cálculo que hay que saber hacer a mano en el examen.</figcaption></figure>
+<h3 id="t3-formulas">Fórmulas y conceptos que hay que saber</h3>
+<div class="box key"><ul><li><b>Esqueleto de una clase:</b></li></ul>
+<div class="code">class Punto {
+    double x_, y_;                       // atributos privados
+public:
+    Punto() : x_(0), y_(0) {}                        // por defecto
+    Punto(double x, double y) : x_(x), y_(y) {}      // con parámetros
+    Punto(const Punto &amp;p) : x_(p.x_), y_(p.y_) {}    // de copia
+    ~Punto() {}                                      // destructor
+
+    double get_x() const { return x_; }              // método const
+    void   set_x(double x) { x_ = x; }
+
+    double modulo() const { return sqrt(x_*x_ + y_*y_); }
+
+    Punto operator+(const Punto &amp;p) const { return Punto(x_+p.x_, y_+p.y_); }
+    bool  operator==(const Punto &amp;p) const { return x_==p.x_ &amp;&amp; y_==p.y_; }
+
+    friend ostream&amp; operator&lt;&lt;(ostream &amp;os, const Punto &amp;p);
+};
+
+ostream&amp; operator&lt;&lt;(ostream &amp;os, const Punto &amp;p)
+{
+    os &lt;&lt; "(" &lt;&lt; p.x_ &lt;&lt; ", " &lt;&lt; p.y_ &lt;&lt; ")";
+    return os;                           // devolver el flujo permite encadenar
+}</div>
+<ul>
+<li><b>Orden de llamadas:</b> constructor → vida del objeto → destructor. Los objetos de la pila se destruyen en orden <b>inverso</b> al de creación, al salir del ámbito.</li>
+<li><b>Regla de los tres</b> (clásica): si una clase necesita <b>destructor</b>, casi seguro necesita también <b>constructor de copia</b> y <b>operador de asignación</b>. Pasa siempre que la clase reserva memoria con <code>new</code>.</li>
+<li><b>static</b>: un atributo o método <code>static</code> pertenece a la <b>clase</b>, no a cada objeto. Útil para contadores de instancias.</li>
+<li><b>Miembros constantes:</b> <code>const int id_;</code> obliga a inicializar en la lista, nunca en el cuerpo.</li>
+</ul></div>
+<h3 id="t3-metodo">Método paso a paso</h3>
+<ol class="steps">
+<li><b>Identifica el estado</b> que la clase debe guardar y hazlo <code>private</code>.</li>
+<li><b>Escribe los constructores</b> que necesite el enunciado, siempre con lista de inicialización.</li>
+<li><b>Marca <code>const</code></b> todos los métodos que no modifiquen el objeto, empezando por los <i>getters</i>.</li>
+<li><b>Si la clase reserva memoria</b>, escribe destructor, constructor de copia y <code>operator=</code>; si no reserva nada, no escribas ninguno y deja los del compilador.</li>
+<li><b>Sobrecarga los operadores</b> que el enunciado pida; <code>operator&lt;&lt;</code> como función libre que devuelve el flujo.</li>
+<li><b>Prueba la clase</b> con un <code>main</code> pequeño que cree objetos, los copie, los imprima y compruebe el resultado.</li>
+</ol>
+<div class="box trap"><h4>Trampas típicas</h4><ul>
+<li>Poner los atributos <code>public</code> «para no escribir <i>getters</i>». Rompe el encapsulamiento y es lo primero que se penaliza.</li>
+<li>Asignar en el cuerpo del constructor en lugar de usar la lista de inicialización: con atributos constantes o referencias <b>ni siquiera compila</b>.</li>
+<li>Olvidar el <code>const</code> en los métodos de consulta: luego no se puede llamar a esos métodos sobre un <code>const Punto&amp;</code> y el código no compila.</li>
+<li>Escribir <code>operator&lt;&lt;</code> como método de la clase: el operando izquierdo tiene que ser el <code>ostream</code>.</li>
+<li>Que <code>operator&lt;&lt;</code> no devuelva el flujo: entonces no se puede encadenar <code>cout &lt;&lt; a &lt;&lt; b</code>.</li>
+<li>Reservar con <code>new</code> en el constructor y no liberar en el destructor, o liberar dos veces al copiar el objeto sin un constructor de copia propio.</li>
+</ul></div>
+<h3 id="t3-problema">Problema resuelto</h3>
+<div class="prob"><div class="enun"><p class="et">Enunciado</p><p>Diseña una clase <code>Alumno</code> con nombre, número de expediente y un vector de notas. Debe permitir añadir notas, calcular la media, comparar alumnos por media e imprimirse con <code>cout</code>. Escribe también un <code>main</code> que lea los alumnos de un fichero y muestre el de mejor media.</p></div>
+<details class="paso"><summary><span class="pn">✓</span>Ver solución paso a paso</summary><div class="inner"><div class="code">#include &lt;iostream&gt;
+#include &lt;fstream&gt;
+#include &lt;sstream&gt;
+#include &lt;string&gt;
+#include &lt;vector&gt;
+using namespace std;
+
+class Alumno {
+    string nombre_;
+    int    expediente_;
+    vector&lt;double&gt; notas_;
+public:
+    Alumno() : expediente_(0) {}
+    Alumno(const string &amp;n, int e) : nombre_(n), expediente_(e) {}
+
+    const string&amp; get_nombre() const { return nombre_; }
+    int  get_expediente()      const { return expediente_; }
+
+    void add_nota(double n) { notas_.push_back(n); }
+
+    double media() const
+    {
+        if (notas_.empty()) return 0.0;
+        double s = 0.0;
+        for (double n : notas_) s += n;
+        return s / notas_.size();
+    }
+
+    bool operator&lt;(const Alumno &amp;a) const { return media() &lt; a.media(); }
+
+    friend ostream&amp; operator&lt;&lt;(ostream &amp;os, const Alumno &amp;a);
+};
+
+ostream&amp; operator&lt;&lt;(ostream &amp;os, const Alumno &amp;a)
+{
+    os &lt;&lt; a.expediente_ &lt;&lt; " - " &lt;&lt; a.nombre_
+       &lt;&lt; " (media " &lt;&lt; a.media() &lt;&lt; ")";
+    return os;
+}
+
+int main()
+{
+    ifstream f("alumnos.txt");           // formato: expediente;nombre;n1 n2 n3
+    if (!f) { cerr &lt;&lt; "No se pudo abrir\n"; return 1; }
+
+    vector&lt;Alumno&gt; v;
+    string linea;
+    while (getline(f, linea)) {
+        stringstream ss(linea);
+        string exp, nom, notas;
+        getline(ss, exp, ';');
+        getline(ss, nom, ';');
+        getline(ss, notas);
+
+        Alumno a(nom, stoi(exp));
+        stringstream sn(notas);
+        double x;
+        while (sn &gt;&gt; x) a.add_nota(x);
+        v.push_back(a);
+    }
+
+    if (v.empty()) { cout &lt;&lt; "Sin alumnos\n"; return 0; }
+
+    const Alumno *mejor = &amp;v[0];
+    for (const Alumno &amp;a : v)
+        if (*mejor &lt; a) mejor = &amp;a;
+
+    cout &lt;&lt; "Mejor media: " &lt;&lt; *mejor &lt;&lt; endl;
+    return 0;
+}</div>
+<p><b>Decisiones que hay que saber justificar.</b></p>
+<ul>
+<li>Los tres atributos son <b>privados</b> y se accede por métodos. <code>get_nombre</code> devuelve <code>const string&amp;</code>: no copia y no deja modificar.</li>
+<li><code>media()</code> y <code>operator&lt;</code> son <code>const</code>: no cambian el objeto, y por eso se pueden llamar sobre el <code>const Alumno&amp;</code> del bucle.</li>
+<li>No hay destructor ni constructor de copia: la clase <b>no reserva memoria</b>, el <code>vector</code> se encarga de la suya. Escribirlos aquí sería trabajo de más y una fuente de errores.</li>
+<li>Para trocear por <code>;</code> se usa <code>getline</code> con delimitador sobre un <code>stringstream</code>; para las notas, el <code>&gt;&gt;</code> de siempre.</li>
+<li>Se guarda un <b>puntero</b> al mejor, no una copia, para no copiar el vector de notas en cada comparación.</li>
+</ul>
+<div class="box key"><p>El patrón «leer fichero → trocear línea → construir objeto → meter en vector → recorrer el vector» es el esqueleto de la mitad de los ejercicios de programación del examen. Tenlo escrito de memoria y sólo cambia la clase.</p></div></div></details></div>
+<h3 id="t3-auto">Autoevaluación</h3>
+<p class="muted">Responde antes de desplegar.</p><details class="paso"><summary><span class="pn">1</span>¿Qué significa encapsular?</summary><div class="inner"><p>Mantener los atributos <code>private</code> y dar acceso sólo por métodos públicos, de modo que la clase garantice siempre un estado válido.</p></div></details><details class="paso"><summary><span class="pn">2</span>¿Para qué sirve la lista de inicialización de un constructor?</summary><div class="inner"><p>Para inicializar los atributos <b>antes</b> del cuerpo. Es más eficiente y es obligatoria con atributos constantes o referencias.</p></div></details><details class="paso"><summary><span class="pn">3</span>¿Qué es RAII?</summary><div class="inner"><p>Adquirir un recurso en el constructor y liberarlo en el destructor, de modo que no pueda quedarse sin liberar. Lo usan <code>lock_guard</code> y los flujos de fichero.</p></div></details><details class="paso"><summary><span class="pn">4</span>¿Qué indica <code>const</code> al final de un método?</summary><div class="inner"><p>Que el método <b>no modifica</b> el objeto. Sólo esos métodos pueden llamarse sobre un objeto constante.</p></div></details><details class="paso"><summary><span class="pn">5</span>¿Por qué <code>operator&lt;&lt;</code> no puede ser método de la clase?</summary><div class="inner"><p>Porque su operando <b>izquierdo</b> es el <code>ostream</code>, no el objeto. Se declara como función libre, normalmente <code>friend</code>.</p></div></details><details class="paso"><summary><span class="pn">6</span>¿Qué dice la regla de los tres?</summary><div class="inner"><p>Que si una clase necesita destructor, también necesita constructor de copia y operador de asignación propios.</p></div></details>
+</section>
+<nav class="pager" aria-label="Páginas"><a href="tema-02.html"><small>← Anterior</small>T2 · La biblioteca estándar: string, vector y map</a><a class="nx" href="tema-04.html"><small>Siguiente →</small>T4 · Programación orientada a objetos: herencia y polimorfismo</a></nav>
+<p class="inicio" style="margin:36px 0 8px;text-align:center;font-size:13px;color:var(--muted)">Guía no oficial de Programación de Sistemas en Tiempo Real (UPCT, GIEyA) · Datos tomados del curso <time datetime="2020-09">2020/21</time> (apuntes y programas de teoría, boletines de ejercicios, prácticas, referencia de C++ del examen y exámenes de 2016 a 2018) · página creada en noviembre de 2026</p>
+</main>
+</div>
+<script src="app.js"></script>
+<script src="sims.js"></script>
+</body>
+</html>

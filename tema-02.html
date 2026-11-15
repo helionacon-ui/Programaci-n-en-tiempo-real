@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T2 La biblioteca estándar: string, vector y map · Programación de Sistemas en Tiempo Real · Guía para aprobar</title>
+<meta name="description" content="Programación de Sistemas en Tiempo Real (UPCT, GIEyA): tema 2, La biblioteca estándar: string, vector y map">
+<meta name="theme-color" content="#a8570a">
+<link href="https://fonts.googleapis.com" rel="preconnect"><link crossorigin href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=IBM+Plex+Sans:ital,wght@0,400;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script>window.MathJax={tex:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']]},svg:{fontCache:'global'}};</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+<link rel="stylesheet" href="style.css">
+<style>html{-webkit-text-size-adjust:100%}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+</head>
+<body>
+<div class="hub-bar" style="max-width:1180px;margin:0 auto;padding:10px 16px 0"><a href="https://helionacon-ui.github.io/GIEIA-UPCT/" style="display:inline-flex;align-items:center;gap:6px;font:600 13.5px/1 system-ui,sans-serif;padding:8px 12px;border-radius:999px;border:1px solid var(--line);background:var(--surface);color:var(--fg);text-decoration:none">← Todas las guías GIEyA</a><p class="fecha" style="margin:6px 0 0;max-width:none;font:13px/1.45 system-ui,sans-serif;color:var(--muted)">Datos tomados del curso <time datetime="2020-09">2020/21</time> (apuntes y programas de teoría, boletines de ejercicios, prácticas, referencia de C++ del examen y exámenes de 2016 a 2018) · página creada en noviembre de 2026</p></div>
+<div class="crumb"><a href="index.html">Programación de Sistemas en Tiempo Real</a><span class="sep">›</span><span>C++ moderno: de los objetos a la concurrencia</span><span class="sep">›</span><span>T2 · La biblioteca estándar: string, vector y map</span></div><a href="#top" class="totop" id="totop" aria-label="Volver arriba">↑</a>
+<div class="wrap" id="top">
+<nav aria-label="Índice" class="toc"><a href="index.html" style="--tc:var(--c0)">Portada</a><div class="grp">Empezar</div><a href="index.html#cero" style="--tc:var(--c0)">Empieza aquí desde cero</a><a href="plan.html" style="--tc:var(--c0)">Cómo es la evaluación</a><a href="index.html#progreso" style="--tc:var(--c0)">Tu progreso</a><div class="grp">C++ moderno: de los objetos a la concurrencia</div><a href="tema-01.html" style="--tc:var(--c2)">T1 Del problema al programa</a><a href="tema-02.html" style="--tc:var(--c3)" class="on" aria-current="page">T2 La biblioteca estándar: string, vector y map</a><a href="tema-03.html" style="--tc:var(--c4)">T3 Programación basada en objetos</a><a href="tema-04.html" style="--tc:var(--c5)">T4 Programación orientada a objetos: herencia y polimorfismo</a><a href="tema-05.html" style="--tc:var(--c6)">T5 Concurrencia: hilos en C++11</a><a href="tema-06.html" style="--tc:var(--c7)">T6 Sincronización: mutex, variables de condición y monitores</a><div class="grp">Tiempo real: planificación y algoritmos</div><a href="tema-07.html" style="--tc:var(--c8)">T7 El planificador del sistema operativo</a><a href="tema-08.html" style="--tc:var(--c1)">T8 Planificación en tiempo real: RM, DM, EDF y ejecutivo cíclico</a><a href="tema-09.html" style="--tc:var(--c2)">T9 Tiempos de respuesta, bloqueo y techo de prioridad</a><a href="tema-10.html" style="--tc:var(--c3)">T10 Lógica difusa y kNN</a><div class="grp">Practicar</div><a href="cuestiones.html" style="--tc:var(--c8)">Cuestiones de teoría respondidas</a><a href="examenes.html" style="--tc:var(--c8)">Problemas de examen resueltos</a><a href="problemas.html" style="--tc:var(--c8)">Qué cae en el examen</a><a href="laboratorio.html" style="--tc:var(--c7)">Prácticas</a><a href="formulario.html" style="--tc:var(--c8)">Formulario</a></nav>
+<main>
+<section class="sec tema" style="--tc:var(--c3);--tcs:var(--c3s)">
+<div class="sh"><span aria-hidden="true" class="badge">2</span><div class="shx"><p class="kick">C++ moderno: de los objetos a la concurrencia · Tema 2</p><h2 id="t2">La biblioteca estándar: string, vector y map</h2><div class="tags"><span class="tag">C++ moderno: de los objetos a la concurrencia</span><span class="tag">Programación</span></div></div></div>
+<div class="zero"><p class="ft">Desde cero</p><p><b>Objetivo:</b> usar los contenedores y las funciones de la STL que entran en el examen, con la hoja de referencia de clases delante.</p><ul>
+<li>La <b>STL</b> es lo que hace productivo a C++: contenedores, iteradores y algoritmos ya escritos y probados. En el examen se entrega una <b>hoja de referencia</b> con las operaciones de <code>string</code>, <code>vector</code>, <code>map</code> y compañía, así que no hay que memorizar firmas, pero sí saber <b>cuál</b> usar y <b>qué cuesta</b> cada una.</li>
+<li><b><code>string</code></b> es un vector de caracteres con operaciones de texto: <code>size</code>, <code>substr</code>, <code>find</code>, <code>insert</code>, <code>erase</code>, concatenación con <code>+</code> y comparación con los operadores habituales. La constante <code>string::npos</code> es lo que devuelve <code>find</code> cuando <b>no</b> encuentra nada: compararla es el error clásico.</li>
+<li><b><code>vector</code></b> es un array que crece. Acceso por índice en tiempo constante, inserción al final amortizada constante, inserción o borrado en medio \(O(n)\). Es el contenedor por defecto: si dudas, vector.</li>
+<li><b><code>map</code></b> guarda pares clave-valor <b>ordenados por clave</b>, con búsqueda, inserción y borrado en \(O(\log n)\). <code>unordered_map</code> es una tabla hash: \(O(1)\) de media pero sin orden. El <code>operator[]</code> de un map <b>crea</b> la entrada si no existe, lo que es comodísimo para contar cosas y peligrosísimo si sólo querías consultar.</li>
+<li>Los <b>iteradores</b> son la forma de recorrer cualquier contenedor con la misma sintaxis. <code>begin()</code> apunta al primero y <code>end()</code> a <b>uno más allá</b> del último: por eso el bucle es <code>it != v.end()</code> y nunca <code>&lt;=</code>.</li>
+<li>Los <b>algoritmos</b> de <code>&lt;algorithm&gt;</code> trabajan sobre rangos de iteradores: <code>sort</code>, <code>find</code>, <code>count</code>, <code>accumulate</code> (en <code>&lt;numeric&gt;</code>), <code>for_each</code>, <code>transform</code>.</li>
+<li>La entrada y salida de <b>ficheros</b> usa <code>ifstream</code> y <code>ofstream</code>, que se comportan como <code>cin</code> y <code>cout</code>. Para leer línea a línea, <code>getline(f, linea)</code>; para leer palabra a palabra, <code>f &gt;&gt; palabra</code>. Un <code>ifstream</code> en un <code>if</code> vale <code>false</code> si el fichero no se pudo abrir, y el bucle de lectura se escribe <code>while (getline(f, linea))</code>.</li>
+</ul></div>
+<details class="nom"><summary><span aria-hidden="true" class="nom-ic">Aa</span>Nomenclatura del tema 2 <span class="src">8 entradas</span></summary><div class="inner">
+<div class="tw"><table><tr><th>Símbolo</th><th>Significado</th><th>Unidad · nota</th></tr><tr><td class="sym">string::npos</td><td>no encontrado</td><td class="u">valor de find</td></tr><tr><td class="sym">v.push_back(x)</td><td>añadir al final</td><td class="u">O(1) amortizado</td></tr><tr><td class="sym">v.at(i)</td><td>acceso comprobado</td><td class="u">lanza excepción</td></tr><tr><td class="sym">m[clave]</td><td>acceso a map</td><td class="u">CREA si no existe</td></tr><tr><td class="sym">m.count(k)</td><td>consulta sin crear</td><td class="u"></td></tr><tr><td class="sym">begin / end</td><td>iteradores</td><td class="u">end = uno más allá</td></tr><tr><td class="sym">getline(f,s)</td><td>leer una línea</td><td class="u"></td></tr><tr><td class="sym">stoi / to_string</td><td>conversiones</td><td class="u"></td></tr></table></div></div></details>
+<figure class="fig"><p class="ft">Figura interactiva - coste de las operaciones de cada contenedor</p><div data-sim="contenedores"></div><figcaption>Mueve los controles y observa cómo cambia el resultado: es el mismo cálculo que hay que saber hacer a mano en el examen.</figcaption></figure>
+<h3 id="t2-formulas">Fórmulas y conceptos que hay que saber</h3>
+<div class="box key"><ul><li><b>Operaciones de string que más caen:</b></li></ul>
+<div class="code">s.size()            s.empty()          s.substr(pos, n)
+s.find("abc")       // devuelve posición o string::npos
+s.insert(p, str)    s.erase(p, n)      s.push_back(c)
+stoi(s)  stod(s)    to_string(v)
+getline(cin, s)     getline(f, s, ';') // con delimitador
+</div>
+<ul><li><b>Vector:</b></li></ul>
+<div class="code">vector&lt;int&gt; v;            vector&lt;int&gt; w(10);      vector&lt;int&gt; u{1,2,3};
+v.push_back(x);  v.pop_back();  v.size();  v.empty();
+v[i]       // sin comprobar límites
+v.at(i)    // lanza excepción si i está fuera
+sort(v.begin(), v.end());
+</div>
+<ul><li><b>Map:</b></li></ul>
+<div class="code">map&lt;string,int&gt; m;
+m["hola"] = 3;                 // crea la entrada si no existe
+m["hola"]++;                   // contar: crea con 0 y suma
+if (m.count("hola")) ...       // consultar SIN crear
+if (m.find("hola") != m.end()) ...
+for (const auto &amp;par : m) cout &lt;&lt; par.first &lt;&lt; " " &lt;&lt; par.second;
+m.erase("hola");
+</div>
+<ul><li><b>Ficheros:</b></li></ul>
+<div class="code">ifstream f("datos.txt");
+if (!f) { cerr &lt;&lt; "No se pudo abrir\n"; return 1; }
+string linea;
+while (getline(f, linea)) { /* procesar */ }
+f.close();
+
+ofstream g("salida.txt");
+g &lt;&lt; "resultado: " &lt;&lt; x &lt;&lt; endl;
+</div>
+<ul><li><b>Coste de las operaciones:</b></li></ul>
+<div class="tw"><table><tr><th>Operación</th><th>vector</th><th>list</th><th>map</th><th>unordered_map</th></tr>
+<tr><td>Acceso por posición</td><td>\(O(1)\)</td><td>\(O(n)\)</td><td>—</td><td>—</td></tr>
+<tr><td>Buscar por clave o valor</td><td>\(O(n)\)</td><td>\(O(n)\)</td><td>\(O(\log n)\)</td><td>\(O(1)\) medio</td></tr>
+<tr><td>Insertar al final</td><td>\(O(1)\) amort.</td><td>\(O(1)\)</td><td>\(O(\log n)\)</td><td>\(O(1)\) medio</td></tr>
+<tr><td>Insertar o borrar en medio</td><td>\(O(n)\)</td><td>\(O(1)\)*</td><td>\(O(\log n)\)</td><td>\(O(1)\) medio</td></tr>
+<tr><td>Mantiene orden</td><td>de inserción</td><td>de inserción</td><td>por clave</td><td>ninguno</td></tr></table></div>
+<p class="muted">* en list, \(O(1)\) si ya tienes el iterador; llegar hasta él cuesta \(O(n)\).</p></div>
+<h3 id="t2-metodo">Método paso a paso</h3>
+<ol class="steps">
+<li><b>Elige el contenedor por la operación que más repitas:</b> recorrer o indexar → <code>vector</code>; buscar por clave → <code>map</code>; contar apariciones → <code>map&lt;clave,int&gt;</code>.</li>
+<li><b>Para leer un fichero:</b> abre, comprueba que se abrió, lee con <code>getline</code> en un <code>while</code>, procesa cada línea y cierra.</li>
+<li><b>Para trocear una línea</b> usa <code>stringstream</code> con <code>&gt;&gt;</code>, o <code>find</code> + <code>substr</code> en bucle si el separador no es un espacio.</li>
+<li><b>Para contar con un map:</b> <code>m[clave]++</code>. No hace falta comprobar si existe: <code>operator[]</code> la crea con 0.</li>
+<li><b>Para consultar sin crear</b> usa <code>count</code> o <code>find</code>, nunca <code>operator[]</code>.</li>
+<li><b>Comprueba siempre el resultado de <code>find</code></b> contra <code>npos</code> o contra <code>end()</code> antes de usarlo.</li>
+</ol>
+<div class="box trap"><h4>Trampas típicas</h4><ul>
+<li>Comparar el resultado de <code>s.find(...)</code> con <code>-1</code> o con <code>0</code>. Hay que compararlo con <code>string::npos</code>, y ojo: una ocurrencia en la posición 0 es un resultado <b>válido</b>, así que <code>if (s.find(x))</code> está mal.</li>
+<li>Usar <code>m[clave]</code> para consultar un map y <b>crear sin querer</b> una entrada vacía, que además cambia el tamaño del map.</li>
+<li>Guardar iteradores o referencias a elementos de un <code>vector</code> y seguir haciendo <code>push_back</code>: al crecer, el vector puede reubicarse y esos iteradores quedan <b>inválidos</b>.</li>
+<li>Recorrer con <code>it &lt;= v.end()</code>. <code>end()</code> apunta más allá del último: se usa <code>!=</code>.</li>
+<li>Borrar elementos de un contenedor dentro de un bucle de rango. Hay que usar el iterador que devuelve <code>erase</code>.</li>
+<li>Olvidar que leer con <code>&gt;&gt;</code> deja el salto de línea en el buffer, de modo que el <code>getline</code> siguiente lee una línea vacía.</li>
+</ul></div>
+<h3 id="t2-problema">Problema resuelto</h3>
+<div class="prob"><div class="enun"><p class="et">Enunciado</p><p>Un fichero <code>texto.txt</code> contiene un texto cualquiera. Escribe un programa que cuente cuántas veces aparece cada palabra y muestre las palabras que aparecen más de una vez, en orden alfabético, junto con su número de apariciones. Las palabras se separan por espacios y hay que ignorar mayúsculas y los signos de puntuación.</p></div>
+<details class="paso"><summary><span class="pn">✓</span>Ver solución paso a paso</summary><div class="inner"><p>Este es el ejercicio tipo de PBO, y casi todo el trabajo lo hace el <code>map</code>.</p>
+<div class="code">#include &lt;iostream&gt;
+#include &lt;fstream&gt;
+#include &lt;string&gt;
+#include &lt;map&gt;
+using namespace std;
+
+// Pasa a minúsculas y quita lo que no sea letra
+string normalizar(const string &amp;s)
+{
+    string r;
+    for (char c : s)
+        if (isalpha(static_cast&lt;unsigned char&gt;(c)))
+            r.push_back(tolower(static_cast&lt;unsigned char&gt;(c)));
+    return r;
+}
+
+int main()
+{
+    ifstream f("texto.txt");
+    if (!f) { cerr &lt;&lt; "No se pudo abrir el fichero\n"; return 1; }
+
+    map&lt;string,int&gt; cuenta;
+    string palabra;
+    while (f &gt;&gt; palabra) {                 // &gt;&gt; ya trocea por espacios
+        string p = normalizar(palabra);
+        if (!p.empty()) cuenta[p]++;       // crea con 0 y suma
+    }
+    f.close();
+
+    for (const auto &amp;par : cuenta)         // el map ya está ordenado
+        if (par.second &gt; 1)
+            cout &lt;&lt; par.first &lt;&lt; ": " &lt;&lt; par.second &lt;&lt; endl;
+
+    return 0;
+}</div>
+<p><b>Por qué está bien elegido cada elemento.</b></p>
+<ul>
+<li><code>f &gt;&gt; palabra</code> trocea por espacios y saltos de línea sin que tengamos que hacer nada: es más corto que <code>getline</code> + <code>stringstream</code>, que también valdría.</li>
+<li><code>map</code> y no <code>unordered_map</code> porque el enunciado pide <b>orden alfabético</b>: el map ya lo da gratis al recorrerlo. Con <code>unordered_map</code> habría que volcar a un vector y ordenar.</li>
+<li><code>cuenta[p]++</code> aprovecha que <code>operator[]</code> crea la entrada con valor 0. Aquí sí queremos ese comportamiento.</li>
+<li>El <code>const auto &amp;</code> del bucle evita copiar cada par; <code>par.first</code> es la clave y <code>par.second</code> el valor.</li>
+<li>Las funciones <code>isalpha</code> y <code>tolower</code> reciben un <code>int</code> y se les pasa el carácter convertido a <code>unsigned char</code> para evitar problemas con los acentos.</li>
+</ul>
+<p><b>Coste.</b> Leer \(n\) palabras con una inserción \(O(\log k)\) cada una, siendo \(k\) el número de palabras distintas: \(O(n\log k)\). El recorrido final es \(O(k)\).</p>
+<div class="box key"><p>Variante habitual del examen: en lugar de contar, guardar en el map <b>la frase que empieza por cada letra</b> y usarlo para cifrar o descifrar un mensaje. Es el mismo esqueleto: abrir fichero, leer línea a línea, rellenar el map, recorrer.</p></div></div></details></div>
+<h3 id="t2-auto">Autoevaluación</h3>
+<p class="muted">Responde antes de desplegar.</p><details class="paso"><summary><span class="pn">1</span>¿Qué devuelve <code>find</code> cuando no encuentra nada?</summary><div class="inner"><p><code>string::npos</code>. Hay que compararlo con eso, nunca con −1 ni con 0.</p></div></details><details class="paso"><summary><span class="pn">2</span>¿Qué hace <code>m[clave]</code> si la clave no existe en un map?</summary><div class="inner"><p>La <b>crea</b> con el valor por defecto. Para consultar sin crear se usa <code>count</code> o <code>find</code>.</p></div></details><details class="paso"><summary><span class="pn">3</span>¿Cuándo usar <code>map</code> y cuándo <code>unordered_map</code>?</summary><div class="inner"><p><code>map</code> si necesitas las claves <b>ordenadas</b>; <code>unordered_map</code> si sólo necesitas buscar rápido.</p></div></details><details class="paso"><summary><span class="pn">4</span>¿Qué coste tiene insertar en medio de un vector?</summary><div class="inner"><p>\(O(n)\): hay que desplazar todos los elementos siguientes.</p></div></details><details class="paso"><summary><span class="pn">5</span>¿Por qué el bucle con iteradores usa <code>!=</code> y no <code>&lt;=</code>?</summary><div class="inner"><p>Porque <code>end()</code> apunta a <b>uno más allá</b> del último elemento; nunca se desreferencia.</p></div></details><details class="paso"><summary><span class="pn">6</span>¿Cómo se lee un fichero línea a línea?</summary><div class="inner"><p><code>while (getline(f, linea))</code>, después de comprobar que el <code>ifstream</code> se abrió bien.</p></div></details>
+</section>
+<nav class="pager" aria-label="Páginas"><a href="tema-01.html"><small>← Anterior</small>T1 · Del problema al programa</a><a class="nx" href="tema-03.html"><small>Siguiente →</small>T3 · Programación basada en objetos</a></nav>
+<p class="inicio" style="margin:36px 0 8px;text-align:center;font-size:13px;color:var(--muted)">Guía no oficial de Programación de Sistemas en Tiempo Real (UPCT, GIEyA) · Datos tomados del curso <time datetime="2020-09">2020/21</time> (apuntes y programas de teoría, boletines de ejercicios, prácticas, referencia de C++ del examen y exámenes de 2016 a 2018) · página creada en noviembre de 2026</p>
+</main>
+</div>
+<script src="app.js"></script>
+<script src="sims.js"></script>
+</body>
+</html>

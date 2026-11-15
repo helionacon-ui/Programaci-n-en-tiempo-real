@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T1 Del problema al programa · Programación de Sistemas en Tiempo Real · Guía para aprobar</title>
+<meta name="description" content="Programación de Sistemas en Tiempo Real (UPCT, GIEyA): tema 1, Del problema al programa">
+<meta name="theme-color" content="#a8570a">
+<link href="https://fonts.googleapis.com" rel="preconnect"><link crossorigin href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=IBM+Plex+Sans:ital,wght@0,400;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script>window.MathJax={tex:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']]},svg:{fontCache:'global'}};</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+<link rel="stylesheet" href="style.css">
+<style>html{-webkit-text-size-adjust:100%}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+</head>
+<body>
+<div class="hub-bar" style="max-width:1180px;margin:0 auto;padding:10px 16px 0"><a href="https://helionacon-ui.github.io/GIEIA-UPCT/" style="display:inline-flex;align-items:center;gap:6px;font:600 13.5px/1 system-ui,sans-serif;padding:8px 12px;border-radius:999px;border:1px solid var(--line);background:var(--surface);color:var(--fg);text-decoration:none">← Todas las guías GIEyA</a><p class="fecha" style="margin:6px 0 0;max-width:none;font:13px/1.45 system-ui,sans-serif;color:var(--muted)">Datos tomados del curso <time datetime="2020-09">2020/21</time> (apuntes y programas de teoría, boletines de ejercicios, prácticas, referencia de C++ del examen y exámenes de 2016 a 2018) · página creada en noviembre de 2026</p></div>
+<div class="crumb"><a href="index.html">Programación de Sistemas en Tiempo Real</a><span class="sep">›</span><span>C++ moderno: de los objetos a la concurrencia</span><span class="sep">›</span><span>T1 · Del problema al programa</span></div><a href="#top" class="totop" id="totop" aria-label="Volver arriba">↑</a>
+<div class="wrap" id="top">
+<nav aria-label="Índice" class="toc"><a href="index.html" style="--tc:var(--c0)">Portada</a><div class="grp">Empezar</div><a href="index.html#cero" style="--tc:var(--c0)">Empieza aquí desde cero</a><a href="plan.html" style="--tc:var(--c0)">Cómo es la evaluación</a><a href="index.html#progreso" style="--tc:var(--c0)">Tu progreso</a><div class="grp">C++ moderno: de los objetos a la concurrencia</div><a href="tema-01.html" style="--tc:var(--c2)" class="on" aria-current="page">T1 Del problema al programa</a><a href="tema-02.html" style="--tc:var(--c3)">T2 La biblioteca estándar: string, vector y map</a><a href="tema-03.html" style="--tc:var(--c4)">T3 Programación basada en objetos</a><a href="tema-04.html" style="--tc:var(--c5)">T4 Programación orientada a objetos: herencia y polimorfismo</a><a href="tema-05.html" style="--tc:var(--c6)">T5 Concurrencia: hilos en C++11</a><a href="tema-06.html" style="--tc:var(--c7)">T6 Sincronización: mutex, variables de condición y monitores</a><div class="grp">Tiempo real: planificación y algoritmos</div><a href="tema-07.html" style="--tc:var(--c8)">T7 El planificador del sistema operativo</a><a href="tema-08.html" style="--tc:var(--c1)">T8 Planificación en tiempo real: RM, DM, EDF y ejecutivo cíclico</a><a href="tema-09.html" style="--tc:var(--c2)">T9 Tiempos de respuesta, bloqueo y techo de prioridad</a><a href="tema-10.html" style="--tc:var(--c3)">T10 Lógica difusa y kNN</a><div class="grp">Practicar</div><a href="cuestiones.html" style="--tc:var(--c8)">Cuestiones de teoría respondidas</a><a href="examenes.html" style="--tc:var(--c8)">Problemas de examen resueltos</a><a href="problemas.html" style="--tc:var(--c8)">Qué cae en el examen</a><a href="laboratorio.html" style="--tc:var(--c7)">Prácticas</a><a href="formulario.html" style="--tc:var(--c8)">Formulario</a></nav>
+<main>
+<section class="sec tema" style="--tc:var(--c2);--tcs:var(--c2s)">
+<div class="sh"><span aria-hidden="true" class="badge">1</span><div class="shx"><p class="kick">C++ moderno: de los objetos a la concurrencia · Tema 1</p><h2 id="t1">Del problema al programa</h2><div class="tags"><span class="tag">C++ moderno: de los objetos a la concurrencia</span><span class="tag">Programación</span></div></div></div>
+<div class="zero"><p class="ft">Desde cero</p><p><b>Objetivo:</b> organizar el desarrollo de un programa, manejar con soltura los tipos, la memoria y las funciones de C++, y escribir algoritmos correctos desde el principio.</p><ul>
+<li>Antes de escribir una línea de código hay <b>dos pasos</b>: entender el problema y diseñar la solución. El ciclo completo es análisis → diseño → codificación → pruebas → despliegue → ejecución → modificación, y se repite. El error más caro de un programador novato es empezar por la codificación.</li>
+<li>Una cosa es saber resolver un problema y otra que esa forma de resolverlo sea <b>expresable en un programa</b>. Hay que pensar la solución con las abstracciones que ofrece el lenguaje.</li>
+<li>C++ es un lenguaje <b>compilado</b> y de <b>tipado estático</b>: el compilador comprueba los tipos antes de ejecutar nada. Esto detecta muchos errores pronto, a cambio de obligar a declararlo todo.</li>
+<li>La memoria de un programa tiene dos zonas que hay que distinguir siempre: la <b>pila</b> (<i>stack</i>), donde viven las variables locales y que se libera sola al salir del ámbito, y el <b>montón</b> (<i>heap</i>), donde vive lo reservado con <code>new</code> y que hay que liberar con <code>delete</code>. Todo lo que puedas poner en la pila, ponlo en la pila.</li>
+<li>Hay tres maneras de pasar un argumento a una función: <b>por valor</b> (se copia; cambiarlo no afecta al original), <b>por referencia</b> (<code>int&amp;</code>: es el mismo objeto con otro nombre) y <b>por referencia constante</b> (<code>const string&amp;</code>: no se copia pero no se puede modificar). La última es la forma correcta de pasar objetos grandes que sólo se leen.</li>
+<li>Una <b>referencia</b> es un alias: se inicializa al declararla y no se puede reasignar. Un <b>puntero</b> es una variable que guarda una dirección: puede ser nulo, puede reasignarse y hay que desreferenciarlo con <code>*</code>. En C++ moderno se usan referencias casi siempre y punteros sólo cuando hace falta representar «puede que no haya nada».</li>
+<li>Para devolver varios valores desde una función se usan <b>parámetros de salida por referencia</b> (o se devuelve una estructura). Esto será importante en concurrencia: la función que ejecuta un hilo devuelve <code>void</code>, así que sus resultados salen por referencia.</li>
+<li>Un programa se escribe para que lo lea otra persona: nombres con significado, funciones cortas, una responsabilidad por función y constantes con nombre en vez de números sueltos.</li>
+</ul></div>
+<details class="nom"><summary><span aria-hidden="true" class="nom-ic">Aa</span>Nomenclatura del tema 1 <span class="src">8 entradas</span></summary><div class="inner">
+<div class="tw"><table><tr><th>Símbolo</th><th>Significado</th><th>Unidad · nota</th></tr><tr><td class="sym">pila</td><td>variables locales</td><td class="u">se libera sola</td></tr><tr><td class="sym">montón</td><td>memoria dinámica</td><td class="u">new / delete</td></tr><tr><td class="sym">int &x</td><td>paso por referencia</td><td class="u">alias</td></tr><tr><td class="sym">const T&</td><td>referencia constante</td><td class="u">no copia, no modifica</td></tr><tr><td class="sym">T*</td><td>puntero</td><td class="u">puede ser nulo</td></tr><tr><td class="sym">auto</td><td>deducción de tipo</td><td class="u"></td></tr><tr><td class="sym">size_t</td><td>entero sin signo</td><td class="u">tamaños e índices</td></tr><tr><td class="sym">O(n)</td><td>complejidad lineal</td><td class="u"></td></tr></table></div></div></details>
+<figure class="fig"><p class="ft">Figura interactiva - pila, monton y paso de parametros</p><div data-sim="memoria"></div><figcaption>Mueve los controles y observa cómo cambia el resultado: es el mismo cálculo que hay que saber hacer a mano en el examen.</figcaption></figure>
+<h3 id="t1-formulas">Fórmulas y conceptos que hay que saber</h3>
+<div class="box key"><ul>
+<li><b>Estructura mínima:</b></li></ul>
+<div class="code">#include &lt;iostream&gt;
+using namespace std;
+
+int main() {
+    cout &lt;&lt; "Hola" &lt;&lt; endl;
+    return 0;
+}</div>
+<ul>
+<li><b>Tipos fundamentales:</b> <code>bool</code> · <code>char</code> (1 byte) · <code>int</code> (4) · <code>long</code> (8) · <code>float</code> (4) · <code>double</code> (8) · <code>size_t</code> (sin signo, para tamaños e índices).</li>
+<li><b>Paso de parámetros:</b></li></ul>
+<div class="code">void por_valor      (int x);          // copia
+void por_referencia (int &amp;x);         // alias: modifica el original
+void solo_lectura   (const string &amp;s);// no copia y no modifica
+</div>
+<ul>
+<li><b>Memoria dinámica:</b> <code>int *p = new int(5); ... delete p;</code> · arrays: <code>new int[n]</code> / <code>delete[] p</code>. Cada <code>new</code> necesita exactamente un <code>delete</code>.</li>
+<li><b>Bucle for de rango</b> (C++11), el que se usa casi siempre:</li></ul>
+<div class="code">for (const auto &amp;x : v) cout &lt;&lt; x &lt;&lt; " ";
+for (auto &amp;x : v) x *= 2;          // modifica los elementos
+</div>
+<ul>
+<li><b>auto:</b> deduce el tipo. <code>auto it = v.begin();</code> evita escribir el tipo del iterador.</li>
+<li><b>Complejidad de los algoritmos básicos:</b> búsqueda lineal \(O(n)\) · búsqueda binaria \(O(\log n)\) · ordenación eficiente \(O(n\log n)\) · bucle doble \(O(n^2)\).</li>
+</ul></div>
+<h3 id="t1-metodo">Método paso a paso</h3>
+<ol class="steps">
+<li><b>Entiende el problema</b> y escribe a mano un par de casos de ejemplo con su resultado esperado. Serán tus pruebas.</li>
+<li><b>Diseña la solución</b> en pasos, antes de teclear: qué datos hacen falta, en qué estructura se guardan y qué funciones los transforman.</li>
+<li><b>Escribe funciones pequeñas</b>, una por tarea, con nombres que digan lo que hacen.</li>
+<li><b>Decide el paso de parámetros:</b> ¿sólo lo lees? <code>const T&amp;</code>. ¿Lo modificas? <code>T&amp;</code>. ¿Es un tipo pequeño que copias? por valor.</li>
+<li><b>Compila a menudo</b> y lee el <b>primer</b> error, no el último: los demás suelen ser consecuencia.</li>
+<li><b>Prueba con los casos límite</b>: vector vacío, un solo elemento, valores negativos, fichero inexistente.</li>
+</ol>
+<div class="box trap"><h4>Trampas típicas</h4><ul>
+<li>Pasar un <code>vector</code> o un <code>string</code> grande <b>por valor</b> sin querer: se copia entero en cada llamada.</li>
+<li>Devolver una referencia o un puntero a una <b>variable local</b>. Al salir de la función esa memoria ya no es válida.</li>
+<li>Olvidar el <code>delete</code> de cada <code>new</code>, o hacer <code>delete</code> dos veces.</li>
+<li>Confundir <code>=</code> (asignación) con <code>==</code> (comparación) dentro de un <code>if</code>.</li>
+<li>Usar <code>int</code> para indexar un contenedor y comparar con <code>size()</code>, que es <code>size_t</code> (sin signo): el compilador avisa y el bucle puede fallar con contenedores vacíos.</li>
+<li>Escribir un bucle <code>for (int i=0; i&lt;=v.size(); i++)</code>: el último índice válido es <code>size()-1</code>.</li>
+</ul></div>
+<h3 id="t1-problema">Problema resuelto</h3>
+<div class="prob"><div class="enun"><p class="et">Enunciado</p><p>Escribe una función que reciba un vector de enteros y devuelva, <b>sin usar la biblioteca estándar de algoritmos</b>, el máximo, el mínimo y la media. Después, una versión que además diga cuántos valores están por encima de la media.</p>
+<p>Decide bien el paso de parámetros y razona la complejidad.</p></div>
+<details class="paso"><summary><span class="pn">✓</span>Ver solución paso a paso</summary><div class="inner"><p><b>1) La firma.</b> El vector sólo se lee: <code>const vector&lt;int&gt; &amp;</code>. Hay que devolver tres valores, así que salen por referencia:</p>
+<div class="code">void estadisticas(const vector&lt;int&gt; &amp;v, int &amp;maximo, int &amp;minimo, double &amp;media)
+{
+    if (v.empty()) { maximo = minimo = 0; media = 0.0; return; }
+
+    maximo = minimo = v[0];
+    long suma = 0;                       // long para no desbordar
+    for (int x : v) {
+        if (x &gt; maximo) maximo = x;
+        if (x &lt; minimo) minimo = x;
+        suma += x;
+    }
+    media = static_cast&lt;double&gt;(suma) / v.size();
+}</div>
+<p>Tres detalles que valen puntos: el <b>caso vacío</b> tratado al principio; la suma en <code>long</code> para no desbordar; y el <code>static_cast&lt;double&gt;</code> antes de dividir, porque <code>suma / v.size()</code> con dos enteros haría <b>división entera</b> y la media saldría truncada.</p>
+<p><b>2) Contar los que superan la media.</b></p>
+<div class="code">int por_encima(const vector&lt;int&gt; &amp;v)
+{
+    int maximo, minimo; double media;
+    estadisticas(v, maximo, minimo, media);
+
+    int n = 0;
+    for (int x : v) if (x &gt; media) ++n;
+    return n;
+}</div>
+<p><b>3) Complejidad.</b> La primera función recorre el vector una vez: \(O(n)\) en tiempo y \(O(1)\) en memoria adicional. La segunda hace dos pasadas, que sigue siendo \(O(n)\): <b>dos pasadas no son peor orden que una</b>. Lo que sí sería peor es, para cada elemento, recorrer el vector entero para calcular la media: eso sería \(O(n^2)\) y es el error típico.</p>
+<div class="box key"><p>Comprobación con \(v=\{4,8,15,16,23,42\}\): suma 108, media 18, máximo 42, mínimo 4, y hay <b>2</b> valores por encima de la media (23 y 42). Antes de dar por bueno un algoritmo, pásale un caso que puedas comprobar a mano.</p></div></div></details></div>
+<h3 id="t1-auto">Autoevaluación</h3>
+<p class="muted">Responde antes de desplegar.</p><details class="paso"><summary><span class="pn">1</span>¿Cuáles son las fases del desarrollo de un programa?</summary><div class="inner"><p>Análisis, diseño, codificación, pruebas, despliegue, ejecución y modificación. La codificación es sólo una de ellas.</p></div></details><details class="paso"><summary><span class="pn">2</span>¿Qué diferencia hay entre la pila y el montón?</summary><div class="inner"><p>La <b>pila</b> guarda variables locales y se libera sola al salir del ámbito; el <b>montón</b> guarda lo reservado con <code>new</code> y hay que liberarlo con <code>delete</code>.</p></div></details><details class="paso"><summary><span class="pn">3</span>¿Cómo se pasa un objeto grande que sólo se lee?</summary><div class="inner"><p>Por <b>referencia constante</b>: <code>const vector&lt;int&gt; &amp;v</code>. No se copia y no se puede modificar.</p></div></details><details class="paso"><summary><span class="pn">4</span>¿Qué diferencia hay entre una referencia y un puntero?</summary><div class="inner"><p>La <b>referencia</b> es un alias: se inicializa al declararse y no se reasigna. El <b>puntero</b> guarda una dirección, puede ser nulo y puede reasignarse.</p></div></details><details class="paso"><summary><span class="pn">5</span>¿Cómo devuelve varios valores una función en C++?</summary><div class="inner"><p>Con <b>parámetros de salida por referencia</b>, o devolviendo una estructura. Es lo que se usa en los hilos, porque su función devuelve <code>void</code>.</p></div></details><details class="paso"><summary><span class="pn">6</span>¿Por qué <code>suma / v.size()</code> puede dar un resultado equivocado?</summary><div class="inner"><p>Porque si los dos son enteros se hace <b>división entera</b> y se trunca. Hay que convertir uno a <code>double</code> antes.</p></div></details>
+</section>
+<nav class="pager" aria-label="Páginas"><a href="plan.html"><small>← Anterior</small>Cómo es la evaluación</a><a class="nx" href="tema-02.html"><small>Siguiente →</small>T2 · La biblioteca estándar: string, vector y map</a></nav>
+<p class="inicio" style="margin:36px 0 8px;text-align:center;font-size:13px;color:var(--muted)">Guía no oficial de Programación de Sistemas en Tiempo Real (UPCT, GIEyA) · Datos tomados del curso <time datetime="2020-09">2020/21</time> (apuntes y programas de teoría, boletines de ejercicios, prácticas, referencia de C++ del examen y exámenes de 2016 a 2018) · página creada en noviembre de 2026</p>
+</main>
+</div>
+<script src="app.js"></script>
+<script src="sims.js"></script>
+</body>
+</html>
