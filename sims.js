@@ -651,5 +651,27 @@ SIMS.knn=el=>build(el,{w:680,h:306,
    : 'kNN no entrena nada: guarda los ejemplos y, para clasificar, mide la distancia a todos, se queda con los k más cercanos y <b>vota</b>. Mueve el punto a la frontera entre las dos nubes y cambia k: con k = 1 la clasificación salta con cualquier ejemplo aislado, y al subir k se suaviza. Por eso se elige k <b>impar</b> con dos clases: para que no haya empates.');
  }});
 
+
+
+
+/* ---- paso a paso declarativo ---- */
+SIMS.__paso=(el,D)=>build(el,{w:D.w||660,h:D.h||340,
+ sliders:[{k:'paso',v:0,min:0,max:D.steps.length,step:1,l:'paso de la resolución (0 = enunciado)',u:''}],
+ draw(a){a.clear();const g=a.g,p=a.st.paso;
+  const it=(x,col)=>{const k=x[0];
+   if(k==='t')a.txt(x[1],x[2],x[3],col,x[4]||13,x[5]||'left');
+   else if(k==='l')a.line(x[1],x[2],x[3],x[4],col,x[5]||1.5,x[6]);
+   else if(k==='a')a.arrow(x[1],x[2],x[3],x[4],col,x[5]);
+   else if(k==='c')a.circ(x[1],x[2],x[3],col,!!x[4]);
+   else if(k==='r'){g.strokeStyle=col;g.lineWidth=1.8;if(x[5]){g.fillStyle=col;g.globalAlpha=.18;g.fillRect(x[1],x[2],x[3],x[4]);g.globalAlpha=1;}g.strokeRect(x[1],x[2],x[3],x[4]);}
+   else if(k==='p'){g.strokeStyle=col;g.lineWidth=x[2]||2;g.beginPath();x[1].forEach((q,i)=>i?g.lineTo(q[0],q[1]):g.moveTo(q[0],q[1]));g.stroke();}};
+  (D.base||[]).forEach(x=>it(x,C.muted));
+  D.steps.forEach((s,i)=>{if(i+1>p)return;const cur=(i+1===p);(s.add||[]).forEach(x=>it(x,cur?C.d:C.text));if(cur)(s.now||[]).forEach(x=>it(x,C.d));});
+  a.html('<div>'+(p===0?D.q:D.steps[p-1].text)+'</div>');}});
+/* ---- fin paso a paso declarativo ---- */
+
+/* ---- paso2 rtaPaso ---- */
+SIMS.rtaPaso=el=>SIMS.__paso(el,{"w":660,"h":315,"q":"Tres tareas periódicas con plazo igual al periodo, planificadas con RM. ¿Cuál es el tiempo de respuesta de la tarea de menor prioridad y cumple su plazo? Sube el paso.","base":[["t","τ1 (C=1, T=4)   τ2 (C=2, T=6)   τ3 (C=3, T=12) · prioridades RM",30,24,12,"left"]],"steps":[{"text":"Por Rate Monotonic, la prioridad es mayor cuanto menor el periodo: <b>τ₁ &gt; τ₂ &gt; τ₃</b>. Se calcula el tiempo de respuesta de cada una con la ecuación recursiva R = C + Σ ⌈R/Tⱼ⌉ Cⱼ sobre las tareas más prioritarias.","add":[["t","R = C + Σ ⌈R/Tⱼ⌉·Cⱼ   (j de mayor prioridad)",40,70,14,"left"]]},{"text":"<b>τ₁</b> (la más prioritaria) nunca es interrumpida: R₁ = C₁ = <b>1</b>. <b>τ₂</b>: R = 2 + ⌈R/4⌉·1; con R = 2 → 3 → 3: <b>R₂ = 3</b> ≤ 6.","add":[["t","R₁ = 1 ;  R₂ = 3",40,100,14,"left"]]},{"text":"<b>τ₃</b>, primera iteración: se parte de R⁰ = C₃ = 3. R¹ = 3 + ⌈3/4⌉·1 + ⌈3/6⌉·2 = 3 + 1 + 2 = <b>6</b>.","add":[["t","R⁰ = 3  →  R¹ = 3 + 1·1 + 1·2 = 6",40,134,14,"left"]]},{"text":"Segunda: R² = 3 + ⌈6/4⌉·1 + ⌈6/6⌉·2 = 3 + 2 + 2 = <b>7</b>. Como R² ≠ R¹, hay que seguir iterando.","add":[["t","R² = 3 + 2·1 + 1·2 = 7",40,164,14,"left"]]},{"text":"Tercera: R³ = 3 + ⌈7/4⌉·1 + ⌈7/6⌉·2 = 3 + 2 + 4 = <b>9</b>. Cuarta: R⁴ = 3 + ⌈9/4⌉·1 + ⌈9/6⌉·2 = 3 + 3 + 4 = <b>10</b>.","add":[["t","R³ = 3 + 2·1 + 2·2 = 9",40,194,14,"left"],["t","R⁴ = 3 + 3·1 + 2·2 = 10",40,224,14,"left"]]},{"text":"Quinta: R⁵ = 3 + ⌈10/4⌉·1 + ⌈10/6⌉·2 = 3 + 3 + 4 = <b>10</b> = R⁴: la sucesión <b>converge</b>. Tiempo de respuesta de τ₃ = 10.","add":[["t","R⁵ = 10 = R⁴  →  R₃ = 10",40,254,15,"left"]]},{"text":"Como <b>R₃ = 10 ≤ D₃ = 12</b>, la tarea cumple su plazo (y R₁, R₂ también): el conjunto es <b>planificable con RM</b>. Si la sucesión superara el plazo, se pararía y la tarea no sería planificable.","add":[["t","10 ≤ 12  ✓  planificable",40,284,15,"left"]]}]});
+/* ---- fin paso2 rtaPaso ---- */
 document.querySelectorAll("[data-sim]").forEach(function(el){var k=el.getAttribute("data-sim");if(SIMS[k]){try{SIMS[k](el);}catch(e){console.error("sim "+k,e);}}else console.warn("sim no encontrada: "+k);});
 })();
