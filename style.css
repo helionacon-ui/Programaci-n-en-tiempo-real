@@ -511,3 +511,7 @@ details.paso .inner p{margin:6px 0}
 .sim-box table select{font:inherit;font-size:14px;padding:4px 6px;border-radius:8px;border:1px solid var(--line);background:var(--surface);color:var(--fg);max-width:100%}
 .mini{border-collapse:collapse;font:12px/1.4 var(--mono);margin:4px 0}.mini td{padding:2px 8px;text-align:right;border:1px solid var(--line)}
 .sim-out .hint{display:block;margin-top:6px;color:var(--muted);font-family:var(--body);font-size:13px}
+
+/* --- ampliación --- */
+details.paso>summary{overflow-x:auto;overflow-y:hidden}
+.prob .enun mjx-container[display="true"],.prob .inner mjx-container[display="true"]{overflow-x:auto;overflow-y:hidden;max-width:100%}
