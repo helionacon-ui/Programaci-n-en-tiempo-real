@@ -381,7 +381,7 @@ C_EMPRESA (45%)
    •   Tiene un método borrar_empleado(), que recibe el nombre de un empleado y lo elimina del
        vector. El método retorna un valor booleano para indicar si ha podido realizar esta acción.
    •   Tiene el operator&lt;&lt; para imprimir en un flujo los atributos del objeto. Por ejemplo:
-               Empresa: UPCT, lista de empleados:
+               Empresa: ACME, lista de empleados:
 Añada todas las funciones que considere necesarias. Solo puede utilizar la funcionalidad
 proporcionada por la librería estándar de C++. Haga también una función ‘main’ en la que muestre
 cómo utilizar las clases diseñadas. EJERCICIO 2: CONCURRENCIA (30%)
@@ -461,7 +461,7 @@ C_EMPRESA (45%)
    •   Tiene un método borrar_empleado(), que recibe el nombre de un empleado y lo elimina del
        vector. El método retorna un valor booleano para indicar si ha podido realizar esta acción.
    •   Tiene el operator&lt;&lt; para imprimir en un flujo los atributos del objeto. Por ejemplo:
-               Empresa: UPCT, lista de empleados:
+               Empresa: ACME, lista de empleados:
 Añada todas las funciones que considere necesarias. Solo puede utilizar la funcionalidad
 proporcionada por la librería estándar de C++. Haga también una función ‘main’ en la que muestre
 cómo utilizar las clases diseñadas.</code></pre><h4>Ejercicio 2 <span class="chip">Monitores y variables condición</span> <a href="#ex-junio25-2">Ver resolución</a></h4><pre><code>EJERCICIO 2: CONCURRENCIA (30%)
@@ -508,7 +508,7 @@ C_ENVIO (30%)
        objeto.
    •   Tiene un método virtual coste_total(), que retorna el coste del envío.
    •   Tiene el operator&lt;&lt; para imprimir en un flujo los atributos del objeto. Por ejemplo:
-                      Envio #12345 (90€), destinatario: Mario, UPCT, 30202, Cartagena
+                      Envio #12345 (90€), destinatario: Mario, ACME, 30202, Cartagena
 
 C_ ENVIO_INTERNACIONAL (25%)
    •   Hereda de la clase C_Envio.
@@ -541,8 +541,8 @@ C_CENTRO_LOGISTICO (45%)
        podido realizar esta acción.
    •   Tiene el operator&lt;&lt; para imprimir en un flujo los atributos del objeto. Por ejemplo:
        Madrid: 3 envios
-             Envio #12345 (90€), destinatario: Mario, UPCT, 30202, Cartagena
-             Envio #12345 (90€), destinatario: María, UPCT, 30202, Cartagena
+             Envio #12345 (90€), destinatario: Mario, ACME, 30202, Cartagena
+             Envio #12345 (90€), destinatario: María, ACME, 30202, Cartagena
              Envio #54321 (50€), destinatario: Xi Ling, Gran Muralla (China + 15€)
 Añada todas las funciones que considere necesarias. Solo puede utilizar la funcionalidad
 proporcionada por la librería estándar de C++. Haga también una función ‘main’ en la que muestre
@@ -586,7 +586,7 @@ C_ENVIO (30%)
        objeto.
    •   Tiene un método virtual coste_total(), que retorna el coste del envío.
    •   Tiene el operator&lt;&lt; para imprimir en un flujo los atributos del objeto. Por ejemplo:
-                      Envio #12345 (90€), destinatario: Mario, UPCT, 30202, Cartagena
+                      Envio #12345 (90€), destinatario: Mario, ACME, 30202, Cartagena
 
 C_ ENVIO_INTERNACIONAL (25%)
    •   Hereda de la clase C_Envio.
@@ -619,8 +619,8 @@ C_CENTRO_LOGISTICO (45%)
        podido realizar esta acción.
    •   Tiene el operator&lt;&lt; para imprimir en un flujo los atributos del objeto. Por ejemplo:
        Madrid: 3 envios
-             Envio #12345 (90€), destinatario: Mario, UPCT, 30202, Cartagena
-             Envio #12345 (90€), destinatario: María, UPCT, 30202, Cartagena
+             Envio #12345 (90€), destinatario: Mario, ACME, 30202, Cartagena
+             Envio #12345 (90€), destinatario: María, ACME, 30202, Cartagena
              Envio #54321 (50€), destinatario: Xi Ling, Gran Muralla (China + 15€)
 Añada todas las funciones que considere necesarias. Solo puede utilizar la funcionalidad
 proporcionada por la librería estándar de C++. Haga también una función ‘main’ en la que muestre
@@ -1875,12 +1875,12 @@ POST_HISTORIA
 Escriba una función main de prueba corta para comprobar el funcionamiento de las clases
 desarrolladas. Solo puede utilizar la funcionalidad que proporciona la librería estándar de C++. EJERCICIO 2
 
-Se pide programar un sencillo gestor de películas, UPCT_Flix, que permita gestionar las películas
+Se pide programar un sencillo gestor de películas, CineFlix, que permita gestionar las películas
 a las que tienen acceso los usuarios de la plataforma. Implemente la estructura Pelicula, que tiene
 los siguientes atributos (todos públicos) y sin métodos: titulo, año en que se estrenó y duración
 en segundos (utilice un tipo de dato de la librería &lt;chrono&gt;). Añada también una función para
 imprimir los detalles de una película por consola.
-A continuación, implemente la clase UPCT_Flix, que tiene como atributos un vector de películas
+A continuación, implemente la clase CineFlix, que tiene como atributos un vector de películas
 y un mapa de string a vector de punteros a películas. La idea es que los datos de las películas
 están almacenadas en el vector, mientras que el mapa representa las películas que un
 determinado usuario (identificado por un string) tiene en su subscripción. El segundo campo del
@@ -1899,7 +1899,7 @@ acceso a la misma película, y no se quiere almacenar múltiples copias de la mi
         identificadores de dos usuarios y retorna un vector de las películas (no punteros, los
         objetos) que están en la subscripción de ambos usuarios.
 
-Escriba una función main de prueba corta para comprobar el funcionamiento de UPCT_Flix. Solo
+Escriba una función main de prueba corta para comprobar el funcionamiento de CineFlix. Solo
 puede utilizar la funcionalidad que proporciona la librería estándar de C++. EJERCICIO 3: CONCURRENCIA
 
 Se quiere realizar un programa que simule un juego en el que dos equipos de hilos compiten por
@@ -1958,12 +1958,12 @@ POST_HISTORIA
 Escriba una función main de prueba corta para comprobar el funcionamiento de las clases
 desarrolladas. Solo puede utilizar la funcionalidad que proporciona la librería estándar de C++.</code></pre><h4>Ejercicio 2 <span class="chip">Clases y objetos</span></h4><pre><code>EJERCICIO 2
 
-Se pide programar un sencillo gestor de películas, UPCT_Flix, que permita gestionar las películas
+Se pide programar un sencillo gestor de películas, CineFlix, que permita gestionar las películas
 a las que tienen acceso los usuarios de la plataforma. Implemente la estructura Pelicula, que tiene
 los siguientes atributos (todos públicos) y sin métodos: titulo, año en que se estrenó y duración
 en segundos (utilice un tipo de dato de la librería &lt;chrono&gt;). Añada también una función para
 imprimir los detalles de una película por consola.
-A continuación, implemente la clase UPCT_Flix, que tiene como atributos un vector de películas
+A continuación, implemente la clase CineFlix, que tiene como atributos un vector de películas
 y un mapa de string a vector de punteros a películas. La idea es que los datos de las películas
 están almacenadas en el vector, mientras que el mapa representa las películas que un
 determinado usuario (identificado por un string) tiene en su subscripción. El segundo campo del
@@ -1982,7 +1982,7 @@ acceso a la misma película, y no se quiere almacenar múltiples copias de la mi
         identificadores de dos usuarios y retorna un vector de las películas (no punteros, los
         objetos) que están en la subscripción de ambos usuarios.
 
-Escriba una función main de prueba corta para comprobar el funcionamiento de UPCT_Flix. Solo
+Escriba una función main de prueba corta para comprobar el funcionamiento de CineFlix. Solo
 puede utilizar la funcionalidad que proporciona la librería estándar de C++.</code></pre><h4>Ejercicio 3 <span class="chip">Monitores y variables condición</span></h4><pre><code>EJERCICIO 3: CONCURRENCIA
 
 Se quiere realizar un programa que simule un juego en el que dos equipos de hilos compiten por
@@ -5911,7 +5911,7 @@ C_ENVIO (30%)
        objeto.
    •   Tiene un método virtual coste_total(), que retorna el coste del envío.
    •   Tiene el operator&lt;&lt; para imprimir en un flujo los atributos del objeto. Por ejemplo:
-                      Envio #12345 (90€), destinatario: Mario, UPCT, 30202, Cartagena
+                      Envio #12345 (90€), destinatario: Mario, ACME, 30202, Cartagena
 
 C_ ENVIO_INTERNACIONAL (25%)
    •   Hereda de la clase C_Envio.
@@ -5944,8 +5944,8 @@ C_CENTRO_LOGISTICO (45%)
        podido realizar esta acción.
    •   Tiene el operator&lt;&lt; para imprimir en un flujo los atributos del objeto. Por ejemplo:
        Madrid: 3 envios
-             Envio #12345 (90€), destinatario: Mario, UPCT, 30202, Cartagena
-             Envio #12345 (90€), destinatario: María, UPCT, 30202, Cartagena
+             Envio #12345 (90€), destinatario: Mario, ACME, 30202, Cartagena
+             Envio #12345 (90€), destinatario: María, ACME, 30202, Cartagena
              Envio #54321 (50€), destinatario: Xi Ling, Gran Muralla (China + 15€)
 Añada todas las funciones que considere necesarias. Solo puede utilizar la funcionalidad
 proporcionada por la librería estándar de C++. Haga también una función ‘main’ en la que muestre
@@ -6029,27 +6029,27 @@ public:
     }
 };</code></pre></div></details><details class="paso"><summary><span class="pn">5</span> 5. <code>main</code></summary><div class="inner"><pre class="lang-cpp"><span class="lbl">CPP</span><code>int main() {
     C_Centro_Logistico madrid{"Madrid"};
-    C_Envio a{12345, 90, "Mario, UPCT, 30202, Cartagena"};
-    C_Envio b{12346, 70, "Maria, UPCT, 30202, Cartagena"};
+    C_Envio a{12345, 90, "Mario, ACME, 30202, Cartagena"};
+    C_Envio b{12346, 70, "Maria, ACME, 30202, Cartagena"};
     C_Envio_Internacional c{54321, 50, "Xi Ling, Gran Muralla", "China", 15};
     cout &lt;&lt; boolalpha &lt;&lt; madrid.add_envio(a) &lt;&lt; madrid.add_envio(b) &lt;&lt; madrid.add_envio(c)
          &lt;&lt; madrid.add_envio(a) &lt;&lt; '\n';
     cout &lt;&lt; madrid;
     cout &lt;&lt; madrid.contar_nacionales() &lt;&lt; ' ' &lt;&lt; madrid.contar_internacionales() &lt;&lt; ' '
-         &lt;&lt; madrid.contar_destinatario("UPCT") &lt;&lt; '\n';
+         &lt;&lt; madrid.contar_destinatario("ACME") &lt;&lt; '\n';
     const C_Envio&amp; r = c;
     cout &lt;&lt; "coste (polimorfismo): " &lt;&lt; r.coste_total() &lt;&lt; '\n';
     cout &lt;&lt; madrid.borrar_envio(12346) &lt;&lt; madrid.borrar_envio(1) &lt;&lt; '\n' &lt;&lt; madrid;
 }</code></pre></div></details></div><details class="resul resultado"><summary>Resultado final</summary><div class="inner"><pre class="out"><span class="lbl">Salida</span><code>truetruetruefalse
 Madrid: 3 envios
-Envio #12345 (90€), destinatario: Mario, UPCT, 30202, Cartagena
-Envio #12346 (70€), destinatario: Maria, UPCT, 30202, Cartagena
+Envio #12345 (90€), destinatario: Mario, ACME, 30202, Cartagena
+Envio #12346 (70€), destinatario: Maria, ACME, 30202, Cartagena
 Envio #54321 (50€), destinatario: Xi Ling, Gran Muralla (China + 15€)
 2 1 2
 coste (polimorfismo): 65
 truefalse
 Madrid: 2 envios
-Envio #12345 (90€), destinatario: Mario, UPCT, 30202, Cartagena
+Envio #12345 (90€), destinatario: Mario, ACME, 30202, Cartagena
 Envio #54321 (50€), destinatario: Xi Ling, Gran Muralla (China + 15€)</code></pre></div></details></article><article class="ex prob" id="ex-mayo25-2" data-tags="mayo25 Mayo 2025 · Ejercicio 2: puente de vía única (monitor)" data-curso="2024-25" data-tipo="final" data-tema="monitor"><h3 class="exh ph">Mayo 2025 · Ejercicio 2: puente de vía única (monitor) <span class="chip">monitor</span><span class="chip">final</span></h3><div class="enun"><p class="et">Enunciado</p><pre class="stmt"><code>EJERCICIO 2: CONCURRENCIA (30%)
 
 Se pide diseñar una clase monitor C_Puente para el siguiente problema, junto con un ejemplo de uso. La
@@ -6187,7 +6187,7 @@ C_EMPRESA (45%)
    •   Tiene un método borrar_empleado(), que recibe el nombre de un empleado y lo elimina del
        vector. El método retorna un valor booleano para indicar si ha podido realizar esta acción.
    •   Tiene el operator&lt;&lt; para imprimir en un flujo los atributos del objeto. Por ejemplo:
-               Empresa: UPCT, lista de empleados:
+               Empresa: ACME, lista de empleados:
 Añada todas las funciones que considere necesarias. Solo puede utilizar la funcionalidad
 proporcionada por la librería estándar de C++. Haga también una función ‘main’ en la que muestre
 cómo utilizar las clases diseñadas.</code></pre></div><div class="idea"><p class="et">Antes de empezar: qué piden y qué teoría usas</p><p><b>Qué piden.</b> Una jerarquía con <b>clase base abstracta</b> (<code>C_Empleado</code>, con <code>get_sueldo()</code> virtual puro), dos derivadas (sueldo fijo y variable) y una empresa que guarda <code>vector&lt;C_Empleado*&gt;</code>.</p><p><b>Teoría que usas.</b> Clase abstracta, método virtual puro, <code>operator&lt;&lt;</code> que las hijas puedan reutilizar (gancho virtual protegido), <code>max_element</code> con lambda para el mayor sueldo, <code>typeid</code> para contar tipos, borrado con iterador.</p></div><div class="pasos"><details class="paso"><summary><span class="pn">1</span> 1. La base abstracta</summary><div class="inner"><p>El <code>operator&lt;&lt;</code> es <code>friend</code> y delega en un método virtual protegido (<code>imprimir</code>) para que las clases hijas lo <b>reutilicen sin reescribirlo</b>. <code>get_sueldo()</code> es virtual puro: la clase ya no se puede instanciar.</p><pre class="lang-cpp"><span class="lbl">CPP</span><code>class C_Empleado {
@@ -6257,24 +6257,24 @@ public:
         return os;
     }
 };</code></pre></div></details><details class="paso"><summary><span class="pn">4</span> 4. <code>main</code></summary><div class="inner"><pre class="lang-cpp"><span class="lbl">CPP</span><code>int main() {
-    C_Empresa upct{"UPCT"};
+    C_Empresa acme{"ACME"};
     C_Empleado_Sueldo_Fijo juan{"Juan", "Calle calle", 2500};
     C_Empleado_Sueldo_Fijo antonio{"Antonio", "Plaza plaza", 2500};
     C_Empleado_Sueldo_Variable maria{"Maria", "Avenida avda", 2000, 1000};
-    upct.add_empleado(juan); upct.add_empleado(antonio); upct.add_empleado(maria);
-    cout &lt;&lt; upct;
-    cout &lt;&lt; upct.total_fijos() &lt;&lt; ' ' &lt;&lt; upct.total_variables() &lt;&lt; '\n';
-    cout &lt;&lt; "Mayor sueldo: " &lt;&lt; *upct.mayor_sueldo() &lt;&lt; '\n';
-    cout &lt;&lt; boolalpha &lt;&lt; upct.borrar_empleado("Antonio") &lt;&lt; ' ' &lt;&lt; upct.borrar_empleado("Nadie") &lt;&lt; '\n';
-    cout &lt;&lt; upct;
-}</code></pre></div></details></div><details class="resul resultado"><summary>Resultado final</summary><div class="inner"><pre class="out"><span class="lbl">Salida</span><code>Empresa: UPCT, lista de empleados:
+    acme.add_empleado(juan); acme.add_empleado(antonio); acme.add_empleado(maria);
+    cout &lt;&lt; acme;
+    cout &lt;&lt; acme.total_fijos() &lt;&lt; ' ' &lt;&lt; acme.total_variables() &lt;&lt; '\n';
+    cout &lt;&lt; "Mayor sueldo: " &lt;&lt; *acme.mayor_sueldo() &lt;&lt; '\n';
+    cout &lt;&lt; boolalpha &lt;&lt; acme.borrar_empleado("Antonio") &lt;&lt; ' ' &lt;&lt; acme.borrar_empleado("Nadie") &lt;&lt; '\n';
+    cout &lt;&lt; acme;
+}</code></pre></div></details></div><details class="resul resultado"><summary>Resultado final</summary><div class="inner"><pre class="out"><span class="lbl">Salida</span><code>Empresa: ACME, lista de empleados:
 Nombre: Juan (Calle calle), Sueldo: 2500€
 Nombre: Antonio (Plaza plaza), Sueldo: 2500€
 Nombre: Maria (Avenida avda), Sueldo: 3000€
 2 1
 Mayor sueldo: Nombre: Maria (Avenida avda), Sueldo: 3000€
 true false
-Empresa: UPCT, lista de empleados:
+Empresa: ACME, lista de empleados:
 Nombre: Juan (Calle calle), Sueldo: 2500€
 Nombre: Maria (Avenida avda), Sueldo: 3000€</code></pre></div></details></article><article class="ex prob" id="ex-junio25-2" data-tags="junio25 Junio 2025 · Ejercicio 2: fábrica de patinetes (monitor)" data-curso="2024-25" data-tipo="final" data-tema="monitor"><h3 class="exh ph">Junio 2025 · Ejercicio 2: fábrica de patinetes (monitor) <span class="chip">monitor</span><span class="chip">final</span></h3><div class="enun"><p class="et">Enunciado</p><pre class="stmt"><code>EJERCICIO 2: CONCURRENCIA (30%)
 
@@ -6923,4 +6923,4 @@ P2 escribe 1 en v1[2]
 C4 lee 1 de v1[4]
 P1 escribe 2 en v1[1]
 P0 escribe 2 en v1[0]
-…</code></pre></div></details></article></section><nav class="pn" aria-label="Páginas"><a class="pv" href="practicas.html" style="--tc:#d9480f"><small>← Anterior</small><strong>Prácticas</strong></a><a class="nx" href="hojas.html" style="--tc:#e67700"><small>Siguiente →</small><strong>Hojas de problemas</strong></a></nav></main></div><p class="sitefoot">Guía no oficial de Programación de Sistemas en Tiempo Real (UPCT). Proyecto personal de estudio iniciado el <time datetime="2026-11-08">8 de noviembre de 2026</time>.</p><script src="assets/search-index.js?v=423d43"></script><script src="assets/app.js?v=423d43"></script></body></html>
+…</code></pre></div></details></article></section><nav class="pn" aria-label="Páginas"><a class="pv" href="practicas.html" style="--tc:#d9480f"><small>← Anterior</small><strong>Prácticas</strong></a><a class="nx" href="hojas.html" style="--tc:#e67700"><small>Siguiente →</small><strong>Hojas de problemas</strong></a></nav></main></div><p class="sitefoot">Guía no oficial de Programación de Sistemas en Tiempo Real. Proyecto personal de estudio iniciado el <time datetime="2026-11-08">8 de noviembre de 2026</time>.</p><script src="assets/search-index.js?v=423d43"></script><script src="assets/app.js?v=423d43"></script></body></html>

@@ -2,7 +2,7 @@
 
 **Proyecto iniciado el 8 de noviembre de 2026.**
 
-Guía de estudio interactiva de Programación de Sistemas en Tiempo Real (UPCT, GIEyA): C++ y STL, clases, herencia y polimorfismo, hilos, monitores, planificación y coma flotante.
+Guía de estudio interactiva de Programación de Sistemas en Tiempo Real (GIEyA): C++ y STL, clases, herencia y polimorfismo, hilos, monitores, planificación y coma flotante.
 
 Ábrela en: https://helionacon-ui.github.io/Programaci-n-en-tiempo-real/
 

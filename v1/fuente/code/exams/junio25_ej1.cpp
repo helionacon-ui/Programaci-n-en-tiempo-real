@@ -78,14 +78,14 @@ public:
 };
 
 int main() {
-    C_Empresa upct{"UPCT"};
+    C_Empresa acme{"ACME"};
     C_Empleado_Sueldo_Fijo juan{"Juan", "Calle calle", 2500};
     C_Empleado_Sueldo_Fijo antonio{"Antonio", "Plaza plaza", 2500};
     C_Empleado_Sueldo_Variable maria{"Maria", "Avenida avda", 2000, 1000};
-    upct.add_empleado(juan); upct.add_empleado(antonio); upct.add_empleado(maria);
-    cout << upct;
-    cout << upct.total_fijos() << ' ' << upct.total_variables() << '\n';
-    cout << "Mayor sueldo: " << *upct.mayor_sueldo() << '\n';
-    cout << boolalpha << upct.borrar_empleado("Antonio") << ' ' << upct.borrar_empleado("Nadie") << '\n';
-    cout << upct;
+    acme.add_empleado(juan); acme.add_empleado(antonio); acme.add_empleado(maria);
+    cout << acme;
+    cout << acme.total_fijos() << ' ' << acme.total_variables() << '\n';
+    cout << "Mayor sueldo: " << *acme.mayor_sueldo() << '\n';
+    cout << boolalpha << acme.borrar_empleado("Antonio") << ' ' << acme.borrar_empleado("Nadie") << '\n';
+    cout << acme;
 }

@@ -1,7 +1,7 @@
 {
   "name": "Programación de Sistemas en Tiempo Real · Guía para aprobar",
   "short_name": "Tiempo real",
-  "description": "Guía de estudio de Programación de Sistemas en Tiempo Real (UPCT): teoría, vídeos, simuladores, exámenes y ejercicios resueltos.",
+  "description": "Guía de estudio de Programación de Sistemas en Tiempo Real: teoría, vídeos, simuladores, exámenes y ejercicios resueltos.",
   "lang": "es",
   "start_url": "./",
   "scope": "./",

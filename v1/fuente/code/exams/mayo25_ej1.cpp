@@ -94,14 +94,14 @@ public:
 
 int main() {
     C_Centro_Logistico madrid{"Madrid"};
-    C_Envio a{12345, 90, "Mario, UPCT, 30202, Cartagena"};
-    C_Envio b{12346, 70, "Maria, UPCT, 30202, Cartagena"};
+    C_Envio a{12345, 90, "Mario, ACME, 30202, Cartagena"};
+    C_Envio b{12346, 70, "Maria, ACME, 30202, Cartagena"};
     C_Envio_Internacional c{54321, 50, "Xi Ling, Gran Muralla", "China", 15};
     cout << boolalpha << madrid.add_envio(a) << madrid.add_envio(b) << madrid.add_envio(c)
          << madrid.add_envio(a) << '\n';
     cout << madrid;
     cout << madrid.contar_nacionales() << ' ' << madrid.contar_internacionales() << ' '
-         << madrid.contar_destinatario("UPCT") << '\n';
+         << madrid.contar_destinatario("ACME") << '\n';
     const C_Envio& r = c;
     cout << "coste (polimorfismo): " << r.coste_total() << '\n';
     cout << madrid.borrar_envio(12346) << madrid.borrar_envio(1) << '\n' << madrid;

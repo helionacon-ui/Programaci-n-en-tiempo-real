@@ -1,6 +1,6 @@
 # Programación de Sistemas en Tiempo Real · Guía para aprobar
 
-Guía de estudio no oficial de **Programación de Sistemas en Tiempo Real** (UPCT, Grado en Ingeniería Electrónica Industrial y Automática, 3.er curso).
+Guía de estudio no oficial de **Programación de Sistemas en Tiempo Real** (Grado en Ingeniería Electrónica Industrial y Automática, 3.er curso).
 
 **Web:** https://helionacon-ui.github.io/GIEIA-UPCT/programacion-tiempo-real/
 

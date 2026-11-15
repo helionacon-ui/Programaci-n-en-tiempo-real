@@ -101,7 +101,7 @@ def hub(date):
             '<button class="theme" id="theme" type="button" aria-label="Cambiar entre tema claro y oscuro">◐ Tema</button>' % (HUB_URL, datos(date)))
 
 def footer():
-    return '<p class="sitefoot">Guía no oficial de Programación de Sistemas en Tiempo Real (UPCT). Proyecto personal de estudio iniciado el <time datetime="%s">%s</time>.</p>' % (START, fecha(START))
+    return '<p class="sitefoot">Guía no oficial de Programación de Sistemas en Tiempo Real (). Proyecto personal de estudio iniciado el <time datetime="%s">%s</time>.</p>' % (START, fecha(START))
 
 def hero(stats, art, multi, secs):
     st = ''.join('<div><b>%s</b><span>%s</span></div>' % (n, l) for n, l in stats)
@@ -109,13 +109,13 @@ def hero(stats, art, multi, secs):
         return '<a class="btn%s" href="%s">%s</a>' % (' pri' if pri else '', href(sid, multi), label)
     if multi:
         cta = a('inicio', 'Empieza por aquí', True) + a('simulacros', 'Hazte un simulacro') + a('plan', 'Plan de estudio')
-        extra = ('<p class="lede hello">Guía no oficial de la UPCT para preparar la asignatura sin agobios: teoría explicada con ejemplos, '
+        extra = ('<p class="lede hello">Guía no oficial de la universidad para preparar la asignatura sin agobios: teoría explicada con ejemplos, '
                  'ejercicios de examen resueltos paso a paso, simuladores y tests para entrenar.</p>')
         hint = '<p class="hint">¿Tienes poco tiempo? Lee <a href="empezar.html">«Empieza aquí»</a> y haz un simulacro: con eso ya sabrás por dónde vas.</p>'
     else:
         cta = a('inicio', 'Empieza desde cero', True) + a('examen', 'El examen') + a('examenes', 'Exámenes resueltos') + a('simulacros', 'Simulacros') + a('auto', 'Autoevaluación') + a('formularios', 'Formulario')
         extra = hint = ''
-    return ('<header class="hero"><div class="hero-in"><div class="hero-txt"><div class="eyebrow">UPCT · GIEyA · Programación en C++</div>'
+    return ('<header class="hero"><div class="hero-in"><div class="hero-txt"><div class="eyebrow">GIEyA · Programación en C++</div>'
             '<h1>Programación de Sistemas en <span>Tiempo Real</span></h1><p class="sub">Para llegar al examen con calma</p>%s<div class="stats">%s</div><div class="cta">%s</div>%s</div>'
             '<div aria-hidden="true" class="hero-art">%s<p class="art-cap">Una CPU, un reloj con plazo y tareas que se planifican: la asignatura en una imagen.</p></div></div></header>' % (extra, st, cta, hint, art))
 
@@ -240,7 +240,7 @@ def write_site(site, secs, pages, extras, stats, art, date, base_css, ours_css, 
     m = master(secs, pages, extras, stats, art, date, css, js, TITLE, sidx)
     open(os.path.join(site, MASTER), 'w', encoding='utf-8').write(m)
     open(os.path.join(site, '.nojekyll'), 'w').write('')
-    man = dict(name=TITLE + ' · Guía para aprobar', short_name='Tiempo real', description='Guía de estudio de %s (UPCT): teoría, vídeos, simuladores, exámenes y ejercicios resueltos.' % TITLE, lang='es',
+    man = dict(name=TITLE + ' · Guía para aprobar', short_name='Tiempo real', description='Guía de estudio de %s (): teoría, vídeos, simuladores, exámenes y ejercicios resueltos.' % TITLE, lang='es',
                start_url='./', scope='./', display='standalone', background_color='#f4f6f5', theme_color='#2456d6',
                icons=[dict(src='icon-192.png', sizes='192x192', type='image/png'), dict(src='icon-512.png', sizes='512x512', type='image/png'), dict(src='icon-maskable-512.png', sizes='512x512', type='image/png', purpose='maskable')])
     json.dump(man, open(os.path.join(site, 'manifest.webmanifest'), 'w', encoding='utf-8'), ensure_ascii=False, indent=2)
