@@ -17,24 +17,64 @@
 <style id="lectura">
 @media screen{
 :root{--body:"Atkinson Hyperlegible Next","Atkinson Hyperlegible","Segoe UI",system-ui,-apple-system,sans-serif}
-body{font-family:var(--body);font-size:20.5px;line-height:2.1;letter-spacing:.022em;word-spacing:.09em}
-p{margin:0 0 1.75em}
-li{margin:.8em 0}
-p,li{max-width:62ch}
+body{font-family:var(--body);font-size:20px;line-height:1.95;letter-spacing:.014em;word-spacing:.05em}
+p{margin:0 0 1.5em;max-width:64ch;hyphens:auto;-webkit-hyphens:auto}
+li{margin:.72em 0;max-width:64ch}
 .box p:last-child,.box ul:last-child,.box ol:last-child{margin-bottom:0}
-h2{margin-top:92px;margin-bottom:24px;line-height:1.3}
-h3{font-size:24px;margin:58px 0 18px;line-height:1.35}
-h4{margin-top:34px;margin-bottom:10px}
-.box{padding:24px 30px;margin:32px 0}
-table{font-size:18px;line-height:1.75}
-td,th{padding-top:.85em;padding-bottom:.85em}
-figure.fig figcaption{font-size:17px;line-height:1.8;margin-top:12px}
+h2{margin-top:92px;margin-bottom:22px;line-height:1.25}
+h3{font-size:25px;margin:66px 0 20px;line-height:1.3}
+h4{margin:38px 0 12px;line-height:1.4}
+/* ---- entradilla con capitular ---- */
+.zero .lede{font-size:1.05em;line-height:1.86;text-align:left}
+.zero .lede::first-letter{float:left;font-size:3.05em;line-height:.84;font-weight:700;padding:.06em .14em 0 0;color:var(--tc,var(--accent))}
+/* ---- sumario del tema ---- */
+p.obj{max-width:none;text-align:left;margin:0 0 1.7em;padding:14px 20px;border-radius:10px;
+ background:color-mix(in srgb,var(--surface) 62%,transparent);
+ border-left:3px solid var(--tc,var(--accent));font-size:.95em;line-height:1.75}
+p.obj>b:first-child{display:block;font:700 11.5px/1.7 var(--mono,monospace);letter-spacing:.1em;
+ text-transform:uppercase;color:var(--tc,var(--accent))}
+/* ---- términos con entrada, al modo de un manual ---- */
+p.run{margin:0 0 1.38em}
+p.run>b:first-child{display:block;font:700 12px/1.7 var(--mono,monospace);letter-spacing:.09em;
+ text-transform:uppercase;color:var(--tc,var(--accent))}
+/* ---- rótulos internos ---- */
+.zero>.ft{font:700 11.5px/1.6 var(--mono,monospace);letter-spacing:.1em;text-transform:uppercase}
+.zero>.ft:not(:first-child){margin-top:2em;font-size:12.5px;color:var(--fg);opacity:.72}
+/* ---- desarrollo teórico ---- */
+.deep h4{position:relative;padding-left:2.35em;font-size:1.03em}
+.deep h4 .hn{position:absolute;left:0;top:.06em;font:700 .84em/1.7 var(--mono,monospace);
+ color:var(--tc,var(--accent));opacity:.8}
+.deep>h4:not(:first-child){border-top:1px solid var(--line);padding-top:30px;margin-top:42px}
+.eqd{margin:1.65em 0;text-align:center;overflow-x:auto;overflow-y:hidden}
+/* ---- notas al margen, sin duplicar el rótulo ---- */
+.box.deepnote{padding:15px 20px;margin:1.5em 0;border-radius:0 10px 10px 0;
+ background:color-mix(in srgb,var(--surface) 76%,transparent)}
+.box.key.deepnote::before,.box.trap.deepnote::before{content:none}
+.box.deepnote>b:first-child{display:block;font:700 11.5px/1.7 var(--mono,monospace);
+ letter-spacing:.1em;text-transform:uppercase;color:var(--tc,var(--accent))}
+.box.trap.deepnote>b:first-child{color:var(--warn)}
+/* ---- resto ---- */
+.box{padding:22px 28px;margin:30px 0}
+table{font-size:18px;line-height:1.7}
+td,th{padding-top:.8em;padding-bottom:.8em}
+figure.fig figcaption{font-size:17px;line-height:1.78;margin-top:12px}
 figure.fig{margin-block:34px}
-.lede{line-height:1.85}
 .toc a{font-size:15.5px;padding:8px 0 8px 10px}
 svg,svg text,canvas,.katex,mjx-container{letter-spacing:normal;word-spacing:normal}
+mjx-container[display]{margin:0!important}
 details>summary{line-height:1.7;padding-block:.5em}
-@media (max-width:600px){body{font-size:19px;line-height:2}}
+.enun p,.inner p{text-align:left}
+@media (min-width:1040px){
+p,li{text-align:justify}
+.zero .lede,.enun p,.inner p,figcaption,.ft{text-align:left}
+}
+@media (max-width:600px){
+body{font-size:18.5px;line-height:1.9}
+p{text-align:left}
+.zero .lede::first-letter{font-size:2.6em}
+.deep h4{padding-left:0}
+.deep h4 .hn{position:static;margin-right:.5em}
+}
 }
 </style>
 </head>
@@ -46,7 +86,7 @@ details>summary{line-height:1.7;padding-block:.5em}
 <main>
 <section class="sec tema" style="--tc:var(--c7);--tcs:var(--c7s)">
 <div class="sh"><span aria-hidden="true" class="badge">6</span><div class="shx"><p class="kick">C++ moderno: de los objetos a la concurrencia · Tema 6</p><h2 id="t6">Sincronización: mutex, variables de condición y monitores</h2><div class="tags"><span class="tag">C++ moderno: de los objetos a la concurrencia</span><span class="tag">Concurrencia</span></div></div></div>
-<div class="zero"><p class="ft">Desde cero</p><p><b>Objetivo:</b> proteger los datos compartidos, hacer que un hilo espere a otro y diseñar clases seguras entre hilos (monitores).</p><ul>
+<div class="zero"><p class="ft">Desde cero</p><p class="obj"><b>Objetivo:</b> proteger los datos compartidos, hacer que un hilo espere a otro y diseñar clases seguras entre hilos (monitores).</p><ul>
 <li>La <b>exclusión mutua</b> es la solución a la condición de carrera: garantizar que, mientras un hilo está en la <b>sección crítica</b>, ningún otro entra. El mecanismo básico es el <b>mutex</b> (<i>mutual exclusion</i>), con dos operaciones: <code>lock</code> y <code>unlock</code>.</li>
 <li>En C++ moderno <b>no se llama a <code>lock</code> y <code>unlock</code> a mano</b>: se usa <b><code>lock_guard</code></b>, que bloquea en su constructor y desbloquea en su destructor (RAII). Así el mutex se libera aunque se salga de la función por un <code>return</code> o por una excepción.</li>
 <li><b><code>unique_lock</code></b> es un <code>lock_guard</code> más flexible: se puede desbloquear y volver a bloquear, y es el que exigen las <b>variables de condición</b>.</li>
@@ -61,14 +101,14 @@ details>summary{line-height:1.7;padding-block:.5em}
 <details class="nom"><summary><span aria-hidden="true" class="nom-ic">Aa</span>Nomenclatura del tema 6 <span class="src">9 entradas</span></summary><div class="inner">
 <div class="tw"><table><tr><th>Símbolo</th><th>Significado</th><th>Unidad · nota</th></tr><tr><td class="sym">mutex</td><td>exclusión mutua</td><td class="u">lock / unlock</td></tr><tr><td class="sym">lock_guard</td><td>RAII sobre el mutex</td><td class="u"></td></tr><tr><td class="sym">unique_lock</td><td>bloqueo flexible</td><td class="u">lo exige wait</td></tr><tr><td class="sym">condition_variable</td><td>espera por condición</td><td class="u"></td></tr><tr><td class="sym">wait(lk, pred)</td><td>duerme si pred es falso</td><td class="u">libera el mutex</td></tr><tr><td class="sym">notify_one/all</td><td>despertar</td><td class="u"></td></tr><tr><td class="sym">atomic<T></td><td>operación indivisible</td><td class="u"></td></tr><tr><td class="sym">monitor</td><td>datos + mutex encapsulados</td><td class="u"></td></tr><tr><td class="sym">Coffman</td><td>4 condiciones de interbloqueo</td><td class="u"></td></tr></table></div></div></details>
 <figure class="fig"><p class="ft">Figura interactiva - productor-consumidor con buffer limitado</p><div data-sim="productor"></div><figcaption>Mueve los controles y observa cómo cambia el resultado: es el mismo cálculo que hay que saber hacer a mano en el examen.</figcaption></figure>
-<!--amp1--><div class="zero" style="margin-top:14px"><p class="ft">Explicación ampliada</p><p class="ft">Exclusión mutua con mutex</p><p>Una <b>sección crítica</b> es un trozo de código que solo un hilo puede ejecutar a la vez (porque toca datos compartidos). Se protege con un <b>mutex</b> (de «exclusión mutua»): el hilo que lo tiene bloqueado ejecuta y los demás esperan a que lo suelte. Lo más seguro es <code>lock_guard&lt;mutex&gt; lk(m);</code>: bloquea al crearse y <b>desbloquea solo al salir del ámbito</b>, incluso si hay una excepción. El peligro opuesto es el <b>interbloqueo</b> (deadlock): el hilo A tiene el mutex 1 y pide el 2, y el B tiene el 2 y pide el 1: ninguno avanza. Se evita pidiendo siempre los mutex en el mismo orden o con <code>scoped_lock(m1, m2)</code>.</p><p class="ft">Productor–consumidor con variable de condición</p><p>Un hilo <b>produce</b> datos y otro los <b>consume</b>, intercambiándolos por un buffer de tamaño máximo \(N\). Si el buffer está lleno, el productor debe <em>esperar</em>; si está vacío, el consumidor. Esperar mirando todo el rato malgasta la CPU; en su lugar se usa una <b>variable de condición</b> (<code>cv.wait(lk, condicion)</code>): el hilo se duerme hasta que otro llame a <code>cv.notify_all()</code>, y al despertar vuelve a comprobar la condición. Hay que usar <code>unique_lock</code> (no <code>lock_guard</code>) porque <code>wait</code> necesita desbloquear el mutex mientras duerme y volver a bloquearlo al despertar. Se notifica <em>después</em> de modificar el buffer.</p></div><!--/amp1--><!--deep--><h3 id="t6-profundiza">Desarrollo teórico a fondo</h3><div class="deep">
-<h4>1. Exclusión mutua</h4>
+<!--amp1--><div class="zero" style="margin-top:14px"><p class="ft">Explicación ampliada</p><p class="ft">Exclusión mutua con mutex</p><p class="lede">Una <b>sección crítica</b> es un trozo de código que solo un hilo puede ejecutar a la vez (porque toca datos compartidos). Se protege con un <b>mutex</b> (de «exclusión mutua»): el hilo que lo tiene bloqueado ejecuta y los demás esperan a que lo suelte. Lo más seguro es <code>lock_guard&lt;mutex&gt; lk(m);</code>: bloquea al crearse y <b>desbloquea solo al salir del ámbito</b>, incluso si hay una excepción. El peligro opuesto es el <b>interbloqueo</b> (deadlock): el hilo A tiene el mutex 1 y pide el 2, y el B tiene el 2 y pide el 1: ninguno avanza. Se evita pidiendo siempre los mutex en el mismo orden o con <code>scoped_lock(m1, m2)</code>.</p><p class="ft">Productor–consumidor con variable de condición</p><p>Un hilo <b>produce</b> datos y otro los <b>consume</b>, intercambiándolos por un buffer de tamaño máximo \(N\). Si el buffer está lleno, el productor debe <em>esperar</em>; si está vacío, el consumidor. Esperar mirando todo el rato malgasta la CPU; en su lugar se usa una <b>variable de condición</b> (<code>cv.wait(lk, condicion)</code>): el hilo se duerme hasta que otro llame a <code>cv.notify_all()</code>, y al despertar vuelve a comprobar la condición. Hay que usar <code>unique_lock</code> (no <code>lock_guard</code>) porque <code>wait</code> necesita desbloquear el mutex mientras duerme y volver a bloquearlo al despertar. Se notifica <em>después</em> de modificar el buffer.</p></div><!--/amp1--><!--deep--><h3 id="t6-profundiza">Desarrollo teórico a fondo</h3><div class="deep">
+<h4><span class="hn">1</span>Exclusión mutua</h4>
 <div class="box key deepnote"><b>Idea clave.</b> un mutex asegura que solo un hilo a la vez ejecuta una sección crítica. Se bloquea antes de acceder a los datos compartidos y se libera al terminar.</div>
 <ul><li><code>std::mutex m;</code> y <code>std::lock_guard&lt;std::mutex&gt; g(m);</code> bloquea hasta que sale del ámbito.</li><li>Bloquear siempre en el mismo orden evita el <b>interbloqueo</b> (deadlock).</li></ul>
 <div class="box trap deepnote"><b>Cuidado.</b> Un mutex que se bloquea dos veces desde el mismo hilo se bloquea a sí mismo. Usa <code>recursive_mutex</code> solo si es necesario.</div>
 <details class="dem"><summary><span class="pn">∴</span>Variables de condición</summary><div class="inner"><p>Un hilo espera hasta que se cumpla una condición, y otro hilo lo avisa con <code>notify_one</code>. Así no se gasta CPU en espera activa.</p>
 <div class="box trap deepnote"><b>Cuidado.</b> Hay que comprobar la condición en un bucle, no una sola vez: los despertares espurios son posibles.</div></div></details>
-<h4>2. Monitores</h4>
+<h4><span class="hn">2</span>Monitores</h4>
 <p>Un monitor es una clase que encapsula los datos y sus mutex. Los métodos públicos bloquean automáticamente, de forma que el acceso concurrente queda controlado.</p>
 </div><!--/deep--><h3 id="t6-formulas">Fórmulas y conceptos que hay que saber</h3>
 <div class="box key"><ul><li><b>Exclusión mutua:</b></li></ul>

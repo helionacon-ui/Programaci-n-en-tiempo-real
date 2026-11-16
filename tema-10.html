@@ -17,24 +17,64 @@
 <style id="lectura">
 @media screen{
 :root{--body:"Atkinson Hyperlegible Next","Atkinson Hyperlegible","Segoe UI",system-ui,-apple-system,sans-serif}
-body{font-family:var(--body);font-size:20.5px;line-height:2.1;letter-spacing:.022em;word-spacing:.09em}
-p{margin:0 0 1.75em}
-li{margin:.8em 0}
-p,li{max-width:62ch}
+body{font-family:var(--body);font-size:20px;line-height:1.95;letter-spacing:.014em;word-spacing:.05em}
+p{margin:0 0 1.5em;max-width:64ch;hyphens:auto;-webkit-hyphens:auto}
+li{margin:.72em 0;max-width:64ch}
 .box p:last-child,.box ul:last-child,.box ol:last-child{margin-bottom:0}
-h2{margin-top:92px;margin-bottom:24px;line-height:1.3}
-h3{font-size:24px;margin:58px 0 18px;line-height:1.35}
-h4{margin-top:34px;margin-bottom:10px}
-.box{padding:24px 30px;margin:32px 0}
-table{font-size:18px;line-height:1.75}
-td,th{padding-top:.85em;padding-bottom:.85em}
-figure.fig figcaption{font-size:17px;line-height:1.8;margin-top:12px}
+h2{margin-top:92px;margin-bottom:22px;line-height:1.25}
+h3{font-size:25px;margin:66px 0 20px;line-height:1.3}
+h4{margin:38px 0 12px;line-height:1.4}
+/* ---- entradilla con capitular ---- */
+.zero .lede{font-size:1.05em;line-height:1.86;text-align:left}
+.zero .lede::first-letter{float:left;font-size:3.05em;line-height:.84;font-weight:700;padding:.06em .14em 0 0;color:var(--tc,var(--accent))}
+/* ---- sumario del tema ---- */
+p.obj{max-width:none;text-align:left;margin:0 0 1.7em;padding:14px 20px;border-radius:10px;
+ background:color-mix(in srgb,var(--surface) 62%,transparent);
+ border-left:3px solid var(--tc,var(--accent));font-size:.95em;line-height:1.75}
+p.obj>b:first-child{display:block;font:700 11.5px/1.7 var(--mono,monospace);letter-spacing:.1em;
+ text-transform:uppercase;color:var(--tc,var(--accent))}
+/* ---- términos con entrada, al modo de un manual ---- */
+p.run{margin:0 0 1.38em}
+p.run>b:first-child{display:block;font:700 12px/1.7 var(--mono,monospace);letter-spacing:.09em;
+ text-transform:uppercase;color:var(--tc,var(--accent))}
+/* ---- rótulos internos ---- */
+.zero>.ft{font:700 11.5px/1.6 var(--mono,monospace);letter-spacing:.1em;text-transform:uppercase}
+.zero>.ft:not(:first-child){margin-top:2em;font-size:12.5px;color:var(--fg);opacity:.72}
+/* ---- desarrollo teórico ---- */
+.deep h4{position:relative;padding-left:2.35em;font-size:1.03em}
+.deep h4 .hn{position:absolute;left:0;top:.06em;font:700 .84em/1.7 var(--mono,monospace);
+ color:var(--tc,var(--accent));opacity:.8}
+.deep>h4:not(:first-child){border-top:1px solid var(--line);padding-top:30px;margin-top:42px}
+.eqd{margin:1.65em 0;text-align:center;overflow-x:auto;overflow-y:hidden}
+/* ---- notas al margen, sin duplicar el rótulo ---- */
+.box.deepnote{padding:15px 20px;margin:1.5em 0;border-radius:0 10px 10px 0;
+ background:color-mix(in srgb,var(--surface) 76%,transparent)}
+.box.key.deepnote::before,.box.trap.deepnote::before{content:none}
+.box.deepnote>b:first-child{display:block;font:700 11.5px/1.7 var(--mono,monospace);
+ letter-spacing:.1em;text-transform:uppercase;color:var(--tc,var(--accent))}
+.box.trap.deepnote>b:first-child{color:var(--warn)}
+/* ---- resto ---- */
+.box{padding:22px 28px;margin:30px 0}
+table{font-size:18px;line-height:1.7}
+td,th{padding-top:.8em;padding-bottom:.8em}
+figure.fig figcaption{font-size:17px;line-height:1.78;margin-top:12px}
 figure.fig{margin-block:34px}
-.lede{line-height:1.85}
 .toc a{font-size:15.5px;padding:8px 0 8px 10px}
 svg,svg text,canvas,.katex,mjx-container{letter-spacing:normal;word-spacing:normal}
+mjx-container[display]{margin:0!important}
 details>summary{line-height:1.7;padding-block:.5em}
-@media (max-width:600px){body{font-size:19px;line-height:2}}
+.enun p,.inner p{text-align:left}
+@media (min-width:1040px){
+p,li{text-align:justify}
+.zero .lede,.enun p,.inner p,figcaption,.ft{text-align:left}
+}
+@media (max-width:600px){
+body{font-size:18.5px;line-height:1.9}
+p{text-align:left}
+.zero .lede::first-letter{font-size:2.6em}
+.deep h4{padding-left:0}
+.deep h4 .hn{position:static;margin-right:.5em}
+}
 }
 </style>
 </head>
@@ -46,7 +86,7 @@ details>summary{line-height:1.7;padding-block:.5em}
 <main>
 <section class="sec tema" style="--tc:var(--c3);--tcs:var(--c3s)">
 <div class="sh"><span aria-hidden="true" class="badge">10</span><div class="shx"><p class="kick">Tiempo real: planificación y algoritmos · Tema 10</p><h2 id="t10">Lógica difusa y kNN</h2><div class="tags"><span class="tag">Tiempo real: planificación y algoritmos</span><span class="tag">Tiempo real</span></div></div></div>
-<div class="zero"><p class="ft">Desde cero</p><p><b>Objetivo:</b> implementar un controlador difuso de Sugeno y un clasificador por vecinos más próximos, que son los dos algoritmos propios de la asignatura.</p><ul>
+<div class="zero"><p class="ft">Desde cero</p><p class="obj"><b>Objetivo:</b> implementar un controlador difuso de Sugeno y un clasificador por vecinos más próximos, que son los dos algoritmos propios de la asignatura.</p><ul>
 <li>La <b>lógica difusa</b> (Zadeh, 1965) sustituye la pertenencia binaria por un <b>grado de pertenencia</b> entre 0 y 1. Una temperatura de 24 ºC puede ser «templada» con grado 0,7 y «caliente» con grado 0,3 a la vez. Sirve para expresar control en forma de reglas del lenguaje natural, sin necesitar un modelo matemático de la planta.</li>
 <li>Un sistema difuso tiene tres etapas: <b>fuzzificación</b> (convertir la entrada numérica en grados de pertenencia a los conjuntos), <b>inferencia</b> (evaluar las reglas) y <b>defuzzificación</b> (volver a un número, el valor <i>crisp</i>).</li>
 <li>Las <b>funciones de pertenencia</b> más usadas son <b>triangulares</b> y <b>trapezoidales</b>, porque se calculan con cuatro restas y una división. También se usan gaussianas y sigmoides.</li>
@@ -60,11 +100,11 @@ details>summary{line-height:1.7;padding-block:.5em}
 <details class="nom"><summary><span aria-hidden="true" class="nom-ic">Aa</span>Nomenclatura del tema 10 <span class="src">9 entradas</span></summary><div class="inner">
 <div class="tw"><table><tr><th>Símbolo</th><th>Significado</th><th>Unidad · nota</th></tr><tr><td class="sym">μ(x)</td><td>grado de pertenencia</td><td class="u">entre 0 y 1</td></tr><tr><td class="sym">fuzzificación</td><td>entrada → grados</td><td class="u"></td></tr><tr><td class="sym">inferencia</td><td>evaluar las reglas</td><td class="u"></td></tr><tr><td class="sym">defuzzificación</td><td>volver a un número</td><td class="u">valor crisp</td></tr><tr><td class="sym">Y / O</td><td>mínimo / máximo</td><td class="u"></td></tr><tr><td class="sym">Sugeno</td><td>salida constante o función</td><td class="u">media ponderada</td></tr><tr><td class="sym">Mamdani</td><td>salida difusa</td><td class="u">centro de gravedad</td></tr><tr><td class="sym">kNN</td><td>k vecinos más próximos</td><td class="u"></td></tr><tr><td class="sym">normalizar</td><td>(x−min)/(max−min)</td><td class="u">imprescindible</td></tr></table></div></div></details>
 <figure class="fig"><p class="ft">Calculadora interactiva - controlador difuso de Sugeno</p><div data-sim="fuzzy"></div><figcaption>Mueve los controles y observa cómo cambia el resultado: es el mismo cálculo que hay que saber hacer a mano en el examen.</figcaption></figure>
-<!--amp1--><div class="zero" style="margin-top:14px"><p class="ft">Explicación ampliada</p><p class="ft">Lógica difusa: pertenencia parcial</p><p>En lógica clásica, la temperatura es «alta» o no lo es. En <b>lógica difusa</b> hay grados: 22 °C puede ser «tibia» con grado 0,6 y «caliente» con grado 0,1. Ese grado entre 0 y 1 es la <b>función de pertenencia</b> \(\mu\), que suele ser un triángulo (\(\mu_\triangle(x;a,b,c)\): sube de \(a\) a \(b\) y baja de \(b\) a \(c\)) o un trapecio. Los operadores se definen así: Y = mínimo, O = máximo, NO = \(1-\mu\). Un sistema difuso tiene reglas del tipo «si temperatura es tibia y humedad es alta, entonces potencia = 30», cada una con un <b>grado de activación</b> \(w\) (el mínimo de los grados de sus condiciones).</p><p class="ft">Sugeno y kNN</p><p>Para obtener una salida numérica se combinan las reglas con la <b>media ponderada de Sugeno</b>: \(z^*=\dfrac{\sum w_iz_i}{\sum w_i}\), con \(z_i\) la salida de cada regla y \(w_i\) su grado de activación. Fuera de la lógica difusa, el clasificador <b>kNN</b> (k vecinos más cercanos) decide la clase de un punto nuevo mirando las clases de sus \(k\) puntos más próximos y eligiendo la más frecuente; la cercanía se mide con la distancia euclídea \(d=\sqrt{\sum_j(x_j-y_j)^2}\). No hay «entrenamiento»: basta guardar los datos, y el coste está en calcular distancias al clasificar. Conviene normalizar los datos si las variables tienen escalas muy distintas.</p></div><!--/amp1--><!--deep--><h3 id="t10-profundiza">Desarrollo teórico a fondo</h3><div class="deep">
-<h4>1. Lógica difusa</h4>
+<!--amp1--><div class="zero" style="margin-top:14px"><p class="ft">Explicación ampliada</p><p class="ft">Lógica difusa: pertenencia parcial</p><p class="lede">En lógica clásica, la temperatura es «alta» o no lo es. En <b>lógica difusa</b> hay grados: 22 °C puede ser «tibia» con grado 0,6 y «caliente» con grado 0,1. Ese grado entre 0 y 1 es la <b>función de pertenencia</b> \(\mu\), que suele ser un triángulo (\(\mu_\triangle(x;a,b,c)\): sube de \(a\) a \(b\) y baja de \(b\) a \(c\)) o un trapecio. Los operadores se definen así: Y = mínimo, O = máximo, NO = \(1-\mu\). Un sistema difuso tiene reglas del tipo «si temperatura es tibia y humedad es alta, entonces potencia = 30», cada una con un <b>grado de activación</b> \(w\) (el mínimo de los grados de sus condiciones).</p><p class="ft">Sugeno y kNN</p><p>Para obtener una salida numérica se combinan las reglas con la <b>media ponderada de Sugeno</b>: \(z^*=\dfrac{\sum w_iz_i}{\sum w_i}\), con \(z_i\) la salida de cada regla y \(w_i\) su grado de activación. Fuera de la lógica difusa, el clasificador <b>kNN</b> (k vecinos más cercanos) decide la clase de un punto nuevo mirando las clases de sus \(k\) puntos más próximos y eligiendo la más frecuente; la cercanía se mide con la distancia euclídea \(d=\sqrt{\sum_j(x_j-y_j)^2}\). No hay «entrenamiento»: basta guardar los datos, y el coste está en calcular distancias al clasificar. Conviene normalizar los datos si las variables tienen escalas muy distintas.</p></div><!--/amp1--><!--deep--><h3 id="t10-profundiza">Desarrollo teórico a fondo</h3><div class="deep">
+<h4><span class="hn">1</span>Lógica difusa</h4>
 <div class="box key deepnote"><b>Idea clave.</b> la lógica difusa describe variables con grados de pertenencia entre 0 y 1, en lugar de verdadero o falso. Es útil cuando las reglas se expresan con lenguaje natural.</div>
 <ul><li><b>Conjuntos difusos</b> con funciones de pertenencia (triangular, trapezoidal).</li><li><b>Reglas</b> del tipo «si la temperatura es alta y la presión es baja, entonces...».</li><li><b>Defuzzificación</b>: convierte el resultado difuso en un valor concreto, por ejemplo por centroide.</li></ul>
-<h4>2. k-vecinos más cercanos (kNN)</h4>
+<h4><span class="hn">2</span>k-vecinos más cercanos (kNN)</h4>
 <div class="box key deepnote"><b>Idea clave.</b> kNN clasifica un dato según la clase mayoritaria de sus k vecinos más cercanos en el espacio de atributos. No tiene fase de entrenamiento: todo el coste está en la predicción.</div>
 <div class="eqd">\[d(x,y)=\sqrt{\sum_i (x_i-y_i)^2}\]</div>
 <div class="box trap deepnote"><b>Cuidado.</b> Los atributos deben normalizarse. Si una variable tiene escala grande, domina la distancia y el resultado queda sesgado.</div>
