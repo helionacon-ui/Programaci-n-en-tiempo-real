@@ -1,4 +1,4 @@
-# Programación de Sistemas en Tiempo Real · Guía para aprobar
+# Programación de Sistemas en Tiempo Real · Apuntes
 
 **Proyecto iniciado el 8 de noviembre de 2026.**
 

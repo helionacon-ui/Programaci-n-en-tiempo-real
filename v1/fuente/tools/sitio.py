@@ -240,7 +240,7 @@ def write_site(site, secs, pages, extras, stats, art, date, base_css, ours_css, 
     m = master(secs, pages, extras, stats, art, date, css, js, TITLE, sidx)
     open(os.path.join(site, MASTER), 'w', encoding='utf-8').write(m)
     open(os.path.join(site, '.nojekyll'), 'w').write('')
-    man = dict(name=TITLE + ' · Guía para aprobar', short_name='Tiempo real', description='Guía de estudio de %s (): teoría, vídeos, simuladores, exámenes y ejercicios resueltos.' % TITLE, lang='es',
+    man = dict(name=TITLE + ' · Apuntes', short_name='Tiempo real', description='Guía de estudio de %s (): teoría, vídeos, simuladores, exámenes y ejercicios resueltos.' % TITLE, lang='es',
                start_url='./', scope='./', display='standalone', background_color='#f4f6f5', theme_color='#2456d6',
                icons=[dict(src='icon-192.png', sizes='192x192', type='image/png'), dict(src='icon-512.png', sizes='512x512', type='image/png'), dict(src='icon-maskable-512.png', sizes='512x512', type='image/png', purpose='maskable')])
     json.dump(man, open(os.path.join(site, 'manifest.webmanifest'), 'w', encoding='utf-8'), ensure_ascii=False, indent=2)

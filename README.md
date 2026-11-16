@@ -1,4 +1,4 @@
-# Programación de Sistemas en Tiempo Real · Guía para aprobar
+# Programación de Sistemas en Tiempo Real · Apuntes
 
 Guía de estudio no oficial de **Programación de Sistemas en Tiempo Real** (Grado en Ingeniería Electrónica Industrial y Automática, 3.er curso).
 
