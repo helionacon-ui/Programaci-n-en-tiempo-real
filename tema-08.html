@@ -132,6 +132,7 @@ mjx-container:not([display="true"]){padding:.2em .32em}
 <details class="dem"><summary><span class="pn">∴</span>Rate Monotonic (RM)</summary><div class="inner"><p>Asigna más prioridad a la tarea con periodo más corto. Es óptima entre las prioridades fijas: si RM no puede planificar un conjunto, ningún otro método de prioridad fija lo hace.</p>
 <div class="eqd">\[U\le n\,(2^{1/n}-1)\quad\text{(cota suficiente)}\]</div>
 <p>Para tres tareas, la cota es 0,78. Si la utilización supera la cota, no se puede concluir; hay que hacer el análisis exacto.</p></div></details>
+<!--manim:ptr-t8b--><figure class="fig manim-fig" id="anim-ptr-t8b"><p class="ft">Animación · Planificación EDF</p><div class="manim" data-anim="ptr-t8b"><p class="muted">Activa JavaScript para ver la animación.</p></div><figcaption>Se reproduce sola al llegar a ella. Puedes pausarla, arrastrar la barra para ir a cualquier instante y cambiar la velocidad. Si aparece «Prueba tú», mueve ese control para fijar tú el parámetro.</figcaption></figure><!--/manim-->
 <h4><span class="hn">2</span>Earliest Deadline First (EDF)</h4>
 <p>Asigna la prioridad según el plazo más próximo, de forma dinámica. Si la utilización es menor o igual que 1, EDF planifica el conjunto. Su inconveniente es la complejidad y el comportamiento tras una sobrecarga.</p>
 <div class="box trap deepnote"><b>Cuidado.</b> EDF ofrece la mejor utilización, pero en sobrecarga puede fallar muchos plazos a la vez. RM degrada de forma más predecible.</div>
@@ -237,7 +238,7 @@ int main()
 </div>
 <script src="app.js"></script>
 <script src="sims.js"></script>
-<script src="anim-manim.js?v=26804" defer></script>
-<script src="anim-temas.js?v=26804" defer></script>
+<script src="anim-manim.js?v=28284" defer></script>
+<script src="anim-temas.js?v=28284" defer></script>
 </body>
 </html>

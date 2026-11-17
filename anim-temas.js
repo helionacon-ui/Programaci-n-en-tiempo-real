@@ -87,4 +87,17 @@ M.reg('ptr-t10',M.base({title:'Lógica difusa: grados de pertenencia',H:560,dur:
   FZ.forEach(function(f){U.plotf(D,A,f[1],f[2],2.6);var m=f[1](T);if(m>0){D.dot(A.X(T),A.Y(m),6,f[2]);D.line(A.X(T),A.Y(m),A.X(0),A.Y(m),f[2],1,[3,3]);}});D.line(A.X(T),A.Y(0),A.X(T),A.Y(1.15),C.m,1.6,[4,3]);
   FZ.forEach(function(f,i){D.text(f[0],A.X([5,21,36][i]),A.Y(1.08),{s:15,a:'center',c:f[2]});});
   U.readout(D,['T = '+nf(T,1)+' °C','fría '+nf(FZ[0][1](T),2)+'    templada '+nf(FZ[1][1](T),2)+'    caliente '+nf(FZ[2][1](T),2)],446);}));
+var TS2=[['τ1',2,5],['τ2',4,7]],EDF=(function(){var rem=[0,0],dl=[0,0],o=[];for(var t=0;t<35;t++){TS2.forEach(function(s,i){if(t%s[2]===0){rem[i]=s[1];dl[i]=t+s[2];}});var r=-1,b=1e9;for(var i=0;i<2;i++)if(rem[i]>0&&dl[i]<b){b=dl[i];r=i;}o.push(r);if(r>=0)rem[r]--;}return o;})();
+M.reg('ptr-t8b',M.base({title:'Planificación EDF: primero el plazo más cercano',H:560,dur:18,caps:[[6,'EDF asigna la CPU a la tarea cuyo plazo absoluto vence antes. Las prioridades cambian dinámicamente en cada activación.'],[12,'Con τ1 (C = 2, T = 5) y τ2 (C = 4, T = 7) la utilización es 2/5 + 4/7 = 0,97: más de lo que garantiza Rate Monotonic para dos tareas (0,83).'],[99,'Aun así EDF cumple todos los plazos: es óptimo mientras U ≤ 1.']]},
+ function(D,t){var u=seg(t,1,16)*35,x0=90,cw=14.5,cols=[C.f,C.hl];TS2.forEach(function(s,i){var y=160+i*90;D.text(s[0]+' ('+s[1]+', '+s[2]+')',x0-10,y+26,{s:15,a:'right',c:cols[i]});for(var a=0;a<=35;a+=s[2])D.arrow(x0+a*cw,y-14,x0+a*cw,y+2,cols[i],1.4);D.line(x0,y+40,x0+35*cw,y+40,C.grid,1);});
+  for(var k=0;k<35;k++){if(u<=k)break;var r=EDF[k];if(r<0)continue;D.rect(x0+k*cw,160+r*90,Math.min(1,u-k)*cw,40,cols[r],RG(cols[r],.35),1);}for(var k2=0;k2<=35;k2+=5)D.text(''+k2,x0+k2*cw,370,{s:12,a:'center',c:C.mut});
+  U.readout(D,['U = 0,97 ≤ 1  →  EDF planificable','(con RM no está garantizado: U > 2(√2 − 1) = 0,83)'],440);}));
+var KP=[[1,1,0],[1.5,2,0],[2,1.2,0],[1.2,2.8,0],[2.6,2.2,0],[4,4,1],[4.5,3,1],[3.6,4.6,1],[5,4.2,1],[4.2,2.4,1],[3,3.4,1],[2.4,3.2,0]];
+M.reg('ptr-t10b',M.base({title:'Clasificador kNN: votan los k vecinos',H:580,dur:18,caps:[[6,'kNN no construye un modelo: guarda los ejemplos etiquetados. Para clasificar un punto nuevo mira sus k vecinos más cercanos.'],[12,'Cada vecino vota con su clase y gana la mayoritaria. Aquí k = 3 y distancia euclídea.'],[99,'k pequeño es sensible al ruido; k grande difumina las fronteras. Conviene normalizar las variables para que ninguna domine la distancia.']]},
+ function(D,t){var s=t/18*2*Math.PI,q=[3.1+1.4*Math.cos(s),2.9+1.3*Math.sin(s)],A=U.axes(D,{xr:[0,6],yr:[0,5.5],xt:[],yt:[],xl:'x₁',yl:'x₂'},{x:120,y:80,w:400,h:360});
+  var d=KP.map(function(p,i){return [Math.hypot(p[0]-q[0],p[1]-q[1]),i];}).sort(function(a,b){return a[0]-b[0];}),nb=d.slice(0,3),votes=[0,0];nb.forEach(function(n){votes[KP[n[1]][2]]++;});var cls=votes[1]>votes[0]?1:0;
+  D.ring(A.X(q[0]),A.Y(q[1]),(A.X(nb[2][0])-A.X(0)),C.mut,1.2);nb.forEach(function(n){var p=KP[n[1]];D.line(A.X(q[0]),A.Y(q[1]),A.X(p[0]),A.Y(p[1]),C.mut,1.2,[3,3]);});
+  KP.forEach(function(p){var c=p[2]?C.hl:C.f;if(p[2])D.rect(A.X(p[0])-7,A.Y(p[1])-7,14,14,c,RG(c,.5),1.6);else{D.dot(A.X(p[0]),A.Y(p[1]),8,RG(c,.5));D.ring(A.X(p[0]),A.Y(p[1]),8,c,1.6);}});
+  D.dot(A.X(q[0]),A.Y(q[1]),9,cls?C.hl:C.f);D.ring(A.X(q[0]),A.Y(q[1]),12,C.m,2.4);
+  U.readout(D,['votos: círculos '+votes[0]+' · cuadrados '+votes[1]+'  →  clase '+(cls?'cuadrado':'círculo')],500);}));
 })();
