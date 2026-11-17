@@ -2,13 +2,14 @@
 (function(){var M=window.MANIM;if(!M)return;var U=M.util,C=M.C,nf=U.nf,lerp=U.lerp,ease=U.ease,seg=U.seg,clamp=U.clamp,RG=U.RG,W=640;
 
 /* T1 del problema al programa */
-M.reg('ptr-t1',M.pasos({title:'Del problema al programa',H:560,dur:20,y0:115,gap:54,lines:[
- {s:'1. Entender el problema: entradas, salidas y restricciones',size:18},
- {s:'2. Diseñar el algoritmo: pasos, datos y casos límite',size:18},
- {s:'3. Codificar en C++: tipos, funciones, estructuras de control',size:18},
- {s:'4. Compilar: el compilador detecta errores de sintaxis y de tipos',size:18},
- {s:'5. Probar con casos normales y extremos; depurar',size:18,c:'hl'},
- {s:'Si una prueba falla se vuelve al paso que corresponda, no al teclado',size:17,c:'m'}]}));
+var AR=[7,3,12,5,9,15,4],MX=(function(){var o=[],m=AR[0],im=0;for(var i=1;i<AR.length;i++){o.push([i,m,im]);if(AR[i]>m){m=AR[i];im=i;}}o.push([AR.length,m,im]);return o;})();
+M.reg('ptr-t1',M.base({title:'Del problema al programa: seguir un algoritmo',H:580,dur:20,caps:[[6,'Problema: encontrar el máximo de una lista. Antes de escribir código se diseña el algoritmo: recorrerla guardando el mayor visto hasta ahora.'],[13,'Se sigue a mano con un ejemplo (traza): en cada paso se compara el elemento actual con el máximo provisional.'],[99,'Después se codifica, se compila y se prueba con casos límite: lista de un elemento, todos iguales, máximo al principio o al final.']]},
+ function(D,t){var k=Math.min(MX.length-1,Math.floor(seg(t,1,18)*MX.length)),s=MX[k],x0=110,cw=62;
+  var code=['int m = v[0];','for (size_t i = 1; i < v.size(); ++i)','    if (v[i] > m) m = v[i];','return m;'];code.forEach(function(c,i){var on=(s[0]<AR.length&&(i===1||i===2))||(s[0]>=AR.length&&i===3);D.text(c,60,100+i*26,{s:15,c:on?C.y:C.w,mono:true,bold:on&&i===2});});
+  AR.forEach(function(v,i){var x=x0+i*cw,cur=i===s[0],best=i===s[2];D.rect(x,240,cw-8,54,best?C.hl:(cur?C.m:C.ax),RG(best?C.hl:(cur?C.m:C.ax),best||cur?.25:.04),best||cur?2.6:1.4);D.text(''+v,x+cw/2-4,274,{s:20,a:'center',c:best?C.hl:(cur?C.m:C.w),bold:true,mono:true});D.text(''+i,x+cw/2-4,312,{s:12,a:'center',c:C.mut});});
+  if(s[0]<AR.length){D.arrow(x0+s[0]*cw+cw/2-4,214,x0+s[0]*cw+cw/2-4,236,C.m,2.4);D.text('i',x0+s[0]*cw+cw/2-4,206,{s:15,a:'center',c:C.m,bold:true});}
+  U.readout(D,['m = '+s[1]+(s[0]<AR.length?'    comparo v['+s[0]+'] = '+AR[s[0]]+(AR[s[0]]>s[1]?' > m → actualizo':' ≤ m'):'    fin: el máximo es '+s[1])],400);}));
+
 
 /* T2 std::vector: tamaño y capacidad */
 M.reg('ptr-t2',M.base({title:'std::vector: tamaño frente a capacidad',H:560,dur:18,caps:[[6,'push_back añade al final. Mientras quede capacidad libre, es inmediato.'],[12,'Cuando el vector está lleno, reserva un bloque mayor (típicamente el doble), copia o mueve los elementos y libera el antiguo.'],[99,'Por eso push_back es O(1) amortizado, pero las direcciones de los elementos pueden cambiar: los punteros e iteradores antiguos dejan de ser válidos.']]},
@@ -18,16 +19,14 @@ M.reg('ptr-t2',M.base({title:'std::vector: tamaño frente a capacidad',H:560,dur
   D.text('size() = '+n,60,320,{s:20,c:C.m,mono:true});D.text('capacity() = '+cap,320,320,{s:20,c:C.f,mono:true});U.readout(D,['realojamientos hasta ahora: '+re],420);}));
 
 /* T3 objetos: constructor y destructor */
-M.reg('ptr-t3',M.pasos({title:'Programación basada en objetos: vida de un objeto',H:580,dur:22,y0:105,gap:46,lines:[
- {s:'class Sensor {',it:false,size:17,a:'left',x:60},
- {s:'   double valor_;                   // privado: encapsulado',it:false,size:17,a:'left',x:60},
- {s:'public:',it:false,size:17,a:'left',x:60},
- {s:'   Sensor(double v) : valor_(v) {}  // constructor',it:false,size:17,a:'left',x:60,c:'ok'},
- {s:'   ~Sensor() {}                     // destructor',it:false,size:17,a:'left',x:60,c:'bad'},
- {s:'   double leer() const { return valor_; }',it:false,size:17,a:'left',x:60},
- {s:'};',it:false,size:17,a:'left',x:60},
- {s:'{ Sensor s(21.5); … }   → constructor al declarar, destructor al salir del bloque',it:false,size:16,a:'left',x:60,c:'m'},
- {s:'RAII: el recurso vive exactamente lo que vive el objeto',it:false,size:16,a:'left',x:60,c:'hl'}]}));
+var LF3=[[0,'int main() {',[]],[1,'  Sensor a(20.0);      // constructor de a',['a']],[2,'  {',['a']],[3,'    Sensor b(35.5);    // constructor de b',['a','b']],[4,'    a.leer();  b.leer();',['a','b']],[5,'  }                    // destructor de b',['a']],[6,'  a.leer();',['a']],[7,'}                      // destructor de a',[]]];
+M.reg('ptr-t3',M.base({title:'Programación basada en objetos: vida de un objeto',H:580,dur:20,caps:[[6,'Un objeto local se construye al llegar a su declaración: se ejecuta el constructor y ocupa sitio en la pila.'],[13,'Al salir del bloque {…} donde se declaró se ejecuta automáticamente su destructor, en orden inverso al de construcción.'],[99,'Esa garantía es la base de RAII: si el objeto gestiona un recurso (memoria, fichero, mutex), lo libera solo, aunque haya una excepción.']]},
+ function(D,t){var k=Math.min(LF3.length-1,Math.floor(seg(t,0.5,19)*LF3.length)),s=LF3[k];
+  LF3.forEach(function(l,i){var y=96+i*30,on=i===k;if(on)D.rect(30,y-21,390,28,null,RG(C.y,.14));D.text(l[1],40,y,{s:14,c:on?C.y:C.w,mono:true,bold:on});});
+  D.text('pila',530,100,{s:15,a:'center',c:C.mut});D.rect(450,110,160,250,C.ax,null,1.4);
+  s[2].forEach(function(o,i){var y=290-i*70;D.rect(465,y,130,56,o==='a'?C.f:C.hl,RG(o==='a'?C.f:C.hl,.2),2);D.text('Sensor '+o,530,y+24,{s:15,a:'center',c:o==='a'?C.f:C.hl,bold:true});D.text('valor_ = '+(o==='a'?'20.0':'35.5'),530,y+44,{s:12,a:'center',c:C.mut,mono:true});});
+  var prev=k?LF3[k-1][2]:[],msg=s[2].length>prev.length?'constructor de '+s[2][s[2].length-1]:(s[2].length<prev.length?'destructor de '+prev[prev.length-1]:'');U.readout(D,[msg||' '],440);}));
+
 
 /* T4 polimorfismo */
 M.reg('ptr-t4',M.base({title:'Polimorfismo: una llamada, distintos métodos',H:580,dur:18,caps:[[6,'Un vector de punteros a la clase base Figura guarda en realidad objetos de clases derivadas.'],[12,'Como area() es <b>virtual</b>, cada llamada se resuelve en tiempo de ejecución mirando la tabla virtual del objeto real.'],[99,'El código que recorre el vector no cambia aunque se añadan figuras nuevas. Sin virtual, siempre se llamaría a Figura::area().']]},
@@ -70,14 +69,15 @@ M.reg('ptr-t8',M.base({title:'Planificación en tiempo real: prioridades monóto
   U.readout(D,['U = 0,75 ≤ 0,78  →  planificable'],450);}));
 
 /* T9 análisis del tiempo de respuesta */
-M.reg('ptr-t9',M.pasos({title:'Tiempo de respuesta: la iteración',H:580,dur:22,y0:105,gap:50,lines:[
- {s:'R_{i} = C_{i} + Σ_{j∈hp(i)} ⌈R_{i}/T_{j}⌉·C_{j}',size:21,b:true},
- {s:'τ3 (C = 2, T = 12) con τ1 (1, 4) y τ2 (2, 6) más prioritarias',size:17},
- {s:'R⁰ = 2 + 1 + 2 = 5',size:19},
- {s:'R¹ = 2 + ⌈5/4⌉·1 + ⌈5/6⌉·2 = 2 + 2 + 2 = 6',size:19},
- {s:'R² = 2 + ⌈6/4⌉·1 + ⌈6/6⌉·2 = 6   → converge',size:19,c:'m'},
- {s:'R_{3} = 6 ≤ D_{3} = 12: cumple el plazo',size:19,c:'ok'},
- {s:'Con bloqueo por recursos: sumar B_{i} (techo de prioridad)',size:17,c:'hl'}]}));
+var RI=[5,6,6];
+M.reg('ptr-t9',M.base({title:'Tiempo de respuesta: la iteración',H:600,dur:20,caps:[[6,'El peor caso de τ3 (C = 2) es arrancar a la vez que todas las tareas más prioritarias: τ1 (C = 1, T = 4) y τ2 (C = 2, T = 6).'],[13,'En una ventana de longitud R, τ1 se activa ⌈R/4⌉ veces y τ2 ⌈R/6⌉ veces: <i>R = C₃ + ⌈R/4⌉·1 + ⌈R/6⌉·2</i>. Se itera hasta que R no cambia.'],[99,'R⁰ = 5 → R¹ = 6 → R² = 6: converge. R₃ = 6 ≤ D₃ = 12, así que τ3 cumple su plazo en el peor caso.']]},
+ function(D,t){var k=Math.min(2,Math.floor(seg(t,1,18)*3)),R=RI[k],x0=110,cw=40,cols=[C.f,C.hl,C.m];
+  ['τ1 (1, 4)','τ2 (2, 6)','τ3 (2, 12)'].forEach(function(n,i){D.text(n,x0-10,150+i*70,{s:15,a:'right',c:cols[i]});});
+  var sch=[0,1,1,2,0,2,1,1,0,-1,-1,-1];for(var i=0;i<12;i++){if(sch[i]<0)continue;D.rect(x0+i*cw,126+sch[i]*70,cw,40,cols[sch[i]],RG(cols[sch[i]],.3),1.4);}
+  D.rect(x0,100,R*cw,240,C.y,RG(C.y,.07),2);D.text('ventana R = '+R,x0+R*cw/2,92,{s:16,a:'center',c:C.y,bold:true});
+  for(var j=0;j<=12;j+=2)D.text(''+j,x0+j*cw,360,{s:13,a:'center',c:C.mut});
+  var prev=k?RI[k-1]:'—',f='R^{'+k+'} = 2 + ⌈'+(k?RI[k-1]:'')+'/4⌉·1 + ⌈'+(k?RI[k-1]:'')+'/6⌉·2 = '+R;U.readout(D,[k?f:'R⁰ = C₃ + C₁ + C₂ = 5',k===2?'converge: R_{3} = 6 ≤ 12 → cumple':'…'],430);}));
+
 
 /* T10 lógica difusa: funciones de pertenencia */
 function tri(x,a,b,c){return x<=a||x>=c?0:(x<b?(x-a)/(b-a):(c-x)/(c-b));}
